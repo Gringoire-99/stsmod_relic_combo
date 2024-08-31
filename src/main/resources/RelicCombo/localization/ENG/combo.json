@@ -1,0 +1,10 @@
+{
+  "RelicCombo:Yummy": {
+    "NAME": "Combo: Yummy！",
+    "FLAVOR": "",
+    "DESCRIPTIONS": [
+      "Collect more than 1 to activate",
+      "Each one provides 1 Strength or Dexterity at the beginning of the combat"
+    ]
+  }
+}

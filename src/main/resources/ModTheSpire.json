@@ -1,0 +1,10 @@
+{
+  "modid": "RelicCombo",
+  "name": "RelicCombo遗物组合",
+  "author_list": ["glen"],
+  "description": "为原版遗物添加了组合套装效果",
+  "version": "0.0.1",
+  "sts_version": "12-18-2022",
+  "mts_version": "3.30.3",
+  "dependencies": ["basemod","stslib"]
+}
