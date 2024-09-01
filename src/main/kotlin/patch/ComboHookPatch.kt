@@ -2,21 +2,35 @@ package patch
 
 import com.badlogic.gdx.Gdx
 import com.evacipated.cardcrawl.modthespire.lib.*
+import com.megacrit.cardcrawl.actions.GameActionManager
 import com.megacrit.cardcrawl.actions.common.ApplyPowerAction
+import com.megacrit.cardcrawl.actions.watcher.ChangeStanceAction
+import com.megacrit.cardcrawl.cards.AbstractCard
+import com.megacrit.cardcrawl.cards.CardGroup
+import com.megacrit.cardcrawl.cards.DamageInfo
 import com.megacrit.cardcrawl.characters.AbstractPlayer
 import com.megacrit.cardcrawl.core.AbstractCreature
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon
+import com.megacrit.cardcrawl.monsters.AbstractMonster
 import com.megacrit.cardcrawl.powers.AbstractPower
+import com.megacrit.cardcrawl.rooms.AbstractRoom
+import com.megacrit.cardcrawl.stances.AbstractStance
 import com.megacrit.cardcrawl.ui.panels.PotionPopUp
+import com.megacrit.cardcrawl.vfx.campfire.CampfireSleepEffect
 import combo.AbstractRelicCombo
+import utils.logger
 
 class ComboHookPatch {
-    @SpirePatch2(clz = AbstractPlayer::class, method = "applyStartOfCombatLogic")
+    /**
+     *  应用战斗开始的逻辑
+     */
+    @SpirePatch2(clz = AbstractRoom::class, method = "update")
     internal class StartOfCombat {
         companion object {
             @JvmStatic
-            @SpirePostfixPatch
-            fun postfix() {
+            @SpireInsertPatch(rloc = 51)
+            fun insert() {
+                logger.info("============ Battle Start ===========")
                 AbstractRelicCombo.currentComboSet.forEach { (k, v) ->
                     if (k.isActive(v)) {
                         k.onBattleStart(v)
@@ -26,6 +40,9 @@ class ComboHookPatch {
         }
     }
 
+    /**
+     *  修改随机药水的稀有度
+     */
     @SpirePatch2(clz = AbstractDungeon::class, method = "returnRandomPotion", paramtypez = [Boolean::class])
     internal class returnRandomPotion {
         companion object {
@@ -41,6 +58,9 @@ class ComboHookPatch {
         }
     }
 
+    /**
+     * 触发使用药水后的逻辑1
+     */
     @SpirePatch2(clz = PotionPopUp::class, method = "updateTargetMode")
     internal class updateTargetMode {
         companion object {
@@ -56,6 +76,9 @@ class ComboHookPatch {
         }
     }
 
+    /**
+     * 触发使用药水后的逻辑2
+     */
     @SpirePatch2(clz = PotionPopUp::class, method = "updateInput")
     internal class updateInput {
         companion object {
@@ -71,6 +94,9 @@ class ComboHookPatch {
         }
     }
 
+    /**
+     *  应用能力时触发的效果
+     */
     @SpirePatch2(clz = ApplyPowerAction::class, method = "update")
     internal class applyPower {
         companion object {
@@ -91,6 +117,214 @@ class ComboHookPatch {
                             ___duration[0] = ___duration[0] - Gdx.graphics.deltaTime
                             SpireReturn.Return()
                         }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * 当玩家受到伤害时触发
+     */
+    @SpirePatch2(clz = AbstractPlayer::class, method = "damage")
+    internal class onTakingDamage {
+        companion object {
+            @JvmStatic
+            @SpireInsertPatch(rloc = 61, localvars = ["damageAmount"])
+            fun insert(@ByRef damageAmount: IntArray) {
+                AbstractRelicCombo.currentComboSet.forEach { (k, v) ->
+                    if (k.isActive(v)) {
+                        k.onPlayerTakingDamageFinal(damageAmount, v)
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     *  战斗结束后执行的逻辑
+     */
+    @SpirePatch2(clz = AbstractRoom::class, method = "endBattle")
+    internal class endBattle {
+        companion object {
+            @JvmStatic
+            @SpirePostfixPatch
+            fun post(__instance: AbstractRoom?) {
+                logger.info("============ Battle End ===========")
+                __instance?.apply {
+                    AbstractRelicCombo.currentComboSet.forEach { (k, v) ->
+                        if (k.isActive(v)) {
+                            k.onEndBattle(this, v)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * 获得金币时触发的逻辑
+     */
+    @SpirePatch2(clz = AbstractPlayer::class, method = "gainGold")
+    internal class gainGold {
+        companion object {
+            @JvmStatic
+            @SpirePrefixPatch
+            fun prefix(@ByRef amount: IntArray) {
+                AbstractRelicCombo.currentComboSet.forEach { (k, v) ->
+                    if (k.isActive(v)) {
+                        k.onGainGold(amount, v)
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * 回合开始时触发的逻辑
+     */
+    @SpirePatch2(clz = AbstractRoom::class, method = "update")
+    internal class getNextAction1 {
+        companion object {
+            @JvmStatic
+            @SpireInsertPatch(rloc = 65)
+            fun insert() {
+                logger.info("============ Turn Start ===========")
+                AbstractRelicCombo.currentComboSet.forEach { (k, v) ->
+                    if (k.isActive(v)) {
+                        k.onStartOfTurn(v)
+                    }
+                }
+            }
+        }
+    }
+
+    @SpirePatch2(clz = GameActionManager::class, method = "getNextAction")
+    internal class getNextAction2 {
+        companion object {
+            @JvmStatic
+            @SpireInsertPatch(rloc = 241)
+            fun insert() {
+                logger.info("============ Turn Start ===========")
+                AbstractRelicCombo.currentComboSet.forEach { (k, v) ->
+                    if (k.isActive(v)) {
+                        k.onStartOfTurn(v)
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * 怪物受到伤害触发的逻辑
+     */
+    @SpirePatch2(clz = AbstractMonster::class, method = "damage")
+    internal class onMonsterTakingDamage {
+        companion object {
+            @JvmStatic
+            @SpireInsertPatch(rloc = 6, localvars = ["damageAmount"])
+            fun insert(info: DamageInfo?, @ByRef damageAmount: IntArray) {
+                info?.apply {
+                    AbstractRelicCombo.currentComboSet.forEach { (k, v) ->
+                        if (k.isActive(v)) {
+                            k.onMonsterTakingDamageStart(this, damageAmount, v)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * 改变姿态前触发的逻辑
+     */
+    @SpirePatch2(clz = ChangeStanceAction::class, method = "update")
+    internal class changeStance {
+        companion object {
+            @JvmStatic
+            @SpireInsertPatch(rloc = 38, localvars = ["oldStance"])
+            fun prefix(oldStance: AbstractStance?, ___newStance: AbstractStance?) {
+                logger.info("========= Change stance old: ${oldStance} new :${___newStance}============")
+                AbstractRelicCombo.currentComboSet.forEach { (k, v) ->
+                    if (k.isActive(v)) {
+                        k.onChangeStance(oldStance = oldStance, ___newStance, v)
+                    }
+                }
+            }
+        }
+    }
+
+
+    /**
+     * 抽到卡片时触发
+     */
+    @SpirePatch2(clz = AbstractPlayer::class, method = "draw", paramtypez = [Int::class])
+    internal class onDraw {
+        companion object {
+            @JvmStatic
+            @SpireInsertPatch(rloc = 18, localvars = ["c"])
+            fun insert(c: AbstractCard?) {
+                c?.apply {
+                    AbstractRelicCombo.currentComboSet.forEach { (k, v) ->
+                        if (k.isActive(v)) {
+                            k.onDrawCard(this, v)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * 消耗卡片后触发
+     */
+    @SpirePatch2(clz = CardGroup::class, method = "moveToExhaustPile")
+    internal class AfterExhaust {
+        companion object {
+            @JvmStatic
+            @SpirePostfixPatch
+            fun postfix(c: AbstractCard?) {
+                c?.apply {
+                    AbstractRelicCombo.currentComboSet.forEach { (k, v) ->
+                        if (k.isActive(v)) {
+                            k.onExhaustCard(c, v)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * 休息时触发
+     */
+    @SpirePatch2(clz = CampfireSleepEffect::class, method = "update")
+    internal class beforeSleep {
+        companion object {
+            @JvmStatic
+            @SpireInsertPatch(rloc = 11)
+            fun postfix(@ByRef ___healAmount: IntArray) {
+                AbstractRelicCombo.currentComboSet.forEach { (k, v) ->
+                    if (k.isActive(v)) {
+                        k.onRest(___healAmount, v)
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * 出牌时触发
+     */
+    @SpirePatch2(clz = AbstractPlayer::class, method = "useCard")
+    internal class useCard {
+        companion object {
+            @JvmStatic
+            @SpirePostfixPatch
+            fun postfix(c: AbstractCard?, monster: AbstractMonster?, energyOnUse: Int) {
+                AbstractRelicCombo.currentComboSet.forEach { (k, v) ->
+                    if (k.isActive(v)) {
+                        k.onUseCard(c, monster, energyOnUse, v)
                     }
                 }
             }

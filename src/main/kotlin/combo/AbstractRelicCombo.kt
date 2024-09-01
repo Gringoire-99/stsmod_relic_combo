@@ -1,11 +1,16 @@
 package combo
 
+import com.megacrit.cardcrawl.cards.AbstractCard
+import com.megacrit.cardcrawl.cards.DamageInfo
 import com.megacrit.cardcrawl.core.AbstractCreature
 import com.megacrit.cardcrawl.core.CardCrawlGame
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon
 import com.megacrit.cardcrawl.helpers.PowerTip
 import com.megacrit.cardcrawl.helpers.RelicLibrary
+import com.megacrit.cardcrawl.monsters.AbstractMonster
 import com.megacrit.cardcrawl.powers.AbstractPower
+import com.megacrit.cardcrawl.rooms.AbstractRoom
+import com.megacrit.cardcrawl.stances.AbstractStance
 
 abstract class AbstractRelicCombo(
     val id: String,
@@ -59,6 +64,14 @@ abstract class AbstractRelicCombo(
 
     }
 
+    open fun onPlayerTakingDamageFinal(damage: IntArray, combo: HashSet<String>) {
+
+    }
+
+    open fun onMonsterTakingDamageStart(info: DamageInfo, damageAmount: IntArray, combo: HashSet<String>) {
+
+    }
+
     open fun onApplyPower(
         combo: HashSet<String>,
         target: AbstractCreature?,
@@ -66,6 +79,10 @@ abstract class AbstractRelicCombo(
         power: AbstractPower?
     ): Boolean {
         return true
+    }
+
+    open fun onExhaustCard(c: AbstractCard, combo: HashSet<String>) {
+
     }
 
     /**
@@ -83,10 +100,38 @@ abstract class AbstractRelicCombo(
         return !isTriggeredActiveEffect && isActive(combo)
     }
 
+    open fun onEndBattle(room: AbstractRoom, combo: HashSet<String>) {
+
+    }
+
+    open fun onGainGold(amount: IntArray, combo: HashSet<String>) {
+
+    }
+
+    open fun onChangeStance(oldStance: AbstractStance?, newStance: AbstractStance?, combo: HashSet<String>) {
+
+    }
+
+
+    open fun onDrawCard(c: AbstractCard, combo: HashSet<String>) {
+
+    }
+
+    open fun onStartOfTurn(combo: HashSet<String>) {}
+
+    open fun onRest(healAmount: IntArray, combo: HashSet<String>) {
+
+    }
+
+    open fun onUseCard(c: AbstractCard?, monster: AbstractMonster?, energyOnUse: Int, combo: HashSet<String>) {
+
+    }
+
     open fun getTip(idToHighlight: HashSet<String> = hashSetOf()): PowerTip {
         updateTip(idToHighlight)
         return tip
     }
+
 
     private fun updateTip(idToHighlight: HashSet<String> = hashSetOf()) {
         val s = combo.joinToString(separator = " NL ") {

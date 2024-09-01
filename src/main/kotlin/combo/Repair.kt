@@ -13,6 +13,6 @@ class Repair : AbstractRelicCombo(
         EmotionChip.ID,
         GoldPlatedCables.ID,
         DataDisk.ID
-    ), numberToActive = 4
+    ),
 ) {
 }

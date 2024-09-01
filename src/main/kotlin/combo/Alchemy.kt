@@ -1,7 +1,6 @@
 package combo
 
 import com.megacrit.cardcrawl.relics.*
-import utils.addToBot
 import utils.drawCard
 import utils.makeId
 import kotlin.math.max
@@ -24,8 +23,6 @@ class Alchemy : AbstractRelicCombo(
     }
 
     override fun onAfterUsePotion(combo: HashSet<String>) {
-        addToBot {
-            drawCard(max(0, combo.size - numberToActive))
-        }
+        drawCard(max(0, combo.size - numberToActive))
     }
 }

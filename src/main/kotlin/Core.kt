@@ -69,6 +69,7 @@ class Core : EditCardsSubscriber, EditStringsSubscriber, EditCharactersSubscribe
             KungFu(),
             LessIsMore(),
             Library(),
+            Mechanism(),
             MightFortune(),
             Ninja(),
             OhNo(),
@@ -77,10 +78,11 @@ class Core : EditCardsSubscriber, EditStringsSubscriber, EditCharactersSubscribe
             Repair(),
             SetSail(),
             Stargazing(),
+            StayHealthy(),
             TheThreeOfUs(),
             ToxinPurification(),
             VIP(),
-            Workaholic(),
+            StayUp(),
             Yummy()
         )
 
