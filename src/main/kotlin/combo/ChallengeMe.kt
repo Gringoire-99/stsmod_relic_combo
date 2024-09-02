@@ -18,7 +18,8 @@ class ChallengeMe :
         hashSetOf(ChampionsBelt.ID, SlaversCollar.ID, Sling.ID, Pantograph.ID, GremlinHorn.ID, PreservedInsect.ID)
     ) {
     private var active: Boolean = false
-    override fun onBattleStart(combo: HashSet<String>) {
+
+    override fun onBattleStartCleanup(combo: HashSet<String>) {
         if (AbstractDungeon.getMonsters().monsters.any { it.type == AbstractMonster.EnemyType.BOSS || it.type == AbstractMonster.EnemyType.ELITE }) {
             active = true
         }
@@ -31,6 +32,7 @@ class ChallengeMe :
     override fun onStartOfTurn(combo: HashSet<String>) {
         if (active) {
             drawCard(1)
+            showText()
         }
     }
 

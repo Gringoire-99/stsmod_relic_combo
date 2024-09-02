@@ -16,6 +16,7 @@ class KnowledgeIsPower :
     ) {
     override fun onUseCard(c: AbstractCard?, monster: AbstractMonster?, energyOnUse: Int, combo: HashSet<String>) {
         if (c is AbstractCard && c.type == AbstractCard.CardType.ATTACK && !c.purgeOnUse) {
+            showText()
             addToQueue(c, monster, random = false, purge = true)
         }
     }

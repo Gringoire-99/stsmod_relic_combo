@@ -30,6 +30,7 @@ class Awakened : AbstractRelicCombo(
                 RitualPower(AbstractDungeon.player, 1, true)
             )
         )
+        showText()
     }
 
     override fun onPlayerTakingDamageFinal(damage: IntArray, combo: HashSet<String>) {
@@ -57,6 +58,7 @@ class Awakened : AbstractRelicCombo(
                     true
                 )
             )
+            showText()
         }
     }
 }

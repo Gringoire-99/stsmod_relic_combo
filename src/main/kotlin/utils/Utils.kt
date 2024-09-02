@@ -3,10 +3,14 @@ package utils
 import Core
 import action.EmptyAction
 import com.megacrit.cardcrawl.actions.AbstractGameAction
+import com.megacrit.cardcrawl.actions.AbstractGameAction.AttackEffect
+import com.megacrit.cardcrawl.actions.common.DamageAction
 import com.megacrit.cardcrawl.actions.common.DrawCardAction
+import com.megacrit.cardcrawl.actions.common.GainBlockAction
 import com.megacrit.cardcrawl.cards.AbstractCard
 import com.megacrit.cardcrawl.cards.CardGroup
 import com.megacrit.cardcrawl.cards.CardQueueItem
+import com.megacrit.cardcrawl.cards.DamageInfo
 import com.megacrit.cardcrawl.core.AbstractCreature
 import com.megacrit.cardcrawl.core.Settings
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon
@@ -48,6 +52,39 @@ fun addToTop(vararg action: AbstractGameAction = arrayOf(), cb: () -> Unit = {})
     a.forEach {
         AbstractDungeon.actionManager.addToTop(it)
     }
+}
+
+fun dealDamage(
+    p: AbstractCreature?,
+    m: AbstractCreature?,
+    damage: Int,
+    damageInfo: DamageInfo = DamageInfo(
+        p ?: AbstractDungeon.player, damage, DamageInfo.DamageType.NORMAL,
+    ),
+    damageEffect: AttackEffect = AttackEffect.SLASH_DIAGONAL,
+    vfx: (target: AbstractCreature) -> Unit = {}
+) {
+    addToBot {
+        val target = m ?: getRandomMonster()
+        target?.let {
+            AbstractDungeon.actionManager.addToTop(
+                DamageAction(
+                    it,
+                    damageInfo,
+                    damageEffect
+                )
+            )
+            vfx(it)
+        }
+    }
+}
+
+fun gainBlock(c: AbstractCreature? = AbstractDungeon.player, b: Int) {
+    AbstractDungeon.actionManager.addToTop(GainBlockAction(c, b))
+}
+
+fun getRandomMonster(): AbstractMonster? {
+    return AbstractDungeon.getMonsters().getRandomMonster(true)
 }
 
 fun drawCard(number: Int) {

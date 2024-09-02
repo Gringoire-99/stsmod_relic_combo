@@ -23,6 +23,7 @@ class AncientCreation : AbstractRelicCombo(
         power: AbstractPower?
     ): Boolean {
         if (target is AbstractPlayer && source is AbstractMonster && power is AbstractPower && power.type == AbstractPower.PowerType.DEBUFF) {
+            showText()
             addToBot(
                 ApplyPowerAction(
                     AbstractDungeon.player,
@@ -30,6 +31,7 @@ class AncientCreation : AbstractRelicCombo(
                     StrengthPower(AbstractDungeon.player, max(1, power.amount)), max(1, power.amount)
                 )
             )
+            showText()
             return false
         }
         return true

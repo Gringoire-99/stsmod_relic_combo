@@ -24,6 +24,10 @@ class Dispel : AbstractRelicCombo(
     )
 ) {
     var isUsed: Boolean = false
+    override fun onBattleStartCleanup(combo: HashSet<String>) {
+        isUsed = false
+    }
+
     override fun onStartOfTurn(combo: HashSet<String>) {
         isUsed = false
     }
@@ -43,6 +47,7 @@ class Dispel : AbstractRelicCombo(
                     LoseStrengthPower(AbstractDungeon.player, 1)
                 )
             )
+            showText()
         }
     }
 
@@ -50,6 +55,7 @@ class Dispel : AbstractRelicCombo(
         if (!isUsed && c.type == AbstractCard.CardType.CURSE) {
             addToBot(GainEnergyAction(1))
             isUsed = true
+            showText()
         }
     }
 }

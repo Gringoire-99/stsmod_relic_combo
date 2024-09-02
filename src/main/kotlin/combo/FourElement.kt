@@ -2,10 +2,10 @@ package combo
 
 import com.badlogic.gdx.graphics.Color
 import com.megacrit.cardcrawl.actions.common.GainEnergyAction
+import com.megacrit.cardcrawl.actions.common.HealAction
 import com.megacrit.cardcrawl.core.CardCrawlGame
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon
 import com.megacrit.cardcrawl.relics.*
-import com.megacrit.cardcrawl.stances.DivinityStance
 import com.megacrit.cardcrawl.vfx.BorderFlashEffect
 import com.megacrit.cardcrawl.vfx.stance.StanceChangeParticleGenerator
 import utils.addToTop
@@ -27,6 +27,7 @@ class FourElement : AbstractRelicCombo(
     ), numberToActive = 4
 ) {
     override fun onBattleStart(combo: HashSet<String>) {
+        showText()
         CardCrawlGame.sound.play("STANCE_ENTER_DIVINITY")
         AbstractDungeon.effectsQueue.add(BorderFlashEffect(Color.GOLD, true))
         AbstractDungeon.effectsQueue.add(
@@ -37,7 +38,7 @@ class FourElement : AbstractRelicCombo(
             )
         )
         val amount = AbstractDungeon.player.masterDeck.group.count { it.isInnate }
-        addToTop {
+        addToTop(HealAction(AbstractDungeon.player, AbstractDungeon.player, 10)) {
             getAllGroup().forEach {
                 it.group.forEach {
                     if (it.canUpgrade()) {

@@ -10,6 +10,7 @@ class Plain :
         hashSetOf(OddlySmoothStone.ID, Vajra.ID, TinyHouse.ID, Circlet.ID, WarPaint.ID, Whetstone.ID)
     ) {
     override fun onBattleStart(combo: HashSet<String>) {
+        showText()
         addToTop {
             getAllGroup().forEach {
                 it.group.forEach { c ->

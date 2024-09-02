@@ -2,6 +2,7 @@ package combo
 
 import com.megacrit.cardcrawl.relics.*
 import utils.drawCard
+import utils.isInCombat
 import utils.makeId
 import kotlin.math.max
 import kotlin.math.min
@@ -23,6 +24,9 @@ class Alchemy : AbstractRelicCombo(
     }
 
     override fun onAfterUsePotion(combo: HashSet<String>) {
-        drawCard(max(0, combo.size - numberToActive))
+        if (isInCombat()) {
+            drawCard(max(0, combo.size - numberToActive))
+            showText()
+        }
     }
 }

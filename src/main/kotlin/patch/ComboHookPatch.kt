@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx
 import com.evacipated.cardcrawl.modthespire.lib.*
 import com.megacrit.cardcrawl.actions.GameActionManager
 import com.megacrit.cardcrawl.actions.common.ApplyPowerAction
+import com.megacrit.cardcrawl.actions.utility.ScryAction
 import com.megacrit.cardcrawl.actions.watcher.ChangeStanceAction
 import com.megacrit.cardcrawl.cards.AbstractCard
 import com.megacrit.cardcrawl.cards.CardGroup
@@ -11,10 +12,16 @@ import com.megacrit.cardcrawl.cards.DamageInfo
 import com.megacrit.cardcrawl.characters.AbstractPlayer
 import com.megacrit.cardcrawl.core.AbstractCreature
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon
+import com.megacrit.cardcrawl.helpers.EventHelper
 import com.megacrit.cardcrawl.monsters.AbstractMonster
 import com.megacrit.cardcrawl.powers.AbstractPower
+import com.megacrit.cardcrawl.random.Random
+import com.megacrit.cardcrawl.rewards.chests.AbstractChest
 import com.megacrit.cardcrawl.rooms.AbstractRoom
+import com.megacrit.cardcrawl.rooms.CampfireUI
+import com.megacrit.cardcrawl.saveAndContinue.SaveFile
 import com.megacrit.cardcrawl.stances.AbstractStance
+import com.megacrit.cardcrawl.ui.campfire.AbstractCampfireOption
 import com.megacrit.cardcrawl.ui.panels.PotionPopUp
 import com.megacrit.cardcrawl.vfx.campfire.CampfireSleepEffect
 import combo.AbstractRelicCombo
@@ -33,6 +40,7 @@ class ComboHookPatch {
                 logger.info("============ Battle Start ===========")
                 AbstractRelicCombo.currentComboSet.forEach { (k, v) ->
                     if (k.isActive(v)) {
+                        k.onBattleStartCleanup(v)
                         k.onBattleStart(v)
                     }
                 }
@@ -170,7 +178,7 @@ class ComboHookPatch {
         companion object {
             @JvmStatic
             @SpirePrefixPatch
-            fun prefix(@ByRef amount: IntArray) {
+            fun insert(@ByRef amount: IntArray) {
                 AbstractRelicCombo.currentComboSet.forEach { (k, v) ->
                     if (k.isActive(v)) {
                         k.onGainGold(amount, v)
@@ -325,6 +333,127 @@ class ComboHookPatch {
                 AbstractRelicCombo.currentComboSet.forEach { (k, v) ->
                     if (k.isActive(v)) {
                         k.onUseCard(c, monster, energyOnUse, v)
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * 打开箱子后触发
+     */
+    @SpirePatch2(clz = AbstractChest::class, method = "open")
+    internal class openChest {
+        companion object {
+            @JvmStatic
+            @SpireInsertPatch(rloc = 4)
+            fun insert(__instance: AbstractChest?) {
+                __instance?.apply {
+                    AbstractRelicCombo.currentComboSet.forEach { (k, v) ->
+                        if (k.isActive(v)) {
+                            k.onOpenChest(__instance, v)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * 预知时触发
+     */
+    @SpirePatch2(clz = ScryAction::class, method = "update")
+    internal class onScry {
+        companion object {
+            @JvmStatic
+            @SpireInsertPatch(rloc = 9)
+            fun insert(@ByRef ___amount: IntArray) {
+                AbstractRelicCombo.currentComboSet.forEach { (k, v) ->
+                    if (k.isActive(v)) {
+                        k.onScry(___amount, v)
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * 移动到下个房间触发
+     */
+    @SpirePatch2(clz = AbstractDungeon::class, method = "nextRoomTransition", paramtypez = [SaveFile::class])
+    internal class nextRoomTransition {
+        companion object {
+            @JvmStatic
+            @SpireInsertPatch(rloc = 156)
+            fun insert() {
+                AbstractRelicCombo.currentComboSet.forEach { (k, v) ->
+                    if (k.isActive(v)) {
+                        k.onNextRoom(v)
+                    }
+                }
+            }
+        }
+    }
+
+    @SpirePatch2(clz = CampfireUI::class, method = "initializeButtons")
+    internal class initializeButtons {
+        companion object {
+            @JvmStatic
+            @SpirePostfixPatch
+            fun insert(___buttons: ArrayList<AbstractCampfireOption>?) {
+                ___buttons?.apply {
+                    AbstractRelicCombo.currentComboSet.forEach { (k, v) ->
+                        if (k.isActive(v)) {
+                            k.onInitCampfireUI(this, v)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+//    @SpirePatch2(clz = CampfireUI::class, method = "updateTouchscreen")
+//    internal class updateTouchscreen {
+//        companion object {
+//            @JvmStatic
+//            @SpireInsertPatch(rloc = 13)
+//            fun insert() {
+//                AbstractRelicCombo.currentComboSet.forEach { (k, v) ->
+//                    if (k.isActive(v)) {
+//                        k.onUseCampfireOption(v)
+//                    }
+//                }
+//            }
+//        }
+//    }
+
+    /**
+     *  随机事件时触发
+     */
+    @SpirePatch2(clz = EventHelper::class, method = "roll", paramtypez = [Random::class])
+    internal class onRollEvent {
+        companion object {
+            @JvmStatic
+            @SpireInsertPatch(
+                rloc = 43,
+                localvars = ["forceChest", "eliteSize", "monsterSize", "shopSize", "treasureSize"]
+            )
+            fun insert(
+                @ByRef forceChest: BooleanArray,
+                @ByRef eliteSize: IntArray,
+                @ByRef monsterSize: IntArray,
+                @ByRef shopSize: IntArray,
+                @ByRef treasureSize: IntArray
+            ) {
+                AbstractRelicCombo.currentComboSet.forEach { (k, v) ->
+                    if (k.isActive(v)) {
+                        k.onRollEvent(
+                            forceChest = forceChest,
+                            eliteSize = eliteSize,
+                            monsterSize = monsterSize,
+                            shopSize = shopSize,
+                            treasureSize = treasureSize, v
+                        )
                     }
                 }
             }

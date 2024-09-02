@@ -28,6 +28,7 @@ class CounterAttack : AbstractRelicCombo(
                 ThornsPower(AbstractDungeon.player, combo.size)
             )
         )
+        showText()
     }
 
     override fun onMonsterTakingDamageStart(info: DamageInfo, damageAmount: IntArray, combo: HashSet<String>) {

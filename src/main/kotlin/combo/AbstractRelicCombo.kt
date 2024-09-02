@@ -1,5 +1,6 @@
 package combo
 
+import com.badlogic.gdx.graphics.Color
 import com.megacrit.cardcrawl.cards.AbstractCard
 import com.megacrit.cardcrawl.cards.DamageInfo
 import com.megacrit.cardcrawl.core.AbstractCreature
@@ -9,9 +10,18 @@ import com.megacrit.cardcrawl.helpers.PowerTip
 import com.megacrit.cardcrawl.helpers.RelicLibrary
 import com.megacrit.cardcrawl.monsters.AbstractMonster
 import com.megacrit.cardcrawl.powers.AbstractPower
+import com.megacrit.cardcrawl.relics.AbstractRelic
+import com.megacrit.cardcrawl.rewards.chests.AbstractChest
 import com.megacrit.cardcrawl.rooms.AbstractRoom
 import com.megacrit.cardcrawl.stances.AbstractStance
+import com.megacrit.cardcrawl.ui.campfire.AbstractCampfireOption
+import com.megacrit.cardcrawl.vfx.TextAboveCreatureEffect
 
+/**
+ *  TODO 修改以支持持久化 (目前一次性触发的效果会因为sl导致多次触发)
+ *
+ *  TODO:FIX !WARN! 目前存在的问题：获取遗物/删除遗物会使combo重新计算，在钩子里获取遗物/删除遗物会触发并发修改的异常。
+ */
 abstract class AbstractRelicCombo(
     val id: String,
     val combo: HashSet<String> = hashSetOf(),
@@ -20,12 +30,14 @@ abstract class AbstractRelicCombo(
     val title: String
     val desc: String
     private var tip: PowerTip
+    val flavorText: String?
     private var isTriggeredActiveEffect: Boolean = false
 
     init {
         val relicStrings = CardCrawlGame.languagePack.getRelicStrings(id)
         title = relicStrings.NAME
         desc = relicStrings.DESCRIPTIONS.joinToString(" NL ") { it.replace(" !N! ", numberToActive.toString()) }
+        flavorText = relicStrings.FLAVOR
         tip = PowerTip(title, desc)
         combo.removeIf { !RelicLibrary.isARelic(it) }
         updateTip()
@@ -48,11 +60,12 @@ abstract class AbstractRelicCombo(
         return combo.contains(relicId)
     }
 
-    open fun onActive(combo: HashSet<String>) {
+
+    open fun onBattleStart(combo: HashSet<String>) {
 
     }
 
-    open fun onBattleStart(combo: HashSet<String>) {
+    open fun onBattleStartCleanup(combo: HashSet<String>) {
 
     }
 
@@ -60,6 +73,7 @@ abstract class AbstractRelicCombo(
 
     }
 
+    open fun onObtainRelic(r: AbstractRelic, combo: HashSet<String>) {}
     open fun onAfterUsePotion(combo: HashSet<String>) {
 
     }
@@ -89,16 +103,9 @@ abstract class AbstractRelicCombo(
      * 判断是否能触发组合效果，返回为真时才能触发
      */
     open fun isActive(combo: HashSet<String>): Boolean {
-        return combo.size >= numberToActive
+        return combo.size >= numberToActive && AbstractDungeon.currMapNode != null
     }
 
-    open fun afterTriggerActive() {
-        isTriggeredActiveEffect = true
-    }
-
-    open fun canTriggerActive(combo: HashSet<String>): Boolean {
-        return !isTriggeredActiveEffect && isActive(combo)
-    }
 
     open fun onEndBattle(room: AbstractRoom, combo: HashSet<String>) {
 
@@ -127,11 +134,50 @@ abstract class AbstractRelicCombo(
 
     }
 
+    open fun onOpenChest(c: AbstractChest, combo: HashSet<String>) {
+
+    }
+
+    open fun onRollEvent(
+        forceChest: BooleanArray,
+        eliteSize: IntArray,
+        monsterSize: IntArray,
+        shopSize: IntArray,
+        treasureSize: IntArray, combo: HashSet<String>
+    ) {
+
+    }
+
+    open fun onScry(amount: IntArray, combo: HashSet<String>) {
+
+    }
+
     open fun getTip(idToHighlight: HashSet<String> = hashSetOf()): PowerTip {
         updateTip(idToHighlight)
         return tip
     }
 
+    open fun onNextRoom(combo: HashSet<String>) {}
+    open fun onInitCampfireUI(buttons: ArrayList<AbstractCampfireOption>, combo: HashSet<String>) {
+
+    }
+
+    open fun onUseCampfireOption(combo: HashSet<String>) {}
+
+    /**
+     * 在战斗外使用有可能触发并发修改的异常，不清楚是什么原因导致的
+     */
+    open fun showText() {
+        val msg = if (flavorText == null || flavorText == "") title else flavorText
+        val textAboveCreatureEffect = TextAboveCreatureEffect(
+            AbstractDungeon.player.hb.cX - AbstractDungeon.player.animX,
+            AbstractDungeon.player.hb.cY + AbstractDungeon.player.hb.height / 2.0f,
+            msg, Color.GOLD.cpy()
+        )
+        AbstractDungeon.topLevelEffects.add(
+            textAboveCreatureEffect
+        )
+    }
 
     private fun updateTip(idToHighlight: HashSet<String> = hashSetOf()) {
         val s = combo.joinToString(separator = " NL ") {
@@ -181,10 +227,7 @@ abstract class AbstractRelicCombo(
                                 val k = find?.key ?: s.javaClass.newInstance()
                                 val v = find?.value ?: hashSetOf()
                                 v.add(r.relicId)
-                                if (k.canTriggerActive(v)) {
-                                    k.onActive(v)
-                                    k.afterTriggerActive()
-                                }
+
                                 currentComboSet[k] = v
                             }
                         }

@@ -1,5 +1,7 @@
 package combo
 
+import action.EmptyEffect
+import com.megacrit.cardcrawl.dungeons.AbstractDungeon
 import com.megacrit.cardcrawl.relics.GremlinMask
 import com.megacrit.cardcrawl.relics.MarkOfTheBloom
 import com.megacrit.cardcrawl.relics.NlothsMask
@@ -11,4 +13,10 @@ class OhNo : AbstractRelicCombo(
     hashSetOf(NlothsMask.ID, MarkOfTheBloom.ID, SpiritPoop.ID, GremlinMask.ID),
     numberToActive = 2
 ) {
+    override fun onBattleStart(combo: HashSet<String>) {
+        AbstractDungeon.effectList.add(EmptyEffect {
+            combo.forEach { c -> AbstractDungeon.player.relics.removeIf { it.relicId == c } }
+        })
+        showText()
+    }
 }

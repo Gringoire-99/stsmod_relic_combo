@@ -13,6 +13,7 @@ class DeepMeditation : AbstractRelicCombo(
     override fun onChangeStance(oldStance: AbstractStance?, newStance: AbstractStance?, combo: HashSet<String>) {
         if (newStance is CalmStance || oldStance is CalmStance) {
             drawCard(1)
+            showText()
         }
     }
 }

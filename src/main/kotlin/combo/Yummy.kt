@@ -6,7 +6,6 @@ import com.megacrit.cardcrawl.powers.DexterityPower
 import com.megacrit.cardcrawl.powers.StrengthPower
 import com.megacrit.cardcrawl.relics.*
 import utils.addToBot
-import utils.addToTop
 import utils.makeId
 
 class Yummy() : AbstractRelicCombo(
@@ -15,25 +14,21 @@ class Yummy() : AbstractRelicCombo(
     ), numberToActive = 2
 ) {
     override fun onBattleStart(combo: HashSet<String>) {
+        showText()
         val s = combo.size / 2
         val d = combo.size - s
-        addToBot {
-            addToTop(
-                ApplyPowerAction(
-                    AbstractDungeon.player,
-                    AbstractDungeon.player,
-                    StrengthPower(AbstractDungeon.player, s),
-                    s
-                )
+        addToBot(
+            ApplyPowerAction(
+                AbstractDungeon.player,
+                AbstractDungeon.player,
+                StrengthPower(AbstractDungeon.player, s),
+                s
+            ), ApplyPowerAction(
+                AbstractDungeon.player,
+                AbstractDungeon.player,
+                DexterityPower(AbstractDungeon.player, d),
+                s
             )
-            addToTop(
-                ApplyPowerAction(
-                    AbstractDungeon.player,
-                    AbstractDungeon.player,
-                    DexterityPower(AbstractDungeon.player, d),
-                    s
-                )
-            )
-        }
+        )
     }
 }

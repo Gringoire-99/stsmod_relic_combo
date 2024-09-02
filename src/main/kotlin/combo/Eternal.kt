@@ -6,7 +6,6 @@ import com.megacrit.cardcrawl.powers.DexterityPower
 import com.megacrit.cardcrawl.powers.StrengthPower
 import com.megacrit.cardcrawl.relics.*
 import utils.addToTop
-import utils.logger
 import utils.makeId
 import kotlin.math.max
 
@@ -25,8 +24,8 @@ class Eternal :
     ) {
 
     private var counter = 0
+    private val numberToTrigger = 7
     override fun onBattleStart(combo: HashSet<String>) {
-        counter = 0
         addToTop(
             ApplyPowerAction(
                 AbstractDungeon.player,
@@ -39,11 +38,16 @@ class Eternal :
                 DexterityPower(AbstractDungeon.player, 1)
             )
         )
+        showText()
+    }
+
+    override fun onBattleStartCleanup(combo: HashSet<String>) {
+        counter = 0
     }
 
     override fun onStartOfTurn(combo: HashSet<String>) {
         counter += 1
-        val require = max(1, 7 - max(0, combo.size - numberToActive))
+        val require = max(1, numberToTrigger - combo.size)
         if (counter >= require) {
             counter = 0
             addToTop {
@@ -57,6 +61,7 @@ class Eternal :
                     }
                 }
             }
+            showText()
         }
     }
 }

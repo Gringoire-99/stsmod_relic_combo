@@ -5,6 +5,7 @@ import com.evacipated.cardcrawl.modthespire.lib.SpirePostfixPatch
 import com.megacrit.cardcrawl.characters.AbstractPlayer
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon
 import com.megacrit.cardcrawl.relics.AbstractRelic
+import com.megacrit.cardcrawl.rooms.AbstractRoom
 import combo.AbstractRelicCombo
 
 class UpdateRelicComboPatch {
@@ -13,19 +14,34 @@ class UpdateRelicComboPatch {
         companion object {
             @JvmStatic
             @SpirePostfixPatch
-            fun post() {
+            fun post(__instance: AbstractRelic?) {
                 AbstractRelicCombo.updateCombo()
+                __instance?.apply {
+                    AbstractRelicCombo.currentComboSet.forEach { (k, v) ->
+                        if (k.isActive(v)) {
+                            k.onObtainRelic(this, v)
+                        }
+                    }
+                }
             }
         }
     }
+
 
     @SpirePatch2(clz = AbstractRelic::class, method = "instantObtain", paramtypez = [])
     internal class instantObtain {
         companion object {
             @JvmStatic
             @SpirePostfixPatch
-            fun post() {
+            fun post(__instance: AbstractRelic?) {
                 AbstractRelicCombo.updateCombo()
+                __instance?.apply {
+                    AbstractRelicCombo.currentComboSet.forEach { (k, v) ->
+                        if (k.isActive(v)) {
+                            k.onObtainRelic(this, v)
+                        }
+                    }
+                }
             }
         }
     }
@@ -39,8 +55,15 @@ class UpdateRelicComboPatch {
         companion object {
             @JvmStatic
             @SpirePostfixPatch
-            fun post() {
+            fun post(__instance: AbstractRelic?) {
                 AbstractRelicCombo.updateCombo()
+                __instance?.apply {
+                    AbstractRelicCombo.currentComboSet.forEach { (k, v) ->
+                        if (k.isActive(v)) {
+                            k.onObtainRelic(this, v)
+                        }
+                    }
+                }
             }
         }
     }
@@ -73,6 +96,7 @@ class UpdateRelicComboPatch {
             @JvmStatic
             @SpirePostfixPatch
             fun post() {
+                AbstractRelicCombo.currentComboSet.clear()
                 AbstractRelicCombo.updateCombo()
             }
         }

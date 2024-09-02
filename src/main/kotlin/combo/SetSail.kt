@@ -13,6 +13,7 @@ class SetSail :
         numberToActive = 2
     ) {
     override fun onBattleStart(combo: HashSet<String>) {
+        showText()
         drawCard(combo.size)
     }
 }

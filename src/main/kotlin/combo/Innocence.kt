@@ -25,12 +25,14 @@ class Innocence : AbstractRelicCombo(
 ) {
     override fun onStartOfTurn(combo: HashSet<String>) {
         if (combo.size == this.combo.size) {
+            showText()
             addToTop(ChangeStanceAction(DivinityStance.STANCE_ID))
         }
     }
 
     override fun onPlayerTakingDamageFinal(damage: IntArray, combo: HashSet<String>) {
         if (!isInCombat() || combo.size == this.combo.size) {
+            showText()
             damage[0] = max(0, damage[0] - combo.size * 3)
         }
     }
