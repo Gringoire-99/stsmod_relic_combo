@@ -13,13 +13,18 @@ import com.megacrit.cardcrawl.characters.AbstractPlayer
 import com.megacrit.cardcrawl.core.AbstractCreature
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon
 import com.megacrit.cardcrawl.helpers.EventHelper
+import com.megacrit.cardcrawl.helpers.RelicLibrary
 import com.megacrit.cardcrawl.monsters.AbstractMonster
+import com.megacrit.cardcrawl.potions.AbstractPotion
 import com.megacrit.cardcrawl.powers.AbstractPower
 import com.megacrit.cardcrawl.random.Random
+import com.megacrit.cardcrawl.relics.AbstractRelic
+import com.megacrit.cardcrawl.relics.AbstractRelic.RelicTier
 import com.megacrit.cardcrawl.rewards.chests.AbstractChest
 import com.megacrit.cardcrawl.rooms.AbstractRoom
 import com.megacrit.cardcrawl.rooms.CampfireUI
 import com.megacrit.cardcrawl.saveAndContinue.SaveFile
+import com.megacrit.cardcrawl.shop.ShopScreen
 import com.megacrit.cardcrawl.stances.AbstractStance
 import com.megacrit.cardcrawl.ui.campfire.AbstractCampfireOption
 import com.megacrit.cardcrawl.ui.panels.PotionPopUp
@@ -74,10 +79,12 @@ class ComboHookPatch {
         companion object {
             @JvmStatic
             @SpireInsertPatch(rloc = 34)
-            fun insert() {
-                AbstractRelicCombo.currentComboSet.forEach { (k, v) ->
-                    if (k.isActive(v)) {
-                        k.onAfterUsePotion(v)
+            fun insert(___potion: AbstractPotion?, ___hoveredMonster: AbstractMonster?) {
+                ___potion?.apply {
+                    AbstractRelicCombo.currentComboSet.forEach { (k, v) ->
+                        if (k.isActive(v)) {
+                            k.onAfterUsePotion(this, ___hoveredMonster, v)
+                        }
                     }
                 }
             }
@@ -92,10 +99,12 @@ class ComboHookPatch {
         companion object {
             @JvmStatic
             @SpireInsertPatch(rloc = 23)
-            fun insert() {
-                AbstractRelicCombo.currentComboSet.forEach { (k, v) ->
-                    if (k.isActive(v)) {
-                        k.onAfterUsePotion(v)
+            fun insert(___potion: AbstractPotion?, ___hoveredMonster: AbstractMonster?) {
+                ___potion?.apply {
+                    AbstractRelicCombo.currentComboSet.forEach { (k, v) ->
+                        if (k.isActive(v)) {
+                            k.onAfterUsePotion(this, ___hoveredMonster, v)
+                        }
                     }
                 }
             }
@@ -117,15 +126,22 @@ class ComboHookPatch {
                 @ByRef ___startingDuration: FloatArray,
                 @ByRef ___duration: FloatArray
             ) {
+                var shouldContinue = false
+
                 AbstractRelicCombo.currentComboSet.forEach { (k, v) ->
                     if (k.isActive(v) && ___duration[0] == ___startingDuration[0]) {
-                        val shouldContinue =
-                            k.onApplyPower(v, target = ___target, source = ___source, power = ___powerToApply)
-                        if (!shouldContinue) {
-                            ___duration[0] = ___duration[0] - Gdx.graphics.deltaTime
-                            SpireReturn.Return()
-                        }
+                        shouldContinue = shouldContinue || !k.onApplyPower(
+                            v,
+                            target = ___target,
+                            source = ___source,
+                            power = ___powerToApply
+                        )
+
                     }
+                }
+                if (shouldContinue) {
+                    ___duration[0] = ___duration[0] - Gdx.graphics.deltaTime
+                    SpireReturn.Return()
                 }
             }
         }
@@ -412,15 +428,17 @@ class ComboHookPatch {
         }
     }
 
-//    @SpirePatch2(clz = CampfireUI::class, method = "updateTouchscreen")
-//    internal class updateTouchscreen {
+//    @SpirePatch2(clz = AbstractCampfireOption::class, method = "update")
+//    internal class onOptionSelected {
 //        companion object {
 //            @JvmStatic
-//            @SpireInsertPatch(rloc = 13)
-//            fun insert() {
-//                AbstractRelicCombo.currentComboSet.forEach { (k, v) ->
-//                    if (k.isActive(v)) {
-//                        k.onUseCampfireOption(v)
+//            @SpireInsertPatch(rloc = 26)
+//            fun insert(__instance: AbstractCampfireOption?) {
+//                __instance?.apply {
+//                    AbstractRelicCombo.currentComboSet.forEach { (k, v) ->
+//                        if (k.isActive(v)) {
+//                            k.onUseCampfireOption(__instance, v)
+//                        }
 //                    }
 //                }
 //            }
@@ -454,6 +472,101 @@ class ComboHookPatch {
                             shopSize = shopSize,
                             treasureSize = treasureSize, v
                         )
+                    }
+                }
+            }
+        }
+    }
+
+    @SpirePatch2(clz = AbstractDungeon::class, method = "returnRandomRelic")
+    internal class beforeReturnRandomRelic {
+        companion object {
+            @JvmStatic
+            @SpirePrefixPatch
+            fun pre(
+                tier: RelicTier?
+            ): SpireReturn<AbstractRelic?> {
+                var t = tier
+                tier?.apply {
+                    AbstractRelicCombo.currentComboSet.forEach { (k, v) ->
+                        if (k.isActive(v)) {
+                            t = k.beforeReturnRandomRelic(tier, v) ?: t
+                        }
+                    }
+                }
+                return SpireReturn.Return(RelicLibrary.getRelic(AbstractDungeon.returnRandomRelicKey(t)).makeCopy())
+            }
+        }
+    }
+
+    @SpirePatch2(clz = ShopScreen::class, method = "init")
+    internal class afterShopInit {
+        companion object {
+            @JvmStatic
+            @SpirePostfixPatch
+            fun post(
+                __instance: ShopScreen?,
+                coloredCards: ArrayList<AbstractCard>?,
+                colorlessCards: ArrayList<AbstractCard>?,
+            ) {
+                __instance?.apply {
+                    AbstractRelicCombo.currentComboSet.forEach { (k, v) ->
+                        if (k.isActive(v)) {
+                            k.onAfterShopInit(this, coloredCards = coloredCards, colorlessCards = colorlessCards, v)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @SpirePatch2(clz = ShopScreen::class, method = "init")
+    internal class beforeShopInit {
+        companion object {
+            @JvmStatic
+            @SpirePrefixPatch
+            fun pre(
+                __instance: ShopScreen?,
+                coloredCards: ArrayList<AbstractCard>?,
+                colorlessCards: ArrayList<AbstractCard>?,
+            ) {
+                __instance?.apply {
+                    AbstractRelicCombo.currentComboSet.forEach { (k, v) ->
+                        if (k.isActive(v)) {
+                            k.onBeforeShopInit(this, coloredCards = coloredCards, colorlessCards = colorlessCards, v)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @SpirePatch2(clz = ShopScreen::class, method = "purgeCard")
+    internal class beforeShopPurgeCard {
+        companion object {
+            @JvmStatic
+            @SpirePrefixPatch
+            fun pre(
+            ) {
+                AbstractRelicCombo.currentComboSet.forEach { (k, v) ->
+                    if (k.isActive(v)) {
+                        k.onBeforeShopPurge( v)
+                    }
+                }
+            }
+        }
+    }
+
+    @SpirePatch2(clz = ShopScreen::class, method = "purgeCard")
+    internal class afterShopPurgeCard {
+        companion object {
+            @JvmStatic
+            @SpirePostfixPatch
+            fun post(
+            ) {
+                AbstractRelicCombo.currentComboSet.forEach { (k, v) ->
+                    if (k.isActive(v)) {
+                        k.onAfterShopPurge(v)
                     }
                 }
             }

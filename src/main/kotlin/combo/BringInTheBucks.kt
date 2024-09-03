@@ -4,7 +4,6 @@ import com.megacrit.cardcrawl.dungeons.AbstractDungeon
 import com.megacrit.cardcrawl.relics.*
 import com.megacrit.cardcrawl.rewards.RewardItem
 import com.megacrit.cardcrawl.rooms.AbstractRoom
-import utils.addToBot
 import utils.addToTop
 import utils.makeId
 import kotlin.math.ceil
@@ -29,7 +28,7 @@ class BringInTheBucks : AbstractRelicCombo(
         repeat(max(0, combo.size - numberToActive)) {
             AbstractDungeon.player.increaseMaxHp(1, true)
         }
-         showText()
+        showText()
     }
 }
 

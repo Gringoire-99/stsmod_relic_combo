@@ -1,6 +1,6 @@
 package utils
 
-import Core
+import RelicComboCore
 import action.EmptyAction
 import com.megacrit.cardcrawl.actions.AbstractGameAction
 import com.megacrit.cardcrawl.actions.AbstractGameAction.AttackEffect
@@ -20,7 +20,7 @@ import org.apache.logging.log4j.Logger
 import kotlin.reflect.KClass
 
 const val modId = "RelicCombo"
-val logger: Logger = LogManager.getLogger(Core.Companion::class.java.name)
+val logger: Logger = LogManager.getLogger(RelicComboCore.Companion::class.java.name)
 fun log(msg: String = "", vararg obj: Any?) {
     val joinToString = obj.joinToString(" + ") { it.toString() }
     logger.info("================${msg} : $joinToString =================")
@@ -150,4 +150,8 @@ fun addToQueue(
         )
     }
     cb(tmp)
+}
+
+fun AbstractMonster.isAlive(): Boolean {
+    return !this.halfDead && !this.isDying && !this.isEscaping
 }

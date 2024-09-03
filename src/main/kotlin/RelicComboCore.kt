@@ -1,5 +1,6 @@
 import basemod.BaseMod
-import basemod.interfaces.*
+import basemod.interfaces.EditStringsSubscriber
+import basemod.interfaces.PostInitializeSubscriber
 import com.evacipated.cardcrawl.modthespire.lib.SpireInitializer
 import com.megacrit.cardcrawl.core.Settings
 import com.megacrit.cardcrawl.localization.RelicStrings
@@ -8,21 +9,17 @@ import utils.modId
 
 
 @SpireInitializer
-class Core : EditCardsSubscriber, EditStringsSubscriber, EditCharactersSubscriber,
-    EditRelicsSubscriber, PostInitializeSubscriber {
+class RelicComboCore : EditStringsSubscriber,
+    PostInitializeSubscriber {
     init {
         BaseMod.subscribe(this)
-
     }
 
     companion object {
         @JvmStatic
         fun initialize() {
-            Core()
+            RelicComboCore()
         }
-    }
-
-    override fun receiveEditCards() {
     }
 
 
@@ -42,14 +39,6 @@ class Core : EditCardsSubscriber, EditStringsSubscriber, EditCharactersSubscribe
         }
     }
 
-    override fun receiveEditCharacters() {
-
-    }
-
-
-    override fun receiveEditRelics() {
-
-    }
 
     override fun receivePostInitialize() {
         AbstractRelicCombo.registerComboSet(
@@ -82,7 +71,7 @@ class Core : EditCardsSubscriber, EditStringsSubscriber, EditCharactersSubscribe
             TheThreeOfUs(),
             ToxinPurification(),
             VIP(),
-            StayUp(),
+//            StayUp(),
             Yummy()
         )
 

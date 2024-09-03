@@ -39,12 +39,14 @@ class ChallengeMe :
     override fun onMonsterTakingDamageStart(info: DamageInfo, damageAmount: IntArray, combo: HashSet<String>) {
         if (active && info.owner is AbstractPlayer) {
             damageAmount[0] += max(0, ceil(damageAmount[0] * 0.25).toInt())
+            showText()
         }
     }
 
     override fun onPlayerTakingDamageFinal(damage: IntArray, combo: HashSet<String>) {
         if (active && isInCombat()) {
             damage[0] = max(0, damage[0] - ceil(damage[0] * 0.25).toInt())
+            showText()
         }
     }
 }

@@ -1,6 +1,8 @@
 package combo
 
+import basemod.BaseMod
 import com.megacrit.cardcrawl.actions.common.GainEnergyAction
+import com.megacrit.cardcrawl.actions.unique.ExpertiseAction
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon
 import com.megacrit.cardcrawl.relics.*
 import utils.*
@@ -29,7 +31,7 @@ class LessIsMore : AbstractRelicCombo(
         val sumOf = getAllGroup().sumOf { it.group.size }
         if (sumOf <= count) {
             showText()
-            addToTop(GainEnergyAction(1))
+            addToTop(ExpertiseAction(AbstractDungeon.player, BaseMod.MAX_HAND_SIZE), GainEnergyAction(1))
         }
     }
 }

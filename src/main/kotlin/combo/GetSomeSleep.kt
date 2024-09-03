@@ -19,6 +19,7 @@ class GetSomeSleep : AbstractRelicCombo(
     hashSetOf(AncientTeaSet.ID, DreamCatcher.ID, RegalPillow.ID, UnceasingTop.ID)
 ) {
     override fun onRest(healAmount: IntArray, combo: HashSet<String>) {
+        showText()
         healAmount[0] = max(healAmount[0], AbstractDungeon.player.maxHealth - AbstractDungeon.player.currentHealth)
         (1 + max(0, combo.size - numberToActive)).toLog("升级次数")
         repeat(1 + max(0, combo.size - numberToActive)) {

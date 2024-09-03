@@ -34,6 +34,7 @@ class CounterAttack : AbstractRelicCombo(
     override fun onMonsterTakingDamageStart(info: DamageInfo, damageAmount: IntArray, combo: HashSet<String>) {
         if (info.type == DamageInfo.DamageType.THORNS) {
             damageAmount[0] *= 2
+            showText()
         }
     }
 }

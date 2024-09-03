@@ -10,7 +10,7 @@ import com.megacrit.cardcrawl.ui.campfire.RestOption
 import utils.makeId
 import utils.toLog
 import kotlin.math.max
-
+// TODO
 class StayUp : AbstractRelicCombo(
     StayUp::class.makeId(), hashSetOf(
         BagOfPreparation.ID, InkBottle.ID, UnceasingTop.ID, Shovel.ID, PenNib.ID,
@@ -21,7 +21,7 @@ class StayUp : AbstractRelicCombo(
     var count: Int = 1
 
     override fun onNextRoom(combo: HashSet<String>) {
-        if (AbstractDungeon.getCurrRoom() is RestRoom) {
+        if (AbstractDungeon.getCurrRoom() !is RestRoom) {
             count = 1 + max(0, combo.size - numberToActive)
         }
     }
@@ -30,13 +30,14 @@ class StayUp : AbstractRelicCombo(
         buttons.find { it is RestOption }?.usable = false
     }
 
-//    override fun onUseCampfireOption(combo: HashSet<String>) {
-//        if (count > 0) {
-//            "使用营火选项".toLog()
-//            count--
-//            AbstractDungeon.effectList.add(EmptyEffect {
-//                AbstractDungeon.getCurrRoom().phase = AbstractRoom.RoomPhase.INCOMPLETE
-//            })
-//        }
-//    }
+    override fun onUseCampfireOption(option: AbstractCampfireOption, combo: HashSet<String>){
+        if (count > 0) {
+            count--
+            val currRoom = AbstractDungeon.getCurrRoom()
+            if (currRoom is RestRoom) {
+                AbstractDungeon.effectList.add(EmptyEffect {
+                })
+            }
+        }
+    }
 }

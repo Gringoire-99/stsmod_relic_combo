@@ -1,7 +1,7 @@
 {
   "RelicCombo:Yummy": {
     "NAME": "组合：好吃的！",
-    "FLAVOR": "美味！",
+    "FLAVOR": "玉盘珍馐",
     "DESCRIPTIONS": [
       "收集 !N! 个激活",
       "战斗开始时:每收集一个提供一点力量或敏捷"
@@ -9,7 +9,7 @@
   },
   "RelicCombo:SetSail": {
     "NAME": "组合：启航！",
-    "FLAVOR": "一帆风顺",
+    "FLAVOR": "畅行无阻",
     "DESCRIPTIONS": [
       "收集 !N! 个激活",
       "战斗开始时:每收集一个多抽一张牌"
@@ -17,7 +17,7 @@
   },
   "RelicCombo:GetSomeSleep": {
     "NAME": "组合：好好睡一觉",
-    "FLAVOR": "好好睡一觉",
+    "FLAVOR": "美梦！",
     "DESCRIPTIONS": [
       "收集 !N! 个激活",
       "当你休息时，会回复所有生命值",
@@ -27,7 +27,7 @@
   },
   "RelicCombo:KungFu": {
     "NAME": "组合：功夫",
-    "FLAVOR": "疾风连击",
+    "FLAVOR": "疾风连击·天罡指穴法 NL 疾风连击·璇玑指穴法 NL 疾风连击·嫘祖剥茧式 NL 疾风连击·天劫七曜指 NL 疾风连击·漫天花雨式 NL 疾风连击·太易琉璃指 NL 疾风连击·分花拂柳式",
     "DESCRIPTIONS": [
       "收集 !N! 个激活",
       "战斗开始时:",
@@ -45,11 +45,11 @@
   },
   "RelicCombo:StayUp": {
     "NAME": "组合：熬夜",
-    "FLAVOR": "",
+    "FLAVOR": "???",
     "DESCRIPTIONS": [
       "收集 !N! 个激活",
-      "在火堆时，可以额外执行一个动作，但无法休息",
-      "每额外收集一个多行动一次"
+      "???",
+      "???"
     ]
   },
   "RelicCombo:BringInTheBucks": {
@@ -68,14 +68,14 @@
     "FLAVOR": "特别待遇",
     "DESCRIPTIONS": [
       "收集 !N! 个激活",
-      "每收集一个降低商人价格5%",
+      "每收集一个降低商人价格10%",
       "商人的移除服务不再消耗金币，移除时还会升级随机牌组里的一张牌，",
       "在商店找到的牌总是升级的"
     ]
   },
   "RelicCombo:MightFortune": {
     "NAME": "组合：异界强运",
-    "FLAVOR": "好耶！",
+    "FLAVOR": "灵运加持！",
     "DESCRIPTIONS": [
       "收集 !N! 个激活",
       "每收集一个增加在？找到宝箱与宝箱可能出现1个额外遗物的概率(15%)"
@@ -109,11 +109,11 @@
   },
   "RelicCombo:ToxinPurification": {
     "NAME": "组合：提纯毒素",
-    "FLAVOR": "毒素催化",
+    "FLAVOR": "驱血法",
     "DESCRIPTIONS": [
       "收集 !N! 个激活",
-      "一回合一次，施加的毒素翻倍",
-      "每额外收集一个每回合可多触发一次"
+      "一回合内对敌人施加三次毒素后",
+      "触发所有敌人的毒素，每一个额外收集多触发一次"
     ]
   },
   "RelicCombo:OhNo": {
@@ -168,12 +168,12 @@
       "战斗开始时:如果你的卡组里的卡牌数量小于等于10张",
       "强化你的所有卡牌1点",
       "回合开始时:如果你的卡牌数量小于等于10张",
-      "获得1 [E]"
+      "获得1 [E] ,抽满你的手牌"
     ]
   },
   "RelicCombo:Awakened": {
     "NAME": "组合：觉醒",
-    "FLAVOR": "觉醒",
+    "FLAVOR": "脱胎换骨",
     "DESCRIPTIONS": [
       "收集 !N! 个激活",
       "战斗开始时:获得1的仪式",
@@ -214,7 +214,7 @@
   },
   "RelicCombo:KnowledgeIsPower": {
     "NAME": "组合：知识就是力量",
-    "FLAVOR": "知识就是力量",
+    "FLAVOR": "化剑",
     "DESCRIPTIONS": [
       "收集 !N! 个激活",
       "攻击牌额外打出一次"
@@ -225,7 +225,8 @@
     "FLAVOR": "注定伟大！",
     "DESCRIPTIONS": [
       "收集 !N! 个激活",
-      "只会找到稀有遗物"
+      "优先找到稀有遗物",
+      "宝箱额外开出一个遗物"
     ]
   },
   "RelicCombo:ChallengeMe": {
@@ -241,16 +242,17 @@
   },
   "RelicCombo:Alchemy": {
     "NAME": "组合：炼金",
-    "FLAVOR": "强效药水",
+    "FLAVOR": "贤者圣露",
     "DESCRIPTIONS": [
       "收集 !N! 个激活",
-      "每收集一个提高药水的稀有度(5%)",
+      "每收集一个提高药水的稀有度(10%)",
+      "使用药水时额外使用一次，每额外收集一个多使用一次",
       "每额外收集一个在使用药水时抽一张牌"
     ]
   },
   "RelicCombo:CounterAttack": {
     "NAME": "组合：防守反击",
-    "FLAVOR": "全副武装",
+    "FLAVOR": "方天赦令",
     "DESCRIPTIONS": [
       "收集 !N! 个激活",
       "战斗开始时:每收集一个提供一点荆棘",
@@ -259,7 +261,7 @@
   },
   "RelicCombo:Mechanism": {
     "NAME": "组合：机关",
-    "FLAVOR": "发射暗器",
+    "FLAVOR": "幻杀飞星",
     "DESCRIPTIONS": [
       "收集 !N! 个激活",
       "回合开始时对随机敌人造成1点荆棘伤害，获得2点格挡",
@@ -269,7 +271,7 @@
   },
   "RelicCombo:StayHealthy": {
     "NAME": "组合：保持健康",
-    "FLAVOR": "身强体壮",
+    "FLAVOR": "龙筋虎骨",
     "DESCRIPTIONS": [
       "收集 !N! 个激活",
       "战斗开始时:根据你的当前生命值获得增益",
@@ -280,7 +282,7 @@
   },
   "RelicCombo:Innocence": {
     "NAME": "组合：童真",
-    "FLAVOR": "不畏奸邪",
+    "FLAVOR": "破妖秽",
     "DESCRIPTIONS": [
       "收集 !N! 个激活",
       "每收集一个减少你在战斗之外损失的生命值3点",

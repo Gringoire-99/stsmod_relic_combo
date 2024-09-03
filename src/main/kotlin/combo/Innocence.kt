@@ -3,6 +3,7 @@ package combo
 import com.megacrit.cardcrawl.actions.watcher.ChangeStanceAction
 import com.megacrit.cardcrawl.relics.*
 import com.megacrit.cardcrawl.stances.DivinityStance
+import utils.addToBot
 import utils.addToTop
 import utils.isInCombat
 import utils.makeId
@@ -26,7 +27,7 @@ class Innocence : AbstractRelicCombo(
     override fun onStartOfTurn(combo: HashSet<String>) {
         if (combo.size == this.combo.size) {
             showText()
-            addToTop(ChangeStanceAction(DivinityStance.STANCE_ID))
+            addToBot(ChangeStanceAction(DivinityStance.STANCE_ID))
         }
     }
 

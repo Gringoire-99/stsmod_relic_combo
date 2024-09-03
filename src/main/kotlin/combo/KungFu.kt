@@ -32,6 +32,7 @@ class KungFu :
     override fun onUseCard(c: AbstractCard?, monster: AbstractMonster?, energyOnUse: Int, combo: HashSet<String>) {
         if (c is PressurePoints && !c.purgeOnUse) {
             addToQueue(c, monster, random = false, purge = true)
+            showText()
         }
     }
 }

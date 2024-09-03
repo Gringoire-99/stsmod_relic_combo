@@ -9,10 +9,13 @@ import com.megacrit.cardcrawl.dungeons.AbstractDungeon
 import com.megacrit.cardcrawl.helpers.PowerTip
 import com.megacrit.cardcrawl.helpers.RelicLibrary
 import com.megacrit.cardcrawl.monsters.AbstractMonster
+import com.megacrit.cardcrawl.potions.AbstractPotion
 import com.megacrit.cardcrawl.powers.AbstractPower
 import com.megacrit.cardcrawl.relics.AbstractRelic
+import com.megacrit.cardcrawl.relics.AbstractRelic.RelicTier
 import com.megacrit.cardcrawl.rewards.chests.AbstractChest
 import com.megacrit.cardcrawl.rooms.AbstractRoom
+import com.megacrit.cardcrawl.shop.ShopScreen
 import com.megacrit.cardcrawl.stances.AbstractStance
 import com.megacrit.cardcrawl.ui.campfire.AbstractCampfireOption
 import com.megacrit.cardcrawl.vfx.TextAboveCreatureEffect
@@ -30,14 +33,18 @@ abstract class AbstractRelicCombo(
     val title: String
     val desc: String
     private var tip: PowerTip
-    val flavorText: String?
+    private val flavorTexts: ArrayList<String> = arrayListOf()
     private var isTriggeredActiveEffect: Boolean = false
 
     init {
         val relicStrings = CardCrawlGame.languagePack.getRelicStrings(id)
         title = relicStrings.NAME
         desc = relicStrings.DESCRIPTIONS.joinToString(" NL ") { it.replace(" !N! ", numberToActive.toString()) }
-        flavorText = relicStrings.FLAVOR
+        if (relicStrings.FLAVOR == null || relicStrings.FLAVOR == ""){
+            flavorTexts.add(title)
+        } else {
+            flavorTexts.addAll(relicStrings.FLAVOR.split(" NL "))
+        }
         tip = PowerTip(title, desc)
         combo.removeIf { !RelicLibrary.isARelic(it) }
         updateTip()
@@ -74,7 +81,8 @@ abstract class AbstractRelicCombo(
     }
 
     open fun onObtainRelic(r: AbstractRelic, combo: HashSet<String>) {}
-    open fun onAfterUsePotion(combo: HashSet<String>) {
+
+    open fun onAfterUsePotion(potion: AbstractPotion, target: AbstractMonster?, combo: HashSet<String>) {
 
     }
 
@@ -158,23 +166,39 @@ abstract class AbstractRelicCombo(
     }
 
     open fun onNextRoom(combo: HashSet<String>) {}
-    open fun onInitCampfireUI(buttons: ArrayList<AbstractCampfireOption>, combo: HashSet<String>) {
-
+    open fun onInitCampfireUI(buttons: ArrayList<AbstractCampfireOption>, combo: HashSet<String>) {}
+    open fun onUseCampfireOption(option: AbstractCampfireOption, combo: HashSet<String>) {}
+    open fun beforeReturnRandomRelic(tier: RelicTier, combo: HashSet<String>): RelicTier? {
+        return null
     }
 
-    open fun onUseCampfireOption(combo: HashSet<String>) {}
+    open fun onAfterShopInit(
+        shop: ShopScreen,
+        coloredCards: ArrayList<AbstractCard>?,
+        colorlessCards: ArrayList<AbstractCard>?,
+        combo: HashSet<String>
+    ) {
+    }
 
-    /**
-     * 在战斗外使用有可能触发并发修改的异常，不清楚是什么原因导致的
-     */
+    open fun onBeforeShopInit(
+        shop: ShopScreen,
+        coloredCards: ArrayList<AbstractCard>?,
+        colorlessCards: ArrayList<AbstractCard>?,
+        combo: HashSet<String>
+    ) {
+    }
+
+    open fun onBeforeShopPurge(combo: HashSet<String>) {}
+    open fun onAfterShopPurge(combo: HashSet<String>) {}
+
     open fun showText() {
-        val msg = if (flavorText == null || flavorText == "") title else flavorText
+        val msg = flavorTexts.randomOrNull() ?: title
         val textAboveCreatureEffect = TextAboveCreatureEffect(
             AbstractDungeon.player.hb.cX - AbstractDungeon.player.animX,
             AbstractDungeon.player.hb.cY + AbstractDungeon.player.hb.height / 2.0f,
             msg, Color.GOLD.cpy()
         )
-        AbstractDungeon.topLevelEffects.add(
+        AbstractDungeon.topLevelEffectsQueue.add(
             textAboveCreatureEffect
         )
     }
