@@ -8,6 +8,9 @@ import com.megacrit.cardcrawl.dungeons.AbstractDungeon
 import com.megacrit.cardcrawl.relics.*
 import com.megacrit.cardcrawl.vfx.BorderFlashEffect
 import com.megacrit.cardcrawl.vfx.stance.StanceChangeParticleGenerator
+import core.AbstractRelicCombo
+import core.ComboEffect
+import core.PatchEffect
 import utils.addToTop
 import utils.drawCard
 import utils.getAllGroup
@@ -26,30 +29,32 @@ class FourElement : AbstractRelicCombo(
         FrozenCore.ID
     ), numberToActive = 4
 ) {
-    override fun onBattleStart(combo: HashSet<String>) {
-        showText()
-        CardCrawlGame.sound.play("STANCE_ENTER_DIVINITY")
-        AbstractDungeon.effectsQueue.add(BorderFlashEffect(Color.GOLD, true))
-        AbstractDungeon.effectsQueue.add(
-            StanceChangeParticleGenerator(
-                AbstractDungeon.player.hb.cX,
-                AbstractDungeon.player.hb.cY,
-                "Divinity"
+    override fun onActive() {
+        PatchEffect.onPostBattleStartSubscribers.add(ComboEffect {
+            flash()
+            CardCrawlGame.sound.play("STANCE_ENTER_DIVINITY")
+            AbstractDungeon.effectsQueue.add(BorderFlashEffect(Color.GOLD, true))
+            AbstractDungeon.effectsQueue.add(
+                StanceChangeParticleGenerator(
+                    AbstractDungeon.player.hb.cX,
+                    AbstractDungeon.player.hb.cY,
+                    "Divinity"
+                )
             )
-        )
-        val amount = AbstractDungeon.player.masterDeck.group.count { it.isInnate }
-        addToTop(HealAction(AbstractDungeon.player, AbstractDungeon.player, 10)) {
-            getAllGroup().forEach {
-                it.group.forEach {
-                    if (it.canUpgrade()) {
-                        it.upgrade()
+            addToTop(HealAction(AbstractDungeon.player, AbstractDungeon.player, 10)) {
+                getAllGroup().forEach { g ->
+                    g.group.forEach {
+                        if (it.canUpgrade()) {
+                            it.upgrade()
+                        }
                     }
                 }
+                val amount = AbstractDungeon.player.masterDeck.group.count { it.isInnate }
+                if (amount > 0) {
+                    addToTop(GainEnergyAction(amount))
+                    drawCard(amount)
+                }
             }
-        }
-        if (amount > 0) {
-            addToTop(GainEnergyAction(amount))
-            drawCard(amount)
-        }
+        })
     }
 }

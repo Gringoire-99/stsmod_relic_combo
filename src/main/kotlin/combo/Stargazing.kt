@@ -7,6 +7,9 @@ import com.megacrit.cardcrawl.actions.utility.ScryAction
 import com.megacrit.cardcrawl.cards.DamageInfo
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon
 import com.megacrit.cardcrawl.relics.*
+import core.AbstractRelicCombo
+import core.ComboEffect
+import core.PatchEffect
 import utils.addToBot
 import utils.addToTop
 import utils.makeId
@@ -17,26 +20,28 @@ class Stargazing : AbstractRelicCombo(
     hashSetOf(GoldenEye.ID, Orrery.ID, FrozenEye.ID, Astrolabe.ID, BlackStar.ID, Melange.ID)
 ) {
     private var scryCount = 0
-    override fun onBattleStart(combo: HashSet<String>) {
-        scryCount += combo.size * 2
-        addToTop(ScryAction(1))
+    override fun onActive() {
+        PatchEffect.onPostBattleStartSubscribers.add(ComboEffect {
+            scryCount += getCurrentComboSize() * 2
+            addToTop(ScryAction(1))
+        })
+        PatchEffect.onPostBattleStartCleanupSubscribers.add(ComboEffect {
+            scryCount = 0
+        })
+        PatchEffect.onPreScrySubscribers.add(ComboEffect { amount ->
+            val a: Int = amount + max(0, scryCount)
+            addToBot(
+                DamageAllEnemiesAction(
+                    AbstractDungeon.player,
+                    a,
+                    DamageInfo.DamageType.THORNS,
+                    AbstractGameAction.AttackEffect.FIRE
+                ),
+                HealAction(AbstractDungeon.player, AbstractDungeon.player, 1)
+            )
+            flash()
+            a
+        })
     }
 
-    override fun onBattleStartCleanup(combo: HashSet<String>) {
-        scryCount = 0
-    }
-
-    override fun onScry(amount: IntArray, combo: HashSet<String>) {
-        amount[0] = amount[0] + max(0, scryCount)
-        addToBot(
-            DamageAllEnemiesAction(
-                AbstractDungeon.player,
-                amount[0],
-                DamageInfo.DamageType.THORNS,
-                AbstractGameAction.AttackEffect.FIRE
-            ),
-            HealAction(AbstractDungeon.player, AbstractDungeon.player, 1)
-        )
-        showText()
-    }
 }

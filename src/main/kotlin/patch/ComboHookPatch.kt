@@ -2,12 +2,10 @@ package patch
 
 import com.badlogic.gdx.Gdx
 import com.evacipated.cardcrawl.modthespire.lib.*
-import com.megacrit.cardcrawl.actions.GameActionManager
 import com.megacrit.cardcrawl.actions.common.ApplyPowerAction
 import com.megacrit.cardcrawl.actions.utility.ScryAction
 import com.megacrit.cardcrawl.actions.watcher.ChangeStanceAction
 import com.megacrit.cardcrawl.cards.AbstractCard
-import com.megacrit.cardcrawl.cards.CardGroup
 import com.megacrit.cardcrawl.cards.DamageInfo
 import com.megacrit.cardcrawl.characters.AbstractPlayer
 import com.megacrit.cardcrawl.core.AbstractCreature
@@ -21,7 +19,6 @@ import com.megacrit.cardcrawl.random.Random
 import com.megacrit.cardcrawl.relics.AbstractRelic
 import com.megacrit.cardcrawl.relics.AbstractRelic.RelicTier
 import com.megacrit.cardcrawl.rewards.chests.AbstractChest
-import com.megacrit.cardcrawl.rooms.AbstractRoom
 import com.megacrit.cardcrawl.rooms.CampfireUI
 import com.megacrit.cardcrawl.saveAndContinue.SaveFile
 import com.megacrit.cardcrawl.shop.ShopScreen
@@ -29,29 +26,25 @@ import com.megacrit.cardcrawl.stances.AbstractStance
 import com.megacrit.cardcrawl.ui.campfire.AbstractCampfireOption
 import com.megacrit.cardcrawl.ui.panels.PotionPopUp
 import com.megacrit.cardcrawl.vfx.campfire.CampfireSleepEffect
-import combo.AbstractRelicCombo
-import utils.logger
+import core.AbstractRelicCombo
+import core.PatchEffect
+import utils.toLog
 
 class ComboHookPatch {
-    /**
-     *  应用战斗开始的逻辑
-     */
-    @SpirePatch2(clz = AbstractRoom::class, method = "update")
-    internal class StartOfCombat {
-        companion object {
-            @JvmStatic
-            @SpireInsertPatch(rloc = 51)
-            fun insert() {
-                logger.info("============ Battle Start ===========")
-                AbstractRelicCombo.currentComboSet.forEach { (k, v) ->
-                    if (k.isActive(v)) {
-                        k.onBattleStartCleanup(v)
-                        k.onBattleStart(v)
-                    }
-                }
-            }
-        }
-    }
+//    /**
+//     *  应用战斗开始的逻辑
+//     */
+//    @SpirePatch2(clz = AbstractRoom::class, method = "update")
+//    internal class StartOfCombat {
+//        companion object {
+//            @JvmStatic
+//            @SpireInsertPatch(rloc = 51)
+//            fun insert() {
+//                PatchEffect.onPostBattleStartCleanupSubscribers.forEach { it.effect() }
+//                PatchEffect.onPostBattleStartSubscribers.forEach { it.effect() }
+//            }
+//        }
+//    }
 
     /**
      *  修改随机药水的稀有度
@@ -62,11 +55,11 @@ class ComboHookPatch {
             @JvmStatic
             @SpireInsertPatch(rloc = 1, localvars = ["roll"])
             fun insert(@ByRef roll: IntArray) {
-                AbstractRelicCombo.currentComboSet.forEach { (k, v) ->
-                    if (k.isActive(v)) {
-                        k.onDropRandomPotion(roll, v)
-                    }
-                }
+                "on drop random potion chance:${roll[0]}".toLog()
+                var r = roll[0]
+                PatchEffect.onPreDropRandomPotionSubscribers.forEach { r = it.effect(r) }
+                "actual potion chance:${roll[0]}".toLog()
+                roll[0] = r
             }
         }
     }
@@ -80,12 +73,9 @@ class ComboHookPatch {
             @JvmStatic
             @SpireInsertPatch(rloc = 34)
             fun insert(___potion: AbstractPotion?, ___hoveredMonster: AbstractMonster?) {
+                "on used potion:${___potion}".toLog()
                 ___potion?.apply {
-                    AbstractRelicCombo.currentComboSet.forEach { (k, v) ->
-                        if (k.isActive(v)) {
-                            k.onAfterUsePotion(this, ___hoveredMonster, v)
-                        }
-                    }
+                    PatchEffect.onPostUsePotionSubscribers.forEach { it.effect(___potion, ___hoveredMonster) }
                 }
             }
         }
@@ -100,12 +90,9 @@ class ComboHookPatch {
             @JvmStatic
             @SpireInsertPatch(rloc = 23)
             fun insert(___potion: AbstractPotion?, ___hoveredMonster: AbstractMonster?) {
+                "on used potion:${___potion}".toLog()
                 ___potion?.apply {
-                    AbstractRelicCombo.currentComboSet.forEach { (k, v) ->
-                        if (k.isActive(v)) {
-                            k.onAfterUsePotion(this, ___hoveredMonster, v)
-                        }
-                    }
+                    PatchEffect.onPostUsePotionSubscribers.forEach { it.effect(___potion, ___hoveredMonster) }
                 }
             }
         }
@@ -125,66 +112,82 @@ class ComboHookPatch {
                 ___powerToApply: AbstractPower?,
                 @ByRef ___startingDuration: FloatArray,
                 @ByRef ___duration: FloatArray
-            ) {
-                var shouldContinue = false
-
-                AbstractRelicCombo.currentComboSet.forEach { (k, v) ->
-                    if (k.isActive(v) && ___duration[0] == ___startingDuration[0]) {
-                        shouldContinue = shouldContinue || !k.onApplyPower(
-                            v,
-                            target = ___target,
-                            source = ___source,
-                            power = ___powerToApply
-                        )
-
+            ): SpireReturn<Void>? {
+                "pre apply power:${___powerToApply}".toLog()
+                var shouldContinue = true
+                if (___duration[0] == ___startingDuration[0]) {
+                    "publish on pre apply power subs".toLog()
+                    PatchEffect.onPreApplyPowerSubscribers.forEach {
+                        if (shouldContinue) {
+                            shouldContinue = it.effect(___target, ___source, ___powerToApply)
+                        }
                     }
                 }
-                if (shouldContinue) {
+                if (!shouldContinue) {
+                    "break apply power action".toLog()
                     ___duration[0] = ___duration[0] - Gdx.graphics.deltaTime
-                    SpireReturn.Return()
+                    return SpireReturn.Return()
                 }
+                return SpireReturn.Continue()
             }
         }
     }
 
     /**
-     * 当玩家受到伤害时触发
+     * 当玩家受到伤害时触发(即将损失血量)
      */
     @SpirePatch2(clz = AbstractPlayer::class, method = "damage")
     internal class onTakingDamage {
         companion object {
             @JvmStatic
             @SpireInsertPatch(rloc = 61, localvars = ["damageAmount"])
-            fun insert(@ByRef damageAmount: IntArray) {
-                AbstractRelicCombo.currentComboSet.forEach { (k, v) ->
-                    if (k.isActive(v)) {
-                        k.onPlayerTakingDamageFinal(damageAmount, v)
-                    }
-                }
+            fun insert(@ByRef damageAmount: IntArray, info: DamageInfo?) {
+                var d = damageAmount[0]
+                "on post player taking damage(before lose hp) :${d}".toLog()
+                PatchEffect.onPostPlayerTakingDamageSubscribers.forEach { d = it.effect(d, info) }
+                "actual player taking damage(before lose hp) $d".toLog()
+                damageAmount[0] = d
             }
         }
     }
 
     /**
-     *  战斗结束后执行的逻辑
+     * 当玩家即将损失生命前
      */
-    @SpirePatch2(clz = AbstractRoom::class, method = "endBattle")
-    internal class endBattle {
+    @SpirePatch2(clz = AbstractPlayer::class, method = "damage")
+    internal class beforeLostHp {
         companion object {
             @JvmStatic
-            @SpirePostfixPatch
-            fun post(__instance: AbstractRoom?) {
-                logger.info("============ Battle End ===========")
-                __instance?.apply {
-                    AbstractRelicCombo.currentComboSet.forEach { (k, v) ->
-                        if (k.isActive(v)) {
-                            k.onEndBattle(this, v)
-                        }
-                    }
-                }
+            @SpireInsertPatch(rloc = 99, localvars = ["damageAmount"])
+            fun insert(@ByRef damageAmount: IntArray, info: DamageInfo?) {
+                var d = damageAmount[0]
+                "before lose hp ${d}".toLog()
+                PatchEffect.onPrePlayerLoseHpSubscribers.forEach { d = it.effect(d, info) }
+                "actual before lose hp ${d}".toLog()
+                damageAmount[0] = d
             }
         }
     }
+
+//    /**
+//     *  战斗结束后执行的逻辑
+//     */
+//    @SpirePatch2(clz = AbstractRoom::class, method = "endBattle")
+//    internal class endBattle {
+//        companion object {
+//            @JvmStatic
+//            @SpirePostfixPatch
+//            fun post(__instance: AbstractRoom?) {
+//                __instance?.apply {
+//                    AbstractRelicCombo.currentComboSet.forEach { (k, v) ->
+//                        if (k.isActive(v)) {
+//                            k.onEndBattle(this, v)
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
 
     /**
      * 获得金币时触发的逻辑
@@ -195,49 +198,49 @@ class ComboHookPatch {
             @JvmStatic
             @SpirePrefixPatch
             fun insert(@ByRef amount: IntArray) {
-                AbstractRelicCombo.currentComboSet.forEach { (k, v) ->
-                    if (k.isActive(v)) {
-                        k.onGainGold(amount, v)
-                    }
-                }
+                "on player gain gold ${amount[0]}".toLog()
+                var a = amount[0]
+                PatchEffect.onPreGainGoldSubscribers.forEach { a = it.effect(a) }
+                "actual gold:$a".toLog()
+                amount[0] = a
             }
         }
     }
 
-    /**
-     * 回合开始时触发的逻辑
-     */
-    @SpirePatch2(clz = AbstractRoom::class, method = "update")
-    internal class getNextAction1 {
-        companion object {
-            @JvmStatic
-            @SpireInsertPatch(rloc = 65)
-            fun insert() {
-                logger.info("============ Turn Start ===========")
-                AbstractRelicCombo.currentComboSet.forEach { (k, v) ->
-                    if (k.isActive(v)) {
-                        k.onStartOfTurn(v)
-                    }
-                }
-            }
-        }
-    }
+//    /**
+//     * 回合开始时触发的逻辑
+//     */
+//    @SpirePatch2(clz = AbstractRoom::class, method = "update")
+//    internal class getNextAction1 {
+//        companion object {
+//            @JvmStatic
+//            @SpireInsertPatch(rloc = 65)
+//            fun insert() {
+//                logger.info("============ Turn Start ===========")
+//                AbstractRelicCombo.currentComboSet.forEach { (k, v) ->
+//                    if (k.isActive(v)) {
+//                        k.onStartOfTurn(v)
+//                    }
+//                }
+//            }
+//        }
+//    }
 
-    @SpirePatch2(clz = GameActionManager::class, method = "getNextAction")
-    internal class getNextAction2 {
-        companion object {
-            @JvmStatic
-            @SpireInsertPatch(rloc = 241)
-            fun insert() {
-                logger.info("============ Turn Start ===========")
-                AbstractRelicCombo.currentComboSet.forEach { (k, v) ->
-                    if (k.isActive(v)) {
-                        k.onStartOfTurn(v)
-                    }
-                }
-            }
-        }
-    }
+//    @SpirePatch2(clz = GameActionManager::class, method = "getNextAction")
+//    internal class getNextAction2 {
+//        companion object {
+//            @JvmStatic
+//            @SpireInsertPatch(rloc = 241)
+//            fun insert() {
+//                logger.info("============ Turn Start ===========")
+//                AbstractRelicCombo.currentComboSet.forEach { (k, v) ->
+//                    if (k.isActive(v)) {
+//                        k.onStartOfTurn(v)
+//                    }
+//                }
+//            }
+//        }
+//    }
 
     /**
      * 怪物受到伤害触发的逻辑
@@ -248,19 +251,17 @@ class ComboHookPatch {
             @JvmStatic
             @SpireInsertPatch(rloc = 6, localvars = ["damageAmount"])
             fun insert(info: DamageInfo?, @ByRef damageAmount: IntArray) {
-                info?.apply {
-                    AbstractRelicCombo.currentComboSet.forEach { (k, v) ->
-                        if (k.isActive(v)) {
-                            k.onMonsterTakingDamageStart(this, damageAmount, v)
-                        }
-                    }
-                }
+                "on monster taking damage:${damageAmount[0]}".toLog()
+                var d = damageAmount[0]
+                PatchEffect.onPreMonsterTakingDamageSubscribers.forEach { d = it.effect(d, info) }
+                "actual on monster taking damage:${d}".toLog()
+                damageAmount[0] = d
             }
         }
     }
 
     /**
-     * 改变姿态前触发的逻辑
+     * 改变姿态后触发的逻辑
      */
     @SpirePatch2(clz = ChangeStanceAction::class, method = "update")
     internal class changeStance {
@@ -268,56 +269,52 @@ class ComboHookPatch {
             @JvmStatic
             @SpireInsertPatch(rloc = 38, localvars = ["oldStance"])
             fun prefix(oldStance: AbstractStance?, ___newStance: AbstractStance?) {
-                logger.info("========= Change stance old: ${oldStance} new :${___newStance}============")
-                AbstractRelicCombo.currentComboSet.forEach { (k, v) ->
-                    if (k.isActive(v)) {
-                        k.onChangeStance(oldStance = oldStance, ___newStance, v)
-                    }
-                }
+                "on post change stance old:${oldStance} new:${___newStance}".toLog()
+                PatchEffect.onPostChangeStanceSubscribers.forEach { it.effect(oldStance, ___newStance) }
             }
         }
     }
 
-
-    /**
-     * 抽到卡片时触发
-     */
-    @SpirePatch2(clz = AbstractPlayer::class, method = "draw", paramtypez = [Int::class])
-    internal class onDraw {
-        companion object {
-            @JvmStatic
-            @SpireInsertPatch(rloc = 18, localvars = ["c"])
-            fun insert(c: AbstractCard?) {
-                c?.apply {
-                    AbstractRelicCombo.currentComboSet.forEach { (k, v) ->
-                        if (k.isActive(v)) {
-                            k.onDrawCard(this, v)
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * 消耗卡片后触发
-     */
-    @SpirePatch2(clz = CardGroup::class, method = "moveToExhaustPile")
-    internal class AfterExhaust {
-        companion object {
-            @JvmStatic
-            @SpirePostfixPatch
-            fun postfix(c: AbstractCard?) {
-                c?.apply {
-                    AbstractRelicCombo.currentComboSet.forEach { (k, v) ->
-                        if (k.isActive(v)) {
-                            k.onExhaustCard(c, v)
-                        }
-                    }
-                }
-            }
-        }
-    }
+//
+//    /**
+//     * 抽到卡片时触发
+//     */
+//    @SpirePatch2(clz = AbstractPlayer::class, method = "draw", paramtypez = [Int::class])
+//    internal class onDraw {
+//        companion object {
+//            @JvmStatic
+//            @SpireInsertPatch(rloc = 18, localvars = ["c"])
+//            fun insert(c: AbstractCard?) {
+//                c?.apply {
+//                    AbstractRelicCombo.currentComboSet.forEach { (k, v) ->
+//                        if (k.isActive(v)) {
+//                            k.onDrawCard(this, v)
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
+//
+//    /**
+//     * 消耗卡片后触发
+//     */
+//    @SpirePatch2(clz = CardGroup::class, method = "moveToExhaustPile")
+//    internal class AfterExhaust {
+//        companion object {
+//            @JvmStatic
+//            @SpirePostfixPatch
+//            fun postfix(c: AbstractCard?) {
+//                c?.apply {
+//                    AbstractRelicCombo.currentComboSet.forEach { (k, v) ->
+//                        if (k.isActive(v)) {
+//                            k.onExhaustCard(c, v)
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
 
     /**
      * 休息时触发
@@ -328,17 +325,17 @@ class ComboHookPatch {
             @JvmStatic
             @SpireInsertPatch(rloc = 11)
             fun postfix(@ByRef ___healAmount: IntArray) {
-                AbstractRelicCombo.currentComboSet.forEach { (k, v) ->
-                    if (k.isActive(v)) {
-                        k.onRest(___healAmount, v)
-                    }
-                }
+                "pre rest heal:${___healAmount[0]}".toLog()
+                var h = ___healAmount[0]
+                PatchEffect.onPreRestSubscribers.forEach { h = it.effect(h) }
+                "actual pre rest heal:${___healAmount[0]}".toLog()
+                ___healAmount[0] = h
             }
         }
     }
 
     /**
-     * 出牌时触发
+     * 出牌后触发
      */
     @SpirePatch2(clz = AbstractPlayer::class, method = "useCard")
     internal class useCard {
@@ -346,10 +343,9 @@ class ComboHookPatch {
             @JvmStatic
             @SpirePostfixPatch
             fun postfix(c: AbstractCard?, monster: AbstractMonster?, energyOnUse: Int) {
-                AbstractRelicCombo.currentComboSet.forEach { (k, v) ->
-                    if (k.isActive(v)) {
-                        k.onUseCard(c, monster, energyOnUse, v)
-                    }
+                "post use card:${c}".toLog()
+                c?.apply {
+                    PatchEffect.onPostUseCardSubscribers.forEach { it.effect(c, monster) }
                 }
             }
         }
@@ -364,12 +360,9 @@ class ComboHookPatch {
             @JvmStatic
             @SpireInsertPatch(rloc = 4)
             fun insert(__instance: AbstractChest?) {
+                "post open chest".toLog()
                 __instance?.apply {
-                    AbstractRelicCombo.currentComboSet.forEach { (k, v) ->
-                        if (k.isActive(v)) {
-                            k.onOpenChest(__instance, v)
-                        }
-                    }
+                    PatchEffect.onPostOpenChestSubscribers.forEach { it.effect(this) }
                 }
             }
         }
@@ -384,11 +377,10 @@ class ComboHookPatch {
             @JvmStatic
             @SpireInsertPatch(rloc = 9)
             fun insert(@ByRef ___amount: IntArray) {
-                AbstractRelicCombo.currentComboSet.forEach { (k, v) ->
-                    if (k.isActive(v)) {
-                        k.onScry(___amount, v)
-                    }
-                }
+                "pre on scry amount:${___amount[0]}".toLog()
+                var a = ___amount[0]
+                PatchEffect.onPreScrySubscribers.forEach { a = it.effect(a) }
+                ___amount[0] = a
             }
         }
     }
@@ -402,11 +394,9 @@ class ComboHookPatch {
             @JvmStatic
             @SpireInsertPatch(rloc = 156)
             fun insert() {
-                AbstractRelicCombo.currentComboSet.forEach { (k, v) ->
-                    if (k.isActive(v)) {
-                        k.onNextRoom(v)
-                    }
-                }
+                AbstractRelicCombo.updateCombo()
+                "moving to next room".toLog()
+                PatchEffect.onPostGoNextRoomSubscribers.forEach { it.effect() }
             }
         }
     }
@@ -417,12 +407,9 @@ class ComboHookPatch {
             @JvmStatic
             @SpirePostfixPatch
             fun insert(___buttons: ArrayList<AbstractCampfireOption>?) {
+                "init campfire btn".toLog()
                 ___buttons?.apply {
-                    AbstractRelicCombo.currentComboSet.forEach { (k, v) ->
-                        if (k.isActive(v)) {
-                            k.onInitCampfireUI(this, v)
-                        }
-                    }
+                    PatchEffect.onPostInitCampFireSubscribers.forEach { it.effect(this) }
                 }
             }
         }
@@ -463,16 +450,15 @@ class ComboHookPatch {
                 @ByRef shopSize: IntArray,
                 @ByRef treasureSize: IntArray
             ) {
-                AbstractRelicCombo.currentComboSet.forEach { (k, v) ->
-                    if (k.isActive(v)) {
-                        k.onRollEvent(
-                            forceChest = forceChest,
-                            eliteSize = eliteSize,
-                            monsterSize = monsterSize,
-                            shopSize = shopSize,
-                            treasureSize = treasureSize, v
-                        )
-                    }
+                "pre roll random event".toLog()
+                PatchEffect.onPreRollEventSubscribers.forEach {
+                    it.effect(
+                        forceChest,
+                        eliteSize,
+                        monsterSize,
+                        shopSize,
+                        treasureSize
+                    )
                 }
             }
         }
@@ -486,15 +472,18 @@ class ComboHookPatch {
             fun pre(
                 tier: RelicTier?
             ): SpireReturn<AbstractRelic?> {
+                "pre return random relic tier:${tier}".toLog()
                 var t = tier
-                tier?.apply {
-                    AbstractRelicCombo.currentComboSet.forEach { (k, v) ->
-                        if (k.isActive(v)) {
-                            t = k.beforeReturnRandomRelic(tier, v) ?: t
-                        }
-                    }
+                t?.apply {
+                    PatchEffect.onPreReturnRandomRelicSubscribers.forEach { t = it.effect(this) }
                 }
-                return SpireReturn.Return(RelicLibrary.getRelic(AbstractDungeon.returnRandomRelicKey(t)).makeCopy())
+                "actual pre return random relic tier:${t}".toLog()
+                if (t == tier) {
+                    return SpireReturn.Continue<AbstractRelic?>()
+                } else {
+                    return SpireReturn.Return(RelicLibrary.getRelic(AbstractDungeon.returnRandomRelicKey(t)).makeCopy())
+                }
+
             }
         }
     }
@@ -509,12 +498,9 @@ class ComboHookPatch {
                 coloredCards: ArrayList<AbstractCard>?,
                 colorlessCards: ArrayList<AbstractCard>?,
             ) {
+                "post shop init".toLog()
                 __instance?.apply {
-                    AbstractRelicCombo.currentComboSet.forEach { (k, v) ->
-                        if (k.isActive(v)) {
-                            k.onAfterShopInit(this, coloredCards = coloredCards, colorlessCards = colorlessCards, v)
-                        }
-                    }
+                    PatchEffect.onPostShopInitSubscribers.forEach { it.effect(this, coloredCards, colorlessCards) }
                 }
             }
         }
@@ -530,12 +516,9 @@ class ComboHookPatch {
                 coloredCards: ArrayList<AbstractCard>?,
                 colorlessCards: ArrayList<AbstractCard>?,
             ) {
+                "pre shop init".toLog()
                 __instance?.apply {
-                    AbstractRelicCombo.currentComboSet.forEach { (k, v) ->
-                        if (k.isActive(v)) {
-                            k.onBeforeShopInit(this, coloredCards = coloredCards, colorlessCards = colorlessCards, v)
-                        }
-                    }
+                    PatchEffect.onPreShopInitSubscribers.forEach { it.effect(this, coloredCards, colorlessCards) }
                 }
             }
         }
@@ -548,11 +531,8 @@ class ComboHookPatch {
             @SpirePrefixPatch
             fun pre(
             ) {
-                AbstractRelicCombo.currentComboSet.forEach { (k, v) ->
-                    if (k.isActive(v)) {
-                        k.onBeforeShopPurge( v)
-                    }
-                }
+                "pre shop purge".toLog()
+                PatchEffect.onPreShopPurgeSubscribers.forEach { it.effect() }
             }
         }
     }
@@ -564,11 +544,8 @@ class ComboHookPatch {
             @SpirePostfixPatch
             fun post(
             ) {
-                AbstractRelicCombo.currentComboSet.forEach { (k, v) ->
-                    if (k.isActive(v)) {
-                        k.onAfterShopPurge(v)
-                    }
-                }
+                "post shop purge".toLog()
+                PatchEffect.onPostShopPurgeSubscribers.forEach { it.effect() }
             }
         }
     }

@@ -5,8 +5,13 @@ import com.megacrit.cardcrawl.cards.DamageInfo
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon
 import com.megacrit.cardcrawl.powers.ThornsPower
 import com.megacrit.cardcrawl.relics.*
+import core.AbstractRelicCombo
+import core.ComboEffect
+import core.PatchEffect
 import utils.addToTop
 import utils.makeId
+import kotlin.math.max
+import kotlin.math.min
 
 class CounterAttack : AbstractRelicCombo(
     CounterAttack::class.makeId(),
@@ -18,23 +23,27 @@ class CounterAttack : AbstractRelicCombo(
         Torii.ID,
         ToughBandages.ID,
         ThreadAndNeedle.ID, FossilizedHelix.ID
-    )
+    ),
+    numberToActive = 3
 ) {
-    override fun onBattleStart(combo: HashSet<String>) {
-        addToTop(
-            ApplyPowerAction(
-                AbstractDungeon.player,
-                AbstractDungeon.player,
-                ThornsPower(AbstractDungeon.player, combo.size)
+    override fun onActive() {
+        PatchEffect.onPostBattleStartSubscribers.add(ComboEffect {
+            addToTop(
+                ApplyPowerAction(
+                    AbstractDungeon.player,
+                    AbstractDungeon.player,
+                    ThornsPower(AbstractDungeon.player, getCurrentComboSize())
+                )
             )
-        )
-        showText()
-    }
-
-    override fun onMonsterTakingDamageStart(info: DamageInfo, damageAmount: IntArray, combo: HashSet<String>) {
-        if (info.type == DamageInfo.DamageType.THORNS) {
-            damageAmount[0] *= 2
-            showText()
-        }
+            flash()
+        })
+        PatchEffect.onPreMonsterTakingDamageSubscribers.add(ComboEffect { damage, info ->
+            var d = damage
+            if (info != null && info.type == DamageInfo.DamageType.THORNS) {
+                d += min(d, max(0, AbstractDungeon.player.getPower(ThornsPower.POWER_ID)?.amount ?: 0))
+                flash()
+            }
+            d
+        })
     }
 }

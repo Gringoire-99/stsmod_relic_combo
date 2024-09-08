@@ -5,6 +5,9 @@ import com.megacrit.cardcrawl.dungeons.AbstractDungeon
 import com.megacrit.cardcrawl.powers.DexterityPower
 import com.megacrit.cardcrawl.powers.StrengthPower
 import com.megacrit.cardcrawl.relics.*
+import core.AbstractRelicCombo
+import core.ComboEffect
+import core.PatchEffect
 import utils.addToBot
 import utils.makeId
 
@@ -13,22 +16,24 @@ class Yummy() : AbstractRelicCombo(
         Strawberry.ID, MeatOnTheBone.ID, Pear.ID, IceCream.ID, Mango.ID, OddMushroom.ID, Waffle.ID
     ), numberToActive = 2
 ) {
-    override fun onBattleStart(combo: HashSet<String>) {
-        showText()
-        val s = combo.size / 2
-        val d = combo.size - s
-        addToBot(
-            ApplyPowerAction(
-                AbstractDungeon.player,
-                AbstractDungeon.player,
-                StrengthPower(AbstractDungeon.player, s),
-                s
-            ), ApplyPowerAction(
-                AbstractDungeon.player,
-                AbstractDungeon.player,
-                DexterityPower(AbstractDungeon.player, d),
-                s
+    override fun onActive() {
+        PatchEffect.onPostBattleStartSubscribers.add(ComboEffect {
+            flash()
+            val s = getCurrentComboSize() / 2
+            val d = getCurrentComboSize() - s
+            addToBot(
+                ApplyPowerAction(
+                    AbstractDungeon.player,
+                    AbstractDungeon.player,
+                    StrengthPower(AbstractDungeon.player, s),
+                    s
+                ), ApplyPowerAction(
+                    AbstractDungeon.player,
+                    AbstractDungeon.player,
+                    DexterityPower(AbstractDungeon.player, d),
+                    s
+                )
             )
-        )
+        })
     }
 }

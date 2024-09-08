@@ -4,15 +4,18 @@ import basemod.interfaces.PostInitializeSubscriber
 import com.evacipated.cardcrawl.modthespire.lib.SpireInitializer
 import com.megacrit.cardcrawl.core.Settings
 import com.megacrit.cardcrawl.localization.RelicStrings
-import combo.*
+import com.megacrit.cardcrawl.localization.UIStrings
+import core.AbstractRelicCombo
+import config.RelicComboModConfig
+import core.PatchEffect
 import utils.modId
-
 
 @SpireInitializer
 class RelicComboCore : EditStringsSubscriber,
     PostInitializeSubscriber {
     init {
         BaseMod.subscribe(this)
+        BaseMod.subscribe(PatchEffect.patchInstance)
     }
 
     companion object {
@@ -26,7 +29,8 @@ class RelicComboCore : EditStringsSubscriber,
     override fun receiveEditStrings() {
         val lang: String = getLangSupport()
         val prefix = "${modId}/localization/$lang/"
-        BaseMod.loadCustomStringsFile(RelicStrings::class.java, "${prefix}combo.json")
+        BaseMod.loadCustomStringsFile(RelicStrings::class.java, "${prefix}relics.json")
+        BaseMod.loadCustomStringsFile(UIStrings::class.java, "${prefix}ui.json")
     }
 
     private fun getLangSupport(): String {
@@ -39,42 +43,15 @@ class RelicComboCore : EditStringsSubscriber,
         }
     }
 
-
     override fun receivePostInitialize() {
         AbstractRelicCombo.registerComboSet(
-            Alchemy(),
-            AncientCreation(),
-            Awakened(),
-            BringInTheBucks(),
-            ChallengeMe(),
-            CounterAttack(),
-            DeepMeditation(),
-            Dispel(),
-            Eternal(),
-            FourElement(),
-            GetSomeSleep(),
-            Innocence(),
-            KnowledgeIsPower(),
-            KungFu(),
-            LessIsMore(),
-            Library(),
-            Mechanism(),
-            MightFortune(),
-            Ninja(),
-            OhNo(),
-            PainIsPower(),
-            Plain(),
-            Repair(),
-            SetSail(),
-            Stargazing(),
-            StayHealthy(),
-            TheThreeOfUs(),
-            ToxinPurification(),
-            VIP(),
-//            StayUp(),
-            Yummy()
+            AbstractRelicCombo.getAllDefaultComboSet()
         )
-
+        RelicComboModConfig.loadConfig()
+        RelicComboModConfig.initModMenu()
+        AbstractRelicCombo.updateEnabledRelicComboSets()
     }
-
 }
+
+
+

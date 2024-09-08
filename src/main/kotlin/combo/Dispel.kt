@@ -7,6 +7,9 @@ import com.megacrit.cardcrawl.dungeons.AbstractDungeon
 import com.megacrit.cardcrawl.powers.LoseStrengthPower
 import com.megacrit.cardcrawl.powers.StrengthPower
 import com.megacrit.cardcrawl.relics.*
+import core.AbstractRelicCombo
+import core.ComboEffect
+import core.PatchEffect
 import utils.addToBot
 import utils.drawCard
 import utils.makeId
@@ -23,39 +26,35 @@ class Dispel : AbstractRelicCombo(
         Omamori.ID
     )
 ) {
-    var isUsed: Boolean = false
-    override fun onBattleStartCleanup(combo: HashSet<String>) {
-        isUsed = false
-    }
-
-    override fun onStartOfTurn(combo: HashSet<String>) {
-        isUsed = false
-    }
-
-    override fun onDrawCard(c: AbstractCard, combo: HashSet<String>) {
-        if (c.type == AbstractCard.CardType.CURSE) {
-            drawCard(1)
-            addToBot(
-                ApplyPowerAction(
-                    AbstractDungeon.player,
-                    AbstractDungeon.player,
-                    StrengthPower(AbstractDungeon.player, 1)
-                ),
-                ApplyPowerAction(
-                    AbstractDungeon.player,
-                    AbstractDungeon.player,
-                    LoseStrengthPower(AbstractDungeon.player, 1)
+    private var isUsed: Boolean = false
+    override fun onActive() {
+        PatchEffect.onPostStartOfTurnSubscribers.add(ComboEffect {
+            isUsed = false
+        })
+        PatchEffect.onPostDrawnCardSubscribers.add(ComboEffect {
+            if (it.type == AbstractCard.CardType.CURSE) {
+                drawCard(1)
+                addToBot(
+                    ApplyPowerAction(
+                        AbstractDungeon.player,
+                        AbstractDungeon.player,
+                        StrengthPower(AbstractDungeon.player, 1)
+                    ),
+                    ApplyPowerAction(
+                        AbstractDungeon.player,
+                        AbstractDungeon.player,
+                        LoseStrengthPower(AbstractDungeon.player, 1)
+                    )
                 )
-            )
-            showText()
-        }
-    }
-
-    override fun onExhaustCard(c: AbstractCard, combo: HashSet<String>) {
-        if (!isUsed && c.type == AbstractCard.CardType.CURSE) {
-            addToBot(GainEnergyAction(1))
-            isUsed = true
-            showText()
-        }
+                flash()
+            }
+        })
+        PatchEffect.onPostExhaustCardSubscribers.add(ComboEffect {
+            if (!isUsed && it.type == AbstractCard.CardType.CURSE) {
+                addToBot(GainEnergyAction(1))
+                isUsed = true
+                flash()
+            }
+        })
     }
 }

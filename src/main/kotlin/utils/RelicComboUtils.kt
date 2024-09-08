@@ -20,10 +20,10 @@ import org.apache.logging.log4j.Logger
 import kotlin.reflect.KClass
 
 const val modId = "RelicCombo"
-val logger: Logger = LogManager.getLogger(RelicComboCore.Companion::class.java.name)
+val logger: Logger = LogManager.getLogger(RelicComboCore::class.java.name)
 fun log(msg: String = "", vararg obj: Any?) {
     val joinToString = obj.joinToString(" + ") { it.toString() }
-    logger.info("================${msg} : $joinToString =================")
+    logger.info("*******${msg} : $joinToString *******")
 }
 
 fun Any?.toLog(msg: String = "") {

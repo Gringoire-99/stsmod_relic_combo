@@ -1,11 +1,14 @@
 package combo
 
+import action.EmptyEffect
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon
 import com.megacrit.cardcrawl.relics.*
 import com.megacrit.cardcrawl.rewards.RewardItem
-import com.megacrit.cardcrawl.rooms.AbstractRoom
-import utils.addToTop
+import core.AbstractRelicCombo
+import core.ComboEffect
+import core.PatchEffect
 import utils.makeId
+import utils.toLog
 import kotlin.math.ceil
 import kotlin.math.max
 
@@ -13,22 +16,32 @@ class BringInTheBucks : AbstractRelicCombo(
     BringInTheBucks::class.makeId(),
     hashSetOf(CeramicFish.ID, MawBank.ID, OldCoin.ID, Abacus.ID, GoldenIdol.ID, BloodyIdol.ID),
 ) {
-    override fun onEndBattle(room: AbstractRoom, combo: HashSet<String>) {
-        repeat(max(0, combo.size - numberToActive + 1)) {
-            val g = AbstractDungeon.miscRng.random(5, 10)
-            addToTop {
-                room.rewards.add(RewardItem(g))
+    var count = 5
+    override fun onActive() {
+        PatchEffect.onPostEndBattleSubscribers.add(ComboEffect {
+            repeat(getExtraCollectCount() + 1) {
+                val g = AbstractDungeon.miscRng.random(5, 10)
+                AbstractDungeon.effectsQueue.add(EmptyEffect {
+                    AbstractDungeon.getCurrRoom().rewards.add(RewardItem(g))
+                })
+                flash()
             }
-            showText()
-        }
-    }
-
-    override fun onGainGold(amount: IntArray, combo: HashSet<String>) {
-        amount[0] = amount[0] + max(0, ceil(amount[0] * combo.size * 0.05).toInt())
-        repeat(max(0, combo.size - numberToActive)) {
-            AbstractDungeon.player.increaseMaxHp(1, true)
-        }
-        showText()
+        })
+        PatchEffect.onPreGainGoldSubscribers.add(ComboEffect { goldAmount ->
+            flash()
+            "amount:${goldAmount} combo size:${getCurrentComboSize()} extra:${getExtraCollectCount()}".toLog()
+            val a: Int = goldAmount + max(0, ceil(goldAmount * getCurrentComboSize() * 0.05F).toInt())
+            if (getExtraCollectCount() > 0 && count > 0) {
+                count--
+                AbstractDungeon.effectsQueue.add(EmptyEffect {
+                    AbstractDungeon.player.increaseMaxHp(getExtraCollectCount(), true)
+                })
+            }
+            a
+        })
+        PatchEffect.onPostGoNextRoomSubscribers.add(ComboEffect {
+            count = 5
+        })
     }
 }
 

@@ -5,8 +5,9 @@ import com.evacipated.cardcrawl.modthespire.lib.SpirePostfixPatch
 import com.megacrit.cardcrawl.characters.AbstractPlayer
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon
 import com.megacrit.cardcrawl.relics.AbstractRelic
-import com.megacrit.cardcrawl.rooms.AbstractRoom
-import combo.AbstractRelicCombo
+import core.AbstractRelicCombo
+import core.PatchEffect
+import utils.toLog
 
 class UpdateRelicComboPatch {
     @SpirePatch2(clz = AbstractRelic::class, method = "obtain")
@@ -15,14 +16,10 @@ class UpdateRelicComboPatch {
             @JvmStatic
             @SpirePostfixPatch
             fun post(__instance: AbstractRelic?) {
-                AbstractRelicCombo.updateCombo()
                 __instance?.apply {
-                    AbstractRelicCombo.currentComboSet.forEach { (k, v) ->
-                        if (k.isActive(v)) {
-                            k.onObtainRelic(this, v)
-                        }
-                    }
+                    PatchEffect.onPostObtainRelicSubscribers.forEach { it.effect(this) }
                 }
+                AbstractRelicCombo.updateCombo()
             }
         }
     }
@@ -34,14 +31,10 @@ class UpdateRelicComboPatch {
             @JvmStatic
             @SpirePostfixPatch
             fun post(__instance: AbstractRelic?) {
-                AbstractRelicCombo.updateCombo()
                 __instance?.apply {
-                    AbstractRelicCombo.currentComboSet.forEach { (k, v) ->
-                        if (k.isActive(v)) {
-                            k.onObtainRelic(this, v)
-                        }
-                    }
+                    PatchEffect.onPostObtainRelicSubscribers.forEach { it.effect(this) }
                 }
+                AbstractRelicCombo.updateCombo()
             }
         }
     }
@@ -56,14 +49,10 @@ class UpdateRelicComboPatch {
             @JvmStatic
             @SpirePostfixPatch
             fun post(__instance: AbstractRelic?) {
-                AbstractRelicCombo.updateCombo()
                 __instance?.apply {
-                    AbstractRelicCombo.currentComboSet.forEach { (k, v) ->
-                        if (k.isActive(v)) {
-                            k.onObtainRelic(this, v)
-                        }
-                    }
+                    PatchEffect.onPostObtainRelicSubscribers.forEach { it.effect(this) }
                 }
+                AbstractRelicCombo.updateCombo()
             }
         }
     }
@@ -85,18 +74,6 @@ class UpdateRelicComboPatch {
             @JvmStatic
             @SpirePostfixPatch
             fun post() {
-                AbstractRelicCombo.updateCombo()
-            }
-        }
-    }
-
-    @SpirePatch2(clz = AbstractDungeon::class, method = "loadSave")
-    internal class loadCombo {
-        companion object {
-            @JvmStatic
-            @SpirePostfixPatch
-            fun post() {
-                AbstractRelicCombo.currentComboSet.clear()
                 AbstractRelicCombo.updateCombo()
             }
         }
