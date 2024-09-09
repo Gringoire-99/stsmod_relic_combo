@@ -51,7 +51,14 @@ class Dispel : AbstractRelicCombo(
         })
         PatchEffect.onPostExhaustCardSubscribers.add(ComboEffect {
             if (!isUsed && it.type == AbstractCard.CardType.CURSE) {
-                addToBot(GainEnergyAction(1))
+                addToBot(
+                    GainEnergyAction(1),
+                    ApplyPowerAction(
+                        AbstractDungeon.player,
+                        AbstractDungeon.player,
+                        StrengthPower(AbstractDungeon.player, 2)
+                    ),
+                )
                 isUsed = true
                 flash()
             }

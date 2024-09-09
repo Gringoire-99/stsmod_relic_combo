@@ -1,292 +1,286 @@
 {
   "RelicCombo:Yummy": {
-    "NAME": "组合：好吃的！",
-    "FLAVOR": "玉盘珍馐",
+    "NAME": "Combo: Yummy!",
+    "FLAVOR": "Delicacy",
     "DESCRIPTIONS": [
-      "收集 !N! 个激活",
-      "战斗开始时:每收集一个提供一点力量或敏捷"
+      "Collect !N! to activate",
+      "At the start of combat: Gain 1 Strength or Dexterity for each collected."
     ]
   },
   "RelicCombo:SetSail": {
-    "NAME": "组合：启航！",
-    "FLAVOR": "畅行无阻",
+    "NAME": "Combo: Set Sail!",
+    "FLAVOR": "Smooth Sailing",
     "DESCRIPTIONS": [
-      "收集 !N! 个激活",
-      "战斗开始时:每收集一个多抽一张牌"
+      "Collect !N! to activate",
+      "At the start of combat: Draw 1 extra card for each collected."
     ]
   },
   "RelicCombo:GetSomeSleep": {
-    "NAME": "组合：好好睡一觉",
-    "FLAVOR": "美梦！",
+    "NAME": "Combo: Get Some Sleep",
+    "FLAVOR": "Sweet Dreams!",
     "DESCRIPTIONS": [
-      "收集 !N! 个激活",
-      "当你休息时，会回复所有生命值",
-      "并升级牌组里稀有度最高的牌",
-      "每额外收集一个升级一次"
+      "Collect !N! to activate",
+      "When you rest: Fully restore HP, increase max HP by 10, and upgrade the 2 highest rarity cards in your deck.",
+      "For each extra collected, upgrade one more card."
     ]
   },
   "RelicCombo:KungFu": {
-    "NAME": "组合：功夫",
-    "FLAVOR": "疾风连击·天罡指穴法 NL 疾风连击·璇玑指穴法 NL 疾风连击·嫘祖剥茧式 NL 疾风连击·天劫七曜指 NL 疾风连击·漫天花雨式 NL 疾风连击·太易琉璃指 NL 疾风连击·分花拂柳式",
+    "NAME": "Combo: Kung Fu",
+    "FLAVOR": "Flurry of Blows",
     "DESCRIPTIONS": [
-      "收集 !N! 个激活",
-      "战斗开始时:",
-      "牌组里的打击牌与点穴的费用降低一点，伤害增加4点",
-      "点穴会打出两次"
+      "Collect !N! to activate",
+      "At the start of combat:",
+      "Reduce the cost of Strike and Pressure Point cards in your deck by 1, and increase their damage by 4.",
+      "Pressure Point triggers twice."
     ]
   },
   "RelicCombo:AncientCreation": {
-    "NAME": "组合：先古造物",
-    "FLAVOR": "先古重塑",
+    "NAME": "Combo: Ancient Creation",
+    "FLAVOR": "Reshaping",
     "DESCRIPTIONS": [
-      "收集 !N! 个激活",
-      "敌人对你施加的所有负面状态转换为力量"
+      "Collect !N! to activate",
+      "Convert all negative status effects inflicted on you into Strength."
     ]
   },
   "RelicCombo:StayUp": {
-    "NAME": "组合：熬夜",
+    "NAME": "Combo: Stay Up",
     "FLAVOR": "???",
     "DESCRIPTIONS": [
-      "收集 !N! 个激活",
+      "Collect !N! to activate",
       "???",
       "???"
     ]
   },
   "RelicCombo:BringInTheBucks": {
-    "NAME": "组合：招财进宝",
-    "FLAVOR": "意外之财！",
+    "NAME": "Combo: Bring In The Bucks",
+    "FLAVOR": "Windfall!",
     "DESCRIPTIONS": [
-      "收集 !N! 个激活",
-      "找到的金币变多",
-      "每收集一个增加5%的金币获取量",
-      "每额外收集一个战斗结束后额外掉落一次金币",
-      "每额外收集一个每次获得金币还会获得1的最大生命值"
+      "Collect !N! to activate",
+      "Increased gold found.",
+      "For each collected, increase gold gain by 5%.",
+      "For each extra collected, an additional gold drop occurs after combat.",
+      "For each extra collected, gain 1 max HP for each time gold is obtained (up to 5 times per room)."
     ]
   },
   "RelicCombo:VIP": {
-    "NAME": "组合：VIP",
-    "FLAVOR": "特别待遇",
+    "NAME": "Combo: VIP",
+    "FLAVOR": "Special Treatment!",
     "DESCRIPTIONS": [
-      "收集 !N! 个激活",
-      "每收集一个降低商人价格10%",
-      "商人的移除服务不再消耗金币，移除时还会升级随机牌组里的一张牌，",
-      "在商店找到的牌总是升级的"
+      "Collect !N! to activate",
+      "Every item receives a massive discount before its first purchase.",
+      "Merchant’s card removal service no longer costs gold, and removing a card upgrades a random card in your deck.",
+      "Upgrades shop cards."
     ]
   },
   "RelicCombo:MightFortune": {
-    "NAME": "组合：异界强运",
-    "FLAVOR": "灵运加持！",
+    "NAME": "Combo: Might Fortune",
+    "FLAVOR": "Fortune’s Favor!",
     "DESCRIPTIONS": [
-      "收集 !N! 个激活",
-      "每收集一个增加在？找到宝箱与宝箱可能出现1个额外遗物的概率(15%)"
+      "Collect !N! to activate",
+      "For each collected",
+      "Increase the chance of finding a chest in ? room ",
+      "Increase the chance of an extra relic appearing in the chest (20%)."
     ]
   },
   "RelicCombo:Stargazing": {
-    "NAME": "组合：观星",
-    "FLAVOR": "洞灭黑暗",
+    "NAME": "Combo: Stargazing",
+    "FLAVOR": "Illuminate the Darkness",
     "DESCRIPTIONS": [
-      "收集 !N! 个激活",
-      "战斗开始时: 每收集一个增加1的每次预知卡牌的数量,预知:1",
-      "预知后对所有敌人造成预知数量的荆棘伤害，治疗1的生命值"
+      "Collect !N! to activate",
+      "At the start of combat: For each collected, increase the number of cards to be Scry by 2. Scry: 1.",
+      "After Scry, deal Thorn damage equal to the number of Scry to all enemies and heal 1 HP."
     ]
   },
   "RelicCombo:DeepMeditation": {
-    "NAME": "组合：深度冥想",
-    "FLAVOR": "和谐音律",
+    "NAME": "Combo: Deep Meditation",
+    "FLAVOR": "Harmonious Melody",
     "DESCRIPTIONS": [
-      "收集 !N! 个激活",
-      "进入与离开平静时抽一张牌"
+      "Collect !N! to activate",
+      "Draw 1 card when you enter or exit Calm."
     ]
   },
   "RelicCombo:Ninja": {
-    "NAME": "组合：忍者",
-    "FLAVOR": "潜影利刃",
+    "NAME": "Combo: Ninja",
+    "FLAVOR": "Shadow's Blade",
     "DESCRIPTIONS": [
-      "收集 !N! 个激活",
-      "一回合一次，每打出3张攻击牌将一张小刀+置入手中且小刀的伤害增加2",
-      "每额外收集一个每回合可多触发一次"
+      "Collect !N! to activate",
+      "Once per turn, after playing 3 Attack cards, add a Shiv+ to your hand, and Shiv damage is increased by 2.",
+      "For each extra collected, trigger one more time per turn."
     ]
   },
   "RelicCombo:ToxinPurification": {
-    "NAME": "组合：提纯毒素",
-    "FLAVOR": "驱血法",
+    "NAME": "Combo: Toxin Purification",
+    "FLAVOR": "Poison Amplification",
     "DESCRIPTIONS": [
-      "收集 !N! 个激活",
-      "一回合内对敌人施加三次毒素后",
-      "触发所有敌人的毒素，每一个额外收集多触发一次"
-    ]
-  },
-  "RelicCombo:OhNo": {
-    "NAME": "组合：哦不！",
-    "FLAVOR": "哦不！",
-    "DESCRIPTIONS": [
-      "收集 !N! 个激活",
-      "摧毁相关遗物"
+      "Collect !N! to activate",
+      "After applying Poison three times to an enemy in one turn,",
+      "Immediately trigger all Poison on all enemies. For each extra collected, trigger once more."
     ]
   },
   "RelicCombo:Eternal": {
-    "NAME": "组合：永恒",
-    "FLAVOR": "永恒",
+    "NAME": "Combo: Eternal",
+    "FLAVOR": "Eternal",
     "DESCRIPTIONS": [
-      "收集 !N! 个激活",
-      "战斗开始时:获得1点敏捷和力量",
-      "每隔7个回合，触发所有这场战斗开始时的效果",
-      "每收集一个，缩短一回合触发时间"
+      "Collect !N! to activate",
+      "At the start of combat: Gain 1 Dexterity and Strength.",
+      "Every 7 turns, trigger all start-of-combat effects in this fight again.",
+      "For each collected, reduce the turn count by 1."
     ]
   },
-  "RelicCombo:PainIsPower": {
-    "NAME": "组合：痛，太痛了！",
-    "FLAVOR": "汲取力量",
+  "RelicCombo:Sacrifice": {
+    "NAME": "Combo: Sacrifice",
+    "FLAVOR": "Blood Sacrifice",
     "DESCRIPTIONS": [
-      "收集 !N! 个激活",
-      "在受到伤害后获得1的临时力量"
+      "Collect !N! to activate",
+      "Gain 1 temporary Strength after taking damage."
     ]
   },
   "RelicCombo:Dispel": {
-    "NAME": "组合：祓除",
-    "FLAVOR": "祓除",
+    "NAME": "Combo: Dispel",
+    "FLAVOR": "Draw Strength",
     "DESCRIPTIONS": [
-      "收集 !N! 个激活",
-      "抽到诅咒时多抽一张牌，获得一点临时力量",
-      "一回合一次，消耗诅咒时获得1 [E]"
+      "Collect !N! to activate",
+      "Draw one more card and gain 1 temporary Strength when drawing a Curse.",
+      "Once per turn, gain 1 [E] and 2 Strength when a Curse is exhausted."
     ]
   },
   "RelicCombo:Library": {
-    "NAME": "组合：图书馆",
-    "FLAVOR": "启迪！",
+    "NAME": "Combo: Library",
+    "FLAVOR": "Enlightenment!",
     "DESCRIPTIONS": [
-      "收集 !N! 个激活",
-      "战斗掉落1次额外卡片",
-      "每额外收集一个额外掉落一次"
+      "Collect !N! to activate",
+      "Gain 1 extra card drop after combat.",
+      "For each extra collected, gain one more extra drop."
     ]
   },
   "RelicCombo:LessIsMore": {
-    "NAME": "组合：少即是多",
-    "FLAVOR": "少即是多",
+    "NAME": "Combo: Less Is More",
+    "FLAVOR": "Less Is More",
     "DESCRIPTIONS": [
-      "收集 !N! 个激活",
-      "战斗开始时:如果你的卡组里的卡牌数量小于等于10张",
-      "强化你的所有卡牌1点",
-      "回合开始时:如果你的卡牌数量小于等于10张",
-      "获得1 [E] ,抽满你的手牌"
+      "Collect !N! to activate",
+      "At the start of combat: If your deck has 10 or fewer cards,",
+      "Strengthen all cards by 1.",
+      "At the start of each turn: If your deck has 10 or fewer cards,",
+      "Gain 1 [E] and draw up to your hand size."
     ]
   },
   "RelicCombo:Awakened": {
-    "NAME": "组合：觉醒",
-    "FLAVOR": "脱胎换骨",
+    "NAME": "Combo: Awakened",
+    "FLAVOR": "Reborn",
     "DESCRIPTIONS": [
-      "收集 !N! 个激活",
-      "战斗开始时:获得1的仪式",
-      "战斗开始时重置:",
-      "免疫一次致命伤害，去除所有负面状态",
-      "每收集一个重复一次，回复4的生命值，获得1点力量，"
+      "Collect !N! to activate",
+      "At the start of combat: Gain 1 Ritual.",
+      "Reset at the start of combat:",
+      "Immune to one fatal damage, remove all negative power.",
+      "For each collected, repeat once, heal 4 HP, and gain 1 Strength."
     ]
   },
   "RelicCombo:Plain": {
-    "NAME": "组合：质朴",
-    "FLAVOR": "至简之力",
+    "NAME": "Combo: Plain",
+    "FLAVOR": "Power of Simplicity",
     "DESCRIPTIONS": [
-      "收集 !N! 个激活",
-      "战斗开始时:",
-      "翻倍牌组里基础牌的伤害与格挡"
+      "Collect !N! to activate",
+      "At the start of combat:",
+      "Double the damage and block of basic cards in your deck."
     ]
   },
   "RelicCombo:FourElement": {
-    "NAME": "组合：四象归一",
-    "FLAVOR": "四象归一",
+    "NAME": "Combo: The Four Elements",
+    "FLAVOR": "United",
     "DESCRIPTIONS": [
-      "收集 !N! 个激活",
-      "战斗开始时",
-      "升级所有卡牌",
-      "治疗10的生命",
-      "牌组里每有一张固有牌抽一张牌,获得1 [E]"
+      "Collect !N! to activate",
+      "At the start of combat:",
+      "Upgrade all cards.",
+      "Heal 10 HP.",
+      "For each innate card in your deck, draw 1 card and gain 1 [E]."
     ]
   },
   "RelicCombo:Repair": {
-    "NAME": "组合：修复",
-    "FLAVOR": "让你看看鸡煲的厉害！",
+    "NAME": "Combo: Repair",
+    "FLAVOR": "Repair",
     "DESCRIPTIONS": [
-      "收集 !N! 个激活",
-      "战斗开始时，获得1集中，1力量，1敏捷，每额外收集一个额外触发一次",
-      "每回合开始时触发所有球的被动效果，每额外收集一个额外触发一次",
-      "攻击牌会额外打出一次"
+      "Collect !N! to activate",
+      "At the start of combat: Gain 1 Focus, 1 Strength, and 1 Dexterity. For each extra collected, trigger once more.",
+      "Trigger all orb passive effects at the start of each turn.",
+      "Attack cards play one additional time."
     ]
   },
   "RelicCombo:KnowledgeIsPower": {
-    "NAME": "组合：知识就是力量",
-    "FLAVOR": "化剑",
+    "NAME": "Combo: Knowledge Is Power",
+    "FLAVOR": "Extra attack",
     "DESCRIPTIONS": [
-      "收集 !N! 个激活",
-      "攻击牌额外打出一次"
+      "Collect !N! to activate",
+      "Attack cards play one additional time."
     ]
   },
   "RelicCombo:TheThreeOfUs": {
-    "NAME": "组合：我们仨",
-    "FLAVOR": "注定伟大！",
+    "NAME": "Combo: The Three of Us",
+    "FLAVOR": "Destined for Greatness!",
     "DESCRIPTIONS": [
-      "收集 !N! 个激活",
-      "优先找到稀有遗物",
-      "宝箱额外开出一个遗物"
+      "Collect !N! to activate",
+      "Prioritize finding rare relics (does not affect shop and boss relics)",
+      "An additional relic will be found in chests"
     ]
   },
   "RelicCombo:ChallengeMe": {
-    "NAME": "组合：挑战我",
-    "FLAVOR": "强者之灾",
+    "NAME": "Combo: Challenge Me",
+    "FLAVOR": "Bane of the Powerful",
     "DESCRIPTIONS": [
-      "收集 !N! 个激活",
-      "战斗开始时:如果你对抗的是强大的敌人",
-      "每回合开始多抽一张牌",
-      "受到敌人的伤害减少25%",
-      "造成的伤害增加25%"
+      "Collect !N! to activate",
+      "At the start of combat: If you are facing a powerful enemy",
+      "Draw one extra card at the start of each turn",
+      "For each collected, reduce damage taken by 5%",
+      "For each collected, increase damage dealt to enemies by 5%"
     ]
   },
   "RelicCombo:Alchemy": {
-    "NAME": "组合：炼金",
-    "FLAVOR": "贤者圣露",
+    "NAME": "Combo: Alchemy",
+    "FLAVOR": "Sage's Elixir",
     "DESCRIPTIONS": [
-      "收集 !N! 个激活",
-      "每收集一个提高药水的稀有度(10%)",
-      "使用药水时额外使用一次，每额外收集一个多使用一次",
-      "每额外收集一个在使用药水时抽一张牌"
+      "Collect !N! to activate",
+      "For each collected, increase the rarity of potions (by 10%)",
+      "Use the potion an additional time, and for each extra collected, use one more time",
+      "For each extra collected, draw one card when using a potion"
     ]
   },
   "RelicCombo:CounterAttack": {
-    "NAME": "组合：防守反击",
-    "FLAVOR": "方天赦令",
+    "NAME": "Combo: Counter Attack",
+    "FLAVOR": "Fangtian's Decree",
     "DESCRIPTIONS": [
-      "收集 !N! 个激活",
-      "战斗开始时:每收集一个提供一点荆棘",
-      "敌人受到双倍荆棘伤害"
+      "Collect !N! to activate",
+      "At the start of combat: Gain 1 Thorns for each collected",
+      "Your Thorns amount increases the Thorns damage enemy take (up to doubling the original damage)"
     ]
   },
   "RelicCombo:Mechanism": {
-    "NAME": "组合：机关",
-    "FLAVOR": "幻杀飞星",
+    "NAME": "Combo: Mechanism",
+    "FLAVOR": "Launch Hidden Weapons",
     "DESCRIPTIONS": [
-      "收集 !N! 个激活",
-      "回合开始时对随机敌人造成1点荆棘伤害，获得2点格挡",
-      "每次触发伤害+1",
-      "每额外收集一个多触发一次"
+      "Collect !N! to activate",
+      "At the start of each turn, deal 1 Thorns damage to a random enemy and gain 2 Block",
+      "Increase the triggered damage by 1 each time",
+      "For each extra collected, trigger once more"
     ]
   },
   "RelicCombo:StayHealthy": {
-    "NAME": "组合：保持健康",
-    "FLAVOR": "龙筋虎骨",
+    "NAME": "Combo: Stay Healthy",
+    "FLAVOR": "Vitality",
     "DESCRIPTIONS": [
-      "收集 !N! 个激活",
-      "战斗开始时:根据你的当前生命值获得增益",
-      "每有20点获得一点力量或敏捷",
-      "每有30点抽一张牌",
-      "每有50点获得1 [E]"
+      "Collect !N! to activate",
+      "At the start of combat: Gain benefits based on your current HP",
+      "Gain 1 Strength or Dexterity for every 20 HP",
+      "Draw one card for every 30 HP",
+      "Gain 1 [E] for every 50 HP"
     ]
   },
   "RelicCombo:Innocence": {
-    "NAME": "组合：童真",
-    "FLAVOR": "破妖秽",
+    "NAME": "Combo: Innocence",
+    "FLAVOR": "Purify Evil",
     "DESCRIPTIONS": [
-      "收集 !N! 个激活",
-      "每收集一个减少你在战斗之外损失的生命值3点",
-      "集齐所有时在战斗时也会减少伤害，并且每回合开始时进入神格"
+      "Collect !N! to activate",
+      "Reduce HP loss outside of combat by 3 for each collected",
+      "When fully collected, also reduce damage in combat and enter Divinity at the start of each turn"
     ]
   }
 }
+

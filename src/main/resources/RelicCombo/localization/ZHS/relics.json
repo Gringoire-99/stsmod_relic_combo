@@ -116,14 +116,6 @@
       "立即引爆所有敌人的毒素一次，每一个额外收集多引爆一次"
     ]
   },
-  "RelicCombo:OhNo": {
-    "NAME": "组合：哦不！",
-    "FLAVOR": "哦不！",
-    "DESCRIPTIONS": [
-      "收集 !N! 个激活",
-      "摧毁相关遗物"
-    ]
-  },
   "RelicCombo:Eternal": {
     "NAME": "组合：永恒",
     "FLAVOR": "永恒",
@@ -134,9 +126,9 @@
       "每收集一个，缩短一回合触发时间"
     ]
   },
-  "RelicCombo:PainIsPower": {
-    "NAME": "组合：痛，太痛了！",
-    "FLAVOR": "汲取力量",
+  "RelicCombo:Sacrifice": {
+    "NAME": "组合：祭祀",
+    "FLAVOR": "血祭",
     "DESCRIPTIONS": [
       "收集 !N! 个激活",
       "在受到伤害后获得1的临时力量"
@@ -144,11 +136,11 @@
   },
   "RelicCombo:Dispel": {
     "NAME": "组合：祓除",
-    "FLAVOR": "祓除",
+    "FLAVOR": "汲取力量",
     "DESCRIPTIONS": [
       "收集 !N! 个激活",
       "抽到诅咒时多抽一张牌，获得一点临时力量",
-      "一回合一次，消耗诅咒时获得1 [E]"
+      "一回合一次，消耗诅咒时获得1 [E] 获得2点力量"
     ]
   },
   "RelicCombo:Library": {
@@ -214,7 +206,7 @@
   },
   "RelicCombo:KnowledgeIsPower": {
     "NAME": "组合：知识就是力量",
-    "FLAVOR": "化剑",
+    "FLAVOR": "额外攻击！",
     "DESCRIPTIONS": [
       "收集 !N! 个激活",
       "攻击牌额外打出一次"

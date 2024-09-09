@@ -15,8 +15,8 @@ import utils.makeId
 /**
  *
  */
-class PainIsPower : AbstractRelicCombo(
-    PainIsPower::class.makeId(),
+class Sacrifice : AbstractRelicCombo(
+    Sacrifice::class.makeId(),
     hashSetOf(MarkOfPain.ID, RunicCube.ID, MutagenicStrength.ID, MarkOfTheBloom.ID, SelfFormingClay.ID, RedSkull.ID)
 ) {
     override fun onActive() {

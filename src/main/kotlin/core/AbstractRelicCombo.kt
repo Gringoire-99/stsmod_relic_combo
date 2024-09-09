@@ -166,7 +166,7 @@ abstract class AbstractRelicCombo(
                 Mechanism(),
                 MightFortune(),
                 Ninja(),
-                PainIsPower(),
+                Sacrifice(),
                 Plain(),
                 Repair(),
                 SetSail(),

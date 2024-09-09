@@ -1,3 +1,10 @@
 {
-
+  "RelicCombo:ComboConfig": {
+    "TEXT_DICT": {
+      "EnableCombo": "开启组合",
+      "NumberToActive": "激活需要的数量",
+      "AddRelicToCombo": "添加遗物到组合",
+      "RemoveRelicFromCombo": "从组合删除遗物"
+    }
+  }
 }
