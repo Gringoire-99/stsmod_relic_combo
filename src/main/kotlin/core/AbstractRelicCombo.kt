@@ -25,7 +25,7 @@ abstract class AbstractRelicCombo(
     init {
         relicStrings?.apply {
             title = relicStrings.NAME
-            desc = relicStrings.DESCRIPTIONS.joinToString(" NL ") { it.replace(" !N! ", numberToActive.toString()) }
+            desc = relicStrings.DESCRIPTIONS.joinToString(" NL ") { it.replace(" !N! ", " ${numberToActive} ") }
             if (relicStrings.FLAVOR == null || relicStrings.FLAVOR == "") {
                 flavorTexts.add(title)
             } else {
@@ -65,19 +65,21 @@ abstract class AbstractRelicCombo(
     }
 
     private fun updateTip(idToHighlight: HashSet<String> = hashSetOf()) {
-        desc =
-            relicStrings?.DESCRIPTIONS?.joinToString(" NL ") { it.replace(" !N! ", numberToActive.toString()) } ?: desc
-        val s = combo.joinToString(separator = " NL ") {
-            var color = "#b"
-            if (it in idToHighlight) {
-                color = "#g"
+        relicStrings?.apply {
+            val c = if (idToHighlight.size >= numberToActive) "#g" else "#r"
+            desc = relicStrings.DESCRIPTIONS.joinToString(" NL ") { it.replace(" !N! ", " ${c}${numberToActive} ") }
+            val s = combo.joinToString(separator = " NL ") {
+                var color = "#b"
+                if (it in idToHighlight) {
+                    color = "#g"
+                }
+                "· ${
+                    CardCrawlGame.languagePack.getRelicStrings(it).NAME.split(" ")
+                        .joinToString(prefix = color, separator = " $color")
+                }"
             }
-            "· ${
-                CardCrawlGame.languagePack.getRelicStrings(it).NAME.split(" ")
-                    .joinToString(prefix = color, separator = " $color")
-            }"
+            tip = ComboPowerTip(title, "$s NL $desc", id)
         }
-        tip = ComboPowerTip(title, "$s NL $desc", id)
     }
 
     fun getCurrentComboSize(): Int {

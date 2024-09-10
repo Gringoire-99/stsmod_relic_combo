@@ -37,7 +37,7 @@ class Innocence : AbstractRelicCombo(
             var d = damage
             if (!isInCombat() || getCurrentComboSize() == this.combo.size) {
                 flash()
-                d = max(0, d - combo.size * 3)
+                d = max(0, d - getCurrentComboSize() * 3)
             }
             d
         })
