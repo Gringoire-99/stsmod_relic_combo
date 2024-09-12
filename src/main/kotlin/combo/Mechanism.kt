@@ -6,6 +6,7 @@ import com.megacrit.cardcrawl.dungeons.AbstractDungeon
 import com.megacrit.cardcrawl.relics.*
 import core.AbstractRelicCombo
 import core.ComboEffect
+import core.ConfigurableType
 import core.PatchEffect
 import utils.dealDamage
 import utils.gainBlock
@@ -13,10 +14,11 @@ import utils.makeId
 
 class Mechanism : AbstractRelicCombo(
     Mechanism::class.makeId(),
-    hashSetOf(Boot.ID, Calipers.ID, Pocketwatch.ID, ClockworkSouvenir.ID, HandDrill.ID)
+    hashSetOf(Boot.ID, Calipers.ID, Pocketwatch.ID, ClockworkSouvenir.ID, HandDrill.ID, TinyHouse.ID)
 ) {
-    private val initialDamage = 1
-    private val initialBlock = 2
+    private val initialDamage = setConfigurableProperty("M", 1, ConfigurableType.Int).toInt()
+    private val initialBlock = setConfigurableProperty("M2", 2, ConfigurableType.Int).toInt()
+    private val repeat = setConfigurableProperty("M3", 1, ConfigurableType.Int).toInt()
     private var damage: Int = initialDamage
     private var block: Int = initialBlock
 
@@ -28,7 +30,7 @@ class Mechanism : AbstractRelicCombo(
         })
         PatchEffect.onPostStartOfTurnSubscribers.add(ComboEffect {
             flash()
-            repeat(1 + getExtraCollectCount()) {
+            repeat(repeat + getExtraCollectCount()) {
                 dealDamage(
                     p = AbstractDungeon.player,
                     m = null,

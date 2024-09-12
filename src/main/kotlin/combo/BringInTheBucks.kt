@@ -6,6 +6,7 @@ import com.megacrit.cardcrawl.relics.*
 import com.megacrit.cardcrawl.rewards.RewardItem
 import core.AbstractRelicCombo
 import core.ComboEffect
+import core.ConfigurableType
 import core.PatchEffect
 import utils.makeId
 import utils.toLog
@@ -16,7 +17,10 @@ class BringInTheBucks : AbstractRelicCombo(
     BringInTheBucks::class.makeId(),
     hashSetOf(CeramicFish.ID, MawBank.ID, OldCoin.ID, Abacus.ID, GoldenIdol.ID, BloodyIdol.ID),
 ) {
-    var count = 5
+    private val maxCount = setConfigurableProperty("C", 5, ConfigurableType.Int).toInt()
+    private var count = maxCount
+    private var increaseHP = setConfigurableProperty("M", 1, ConfigurableType.Int).toInt()
+    private var increaseGold = setConfigurableProperty("M2", 5, ConfigurableType.Int).toInt()
     override fun onActive() {
         PatchEffect.onPostEndBattleSubscribers.add(ComboEffect {
             repeat(getExtraCollectCount() + 1) {
@@ -30,17 +34,17 @@ class BringInTheBucks : AbstractRelicCombo(
         PatchEffect.onPreGainGoldSubscribers.add(ComboEffect { goldAmount ->
             flash()
             "amount:${goldAmount} combo size:${getCurrentComboSize()} extra:${getExtraCollectCount()}".toLog()
-            val a: Int = goldAmount + max(0, ceil(goldAmount * getCurrentComboSize() * 0.05F).toInt())
+            val a: Int = goldAmount + max(0, ceil(goldAmount * getCurrentComboSize() * 0.01F * increaseGold).toInt())
             if (getExtraCollectCount() > 0 && count > 0) {
                 count--
                 AbstractDungeon.effectsQueue.add(EmptyEffect {
-                    AbstractDungeon.player.increaseMaxHp(getExtraCollectCount(), true)
+                    AbstractDungeon.player.increaseMaxHp(getExtraCollectCount() * increaseHP, true)
                 })
             }
             a
         })
         PatchEffect.onPostGoNextRoomSubscribers.add(ComboEffect {
-            count = 5
+            count = maxCount
         })
     }
 }

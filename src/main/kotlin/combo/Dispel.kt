@@ -9,6 +9,7 @@ import com.megacrit.cardcrawl.powers.StrengthPower
 import com.megacrit.cardcrawl.relics.*
 import core.AbstractRelicCombo
 import core.ComboEffect
+import core.ConfigurableType
 import core.PatchEffect
 import utils.addToBot
 import utils.drawCard
@@ -26,6 +27,10 @@ class Dispel : AbstractRelicCombo(
         Omamori.ID
     )
 ) {
+    private val m = setConfigurableProperty("M", 1, ConfigurableType.Int).toInt()
+    private val gain = setConfigurableProperty("M2", 1, ConfigurableType.Int).toInt()
+    private val s = setConfigurableProperty("M3", 2, ConfigurableType.Int).toInt()
+
     private var isUsed: Boolean = false
     override fun onActive() {
         PatchEffect.onPostStartOfTurnSubscribers.add(ComboEffect {
@@ -33,17 +38,17 @@ class Dispel : AbstractRelicCombo(
         })
         PatchEffect.onPostDrawnCardSubscribers.add(ComboEffect {
             if (it.type == AbstractCard.CardType.CURSE) {
-                drawCard(1)
+                drawCard(m)
                 addToBot(
                     ApplyPowerAction(
                         AbstractDungeon.player,
                         AbstractDungeon.player,
-                        StrengthPower(AbstractDungeon.player, 1)
+                        StrengthPower(AbstractDungeon.player, m)
                     ),
                     ApplyPowerAction(
                         AbstractDungeon.player,
                         AbstractDungeon.player,
-                        LoseStrengthPower(AbstractDungeon.player, 1)
+                        LoseStrengthPower(AbstractDungeon.player, m)
                     )
                 )
                 flash()
@@ -52,11 +57,11 @@ class Dispel : AbstractRelicCombo(
         PatchEffect.onPostExhaustCardSubscribers.add(ComboEffect {
             if (!isUsed && it.type == AbstractCard.CardType.CURSE) {
                 addToBot(
-                    GainEnergyAction(1),
+                    GainEnergyAction(gain),
                     ApplyPowerAction(
                         AbstractDungeon.player,
                         AbstractDungeon.player,
-                        StrengthPower(AbstractDungeon.player, 2)
+                        StrengthPower(AbstractDungeon.player, s)
                     ),
                 )
                 isUsed = true

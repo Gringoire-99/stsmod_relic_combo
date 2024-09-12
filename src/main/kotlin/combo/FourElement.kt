@@ -10,6 +10,7 @@ import com.megacrit.cardcrawl.vfx.BorderFlashEffect
 import com.megacrit.cardcrawl.vfx.stance.StanceChangeParticleGenerator
 import core.AbstractRelicCombo
 import core.ComboEffect
+import core.ConfigurableType
 import core.PatchEffect
 import utils.addToTop
 import utils.drawCard
@@ -27,8 +28,10 @@ class FourElement : AbstractRelicCombo(
         ToxicEgg2.ID,
         PrismaticShard.ID,
         FrozenCore.ID
-    ), numberToActive = 4
+    ), numberToActiveCombo = 4
 ) {
+    private val heal = setConfigurableProperty("M", 10, ConfigurableType.Int).toInt()
+    private val m = setConfigurableProperty("M2", 1, ConfigurableType.Int).toInt()
     override fun onActive() {
         PatchEffect.onPostBattleStartSubscribers.add(ComboEffect {
             flash()
@@ -41,7 +44,7 @@ class FourElement : AbstractRelicCombo(
                     "Divinity"
                 )
             )
-            addToTop(HealAction(AbstractDungeon.player, AbstractDungeon.player, 10)) {
+            addToTop(HealAction(AbstractDungeon.player, AbstractDungeon.player, heal)) {
                 getAllGroup().forEach { g ->
                     g.group.forEach {
                         if (it.canUpgrade()) {
@@ -51,8 +54,8 @@ class FourElement : AbstractRelicCombo(
                 }
                 val amount = AbstractDungeon.player.masterDeck.group.count { it.isInnate }
                 if (amount > 0) {
-                    addToTop(GainEnergyAction(amount))
-                    drawCard(amount)
+                    addToTop(GainEnergyAction(amount * m))
+                    drawCard(amount * m)
                 }
             }
         })

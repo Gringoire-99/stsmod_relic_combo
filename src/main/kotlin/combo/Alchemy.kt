@@ -5,6 +5,7 @@ import com.megacrit.cardcrawl.dungeons.AbstractDungeon
 import com.megacrit.cardcrawl.relics.*
 import core.AbstractRelicCombo
 import core.ComboEffect
+import core.ConfigurableType
 import core.PatchEffect
 import utils.drawCard
 import utils.isInCombat
@@ -23,18 +24,21 @@ class Alchemy : AbstractRelicCombo(
         SacredBark.ID
     ),
 ) {
+    private val rate: Int = setConfigurableProperty("Rate", 10, ConfigurableType.Int).toInt()
+    private val magic: Int = setConfigurableProperty("M", 1, ConfigurableType.Int).toInt()
+
     override fun onActive() {
         PatchEffect.onPreDropRandomPotionSubscribers.add(ComboEffect { c ->
-            min(99, c + 10 * getCurrentComboSize())
+            min(99, c + rate * getCurrentComboSize())
         })
         PatchEffect.onPostUsePotionSubscribers.add(ComboEffect { p, t ->
             if (isInCombat()) {
                 if (getExtraCollectCount() > 0) {
-                    drawCard(getExtraCollectCount())
+                    drawCard(getExtraCollectCount() * magic)
                 }
             }
             AbstractDungeon.effectsQueue.add(EmptyEffect {
-                repeat(1 + getExtraCollectCount()) {
+                repeat(magic + getExtraCollectCount()) {
                     p.use(t)
                 }
             })

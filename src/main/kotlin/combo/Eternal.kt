@@ -7,6 +7,7 @@ import com.megacrit.cardcrawl.powers.StrengthPower
 import com.megacrit.cardcrawl.relics.*
 import core.AbstractRelicCombo
 import core.ComboEffect
+import core.ConfigurableType
 import core.PatchEffect
 import utils.addToTop
 import utils.makeId
@@ -27,7 +28,8 @@ class Eternal :
     ) {
 
     private var counter = 0
-    private val numberToTrigger = 7
+    private val max = setConfigurableProperty("M", 7, ConfigurableType.Int).toInt()
+    private val m = setConfigurableProperty("M2", 1, ConfigurableType.Int).toInt()
 
     override fun onActive() {
         PatchEffect.onPostBattleStartSubscribers.add(ComboEffect {
@@ -35,12 +37,12 @@ class Eternal :
                 ApplyPowerAction(
                     AbstractDungeon.player,
                     AbstractDungeon.player,
-                    StrengthPower(AbstractDungeon.player, 1)
+                    StrengthPower(AbstractDungeon.player, m)
                 ),
                 ApplyPowerAction(
                     AbstractDungeon.player,
                     AbstractDungeon.player,
-                    DexterityPower(AbstractDungeon.player, 1)
+                    DexterityPower(AbstractDungeon.player, m)
                 )
             )
             flash()
@@ -50,7 +52,7 @@ class Eternal :
         })
         PatchEffect.onPostStartOfTurnSubscribers.add(ComboEffect {
             counter += 1
-            val require = max(1, numberToTrigger - getCurrentComboSize())
+            val require = max(1, max - getCurrentComboSize())
             if (counter >= require) {
                 counter = 0
                 addToTop {

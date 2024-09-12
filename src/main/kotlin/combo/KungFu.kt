@@ -8,25 +8,27 @@ import com.megacrit.cardcrawl.relics.Nunchaku
 import com.megacrit.cardcrawl.relics.StrikeDummy
 import core.AbstractRelicCombo
 import core.ComboEffect
+import core.ConfigurableType
 import core.PatchEffect
 import utils.*
 
 class KungFu :
     AbstractRelicCombo(KungFu::class.makeId(), hashSetOf(ArtOfWar.ID, Nunchaku.ID, StrikeDummy.ID, Duality.ID)) {
-
+    private val damage = setConfigurableProperty("M", 4, ConfigurableType.Int).toInt()
+    private val reduceCost = setConfigurableProperty("M2", 1, ConfigurableType.Int).toInt()
     override fun onActive() {
         PatchEffect.onPostBattleStartSubscribers.add(ComboEffect {
             flash()
-            addToBot{
+            addToBot {
                 getAllGroup().forEach {
                     it.group.forEach { c ->
                         if (c.hasTag(AbstractCard.CardTags.STRIKE)) {
-                            c.updateCost(-1)
-                            c.upDamage(4)
+                            c.modifyCostForCombat(-reduceCost)
+                            c.upDamage(damage)
                         }
                         if (c is PressurePoints) {
-                            c.updateCost(-1)
-                            c.upMagicNumber(4)
+                            c.modifyCostForCombat(-reduceCost)
+                            c.upMagicNumber(damage)
                         }
                     }
                 }

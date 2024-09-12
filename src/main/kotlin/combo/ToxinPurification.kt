@@ -11,6 +11,7 @@ import com.megacrit.cardcrawl.powers.PoisonPower
 import com.megacrit.cardcrawl.relics.*
 import core.AbstractRelicCombo
 import core.ComboEffect
+import core.ConfigurableType
 import core.PatchEffect
 import utils.addToBot
 import utils.isAlive
@@ -21,7 +22,8 @@ class ToxinPurification : AbstractRelicCombo(
     hashSetOf(TwistedFunnel.ID, TheSpecimen.ID, SneckoSkull.ID, ChemicalX.ID, RingOfTheSerpent.ID)
 ) {
     private var count: Int = 0
-
+    private val limit = setConfigurableProperty("M", 3, ConfigurableType.Int).toInt()
+    private val repeat = setConfigurableProperty("M2", 1, ConfigurableType.Int).toInt()
     override fun onActive() {
         PatchEffect.onPostStartOfTurnSubscribers.add(ComboEffect {
             count = 0
@@ -32,14 +34,14 @@ class ToxinPurification : AbstractRelicCombo(
 
             if (power is PoisonPower && source is AbstractPlayer && target is AbstractMonster) {
                 count++
-                if (count == 3) {
+                if (count == limit) {
                     flash()
                     count = 0
                     addToBot {
                         AbstractDungeon.getMonsters().monsters.forEach {
                             val power1 = it.getPower(PoisonPower.POWER_ID)
                             if (it.isAlive() && power1 != null && power1.amount > 0) {
-                                repeat(1 + getExtraCollectCount()) {
+                                repeat(repeat + getExtraCollectCount()) {
                                     addToBot(
                                         PoisonLoseHpAction(
                                             power1.owner,
@@ -54,7 +56,6 @@ class ToxinPurification : AbstractRelicCombo(
                     }
                 }
             }
-
             true
 
         })

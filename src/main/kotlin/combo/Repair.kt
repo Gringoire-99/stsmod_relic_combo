@@ -10,6 +10,7 @@ import com.megacrit.cardcrawl.powers.StrengthPower
 import com.megacrit.cardcrawl.relics.*
 import core.AbstractRelicCombo
 import core.ComboEffect
+import core.ConfigurableType
 import core.PatchEffect
 import utils.addToBot
 import utils.addToQueue
@@ -27,33 +28,33 @@ class Repair : AbstractRelicCombo(
         DataDisk.ID
     ),
 ) {
+    private val amount = setConfigurableProperty("M", 1, ConfigurableType.Int).toInt()
+    private val impulse = setConfigurableProperty("M2", 1, ConfigurableType.Int).toInt()
     override fun onActive() {
         PatchEffect.onPostBattleStartSubscribers.add(ComboEffect {
             flash()
-            repeat(1 + getExtraCollectCount()) {
-                addToBot(
-                    ApplyPowerAction(
-                        AbstractDungeon.player,
-                        AbstractDungeon.player,
-                        StrengthPower(AbstractDungeon.player, 1)
-                    ),
-                    ApplyPowerAction(
-                        AbstractDungeon.player,
-                        AbstractDungeon.player,
-                        DexterityPower(AbstractDungeon.player, 1)
-                    ),
-                    ApplyPowerAction(
-                        AbstractDungeon.player,
-                        AbstractDungeon.player,
-                        FocusPower(AbstractDungeon.player, 1)
-                    ),
-                )
-            }
+            val a = amount + getExtraCollectCount()
+            addToBot(
+                ApplyPowerAction(
+                    AbstractDungeon.player,
+                    AbstractDungeon.player,
+                    StrengthPower(AbstractDungeon.player, a)
+                ),
+                ApplyPowerAction(
+                    AbstractDungeon.player,
+                    AbstractDungeon.player,
+                    DexterityPower(AbstractDungeon.player, a)
+                ),
+                ApplyPowerAction(
+                    AbstractDungeon.player,
+                    AbstractDungeon.player,
+                    FocusPower(AbstractDungeon.player, a)
+                ),
+            )
         })
         PatchEffect.onPostStartOfTurnSubscribers.add(ComboEffect {
             flash()
-            val c = 1
-            repeat(c) {
+            repeat(impulse) {
                 addToBot(
                     ImpulseAction(),
                 )

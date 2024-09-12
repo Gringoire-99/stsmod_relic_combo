@@ -7,6 +7,7 @@ import com.megacrit.cardcrawl.dungeons.AbstractDungeon
 import com.megacrit.cardcrawl.relics.*
 import core.AbstractRelicCombo
 import core.ComboEffect
+import core.ConfigurableType
 import core.PatchEffect
 import utils.*
 
@@ -14,17 +15,20 @@ class LessIsMore : AbstractRelicCombo(
     LessIsMore::class.makeId(),
     hashSetOf(EmptyCage.ID, CharonsAshes.ID, PeacePipe.ID, SmilingMask.ID, SingingBowl.ID, BustedCrown.ID)
 ) {
-    private val count = 10
+
+    private val limit = setConfigurableProperty("M", 10, ConfigurableType.Int).toInt()
+    private val upgrade = setConfigurableProperty("M2", 1, ConfigurableType.Int).toInt()
+    private val gain = setConfigurableProperty("M3", 1, ConfigurableType.Int).toInt()
     override fun onActive() {
         PatchEffect.onPostBattleStartSubscribers.add(ComboEffect {
-            if (AbstractDungeon.player.masterDeck.size() <= count) {
+            if (AbstractDungeon.player.masterDeck.size() <= limit) {
                 flash()
                 addToTop {
-                    getAllGroup().forEach { it ->
+                    getAllGroup().forEach {
                         it.group.forEach { c ->
-                            c.upDamage(1)
-                            c.upBlock(1)
-                            c.upMagicNumber(1)
+                            c.upDamage(upgrade)
+                            c.upBlock(upgrade)
+                            c.upMagicNumber(upgrade)
                         }
                     }
                 }
@@ -32,9 +36,9 @@ class LessIsMore : AbstractRelicCombo(
         })
         PatchEffect.onPostStartOfTurnSubscribers.add(ComboEffect {
             val sumOf = getAllGroup().sumOf { it.group.size }
-            if (sumOf <= count) {
+            if (sumOf <= limit) {
                 flash()
-                addToTop(ExpertiseAction(AbstractDungeon.player, BaseMod.MAX_HAND_SIZE), GainEnergyAction(1))
+                addToTop(ExpertiseAction(AbstractDungeon.player, BaseMod.MAX_HAND_SIZE), GainEnergyAction(gain))
             }
         })
     }

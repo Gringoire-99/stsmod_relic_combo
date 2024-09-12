@@ -9,6 +9,7 @@ import com.megacrit.cardcrawl.dungeons.AbstractDungeon
 import com.megacrit.cardcrawl.relics.*
 import core.AbstractRelicCombo
 import core.ComboEffect
+import core.ConfigurableType
 import core.PatchEffect
 import utils.addToBot
 import utils.addToTop
@@ -19,11 +20,13 @@ class Stargazing : AbstractRelicCombo(
     Stargazing::class.makeId(),
     hashSetOf(GoldenEye.ID, Orrery.ID, FrozenEye.ID, Astrolabe.ID, BlackStar.ID, Melange.ID)
 ) {
+    private val scryAdd = setConfigurableProperty("M", 2, ConfigurableType.Int).toInt()
+    private val m = setConfigurableProperty("M2", 1, ConfigurableType.Int).toInt()
     private var scryCount = 0
     override fun onActive() {
         PatchEffect.onPostBattleStartSubscribers.add(ComboEffect {
-            scryCount += getCurrentComboSize() * 2
-            addToTop(ScryAction(1))
+            scryCount += getCurrentComboSize() * scryAdd
+            addToTop(ScryAction(m))
         })
         PatchEffect.onPostBattleStartCleanupSubscribers.add(ComboEffect {
             scryCount = 0
@@ -37,7 +40,7 @@ class Stargazing : AbstractRelicCombo(
                     DamageInfo.DamageType.THORNS,
                     AbstractGameAction.AttackEffect.FIRE
                 ),
-                HealAction(AbstractDungeon.player, AbstractDungeon.player, 1)
+                HealAction(AbstractDungeon.player, AbstractDungeon.player, m)
             )
             flash()
             a

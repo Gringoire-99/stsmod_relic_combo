@@ -7,6 +7,7 @@ import com.megacrit.cardcrawl.powers.StrengthPower
 import com.megacrit.cardcrawl.relics.*
 import core.AbstractRelicCombo
 import core.ComboEffect
+import core.ConfigurableType
 import core.PatchEffect
 import utils.addToBot
 import utils.isInCombat
@@ -19,6 +20,8 @@ class Sacrifice : AbstractRelicCombo(
     Sacrifice::class.makeId(),
     hashSetOf(MarkOfPain.ID, RunicCube.ID, MutagenicStrength.ID, MarkOfTheBloom.ID, SelfFormingClay.ID, RedSkull.ID)
 ) {
+    private val m = setConfigurableProperty("M", 1, ConfigurableType.Int).toInt()
+
     override fun onActive() {
         PatchEffect.onPrePlayerLoseHpSubscribers.add(ComboEffect { damage, t ->
             val d = damage
@@ -27,12 +30,12 @@ class Sacrifice : AbstractRelicCombo(
                     ApplyPowerAction(
                         AbstractDungeon.player,
                         AbstractDungeon.player,
-                        StrengthPower(AbstractDungeon.player, 1)
+                        StrengthPower(AbstractDungeon.player, m)
                     ),
                     ApplyPowerAction(
                         AbstractDungeon.player,
                         AbstractDungeon.player,
-                        LoseStrengthPower(AbstractDungeon.player, 1)
+                        LoseStrengthPower(AbstractDungeon.player, m)
                     )
                 )
                 flash()

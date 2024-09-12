@@ -4,6 +4,7 @@ import com.megacrit.cardcrawl.dungeons.AbstractDungeon
 import com.megacrit.cardcrawl.relics.*
 import core.AbstractRelicCombo
 import core.ComboEffect
+import core.ConfigurableType
 import core.PatchEffect
 import utils.makeId
 
@@ -19,6 +20,8 @@ class MightFortune : AbstractRelicCombo(
         SsserpentHead.ID
     )
 ) {
+    private val m = setConfigurableProperty("M", 20, ConfigurableType.Int).toInt()
+
     override fun onActive() {
 
         PatchEffect.onPreRollEventSubscribers.add(ComboEffect {
@@ -28,14 +31,14 @@ class MightFortune : AbstractRelicCombo(
                 _: IntArray,
                 _: IntArray,
             ->
-            val randomBoolean = AbstractDungeon.miscRng.randomBoolean(getCurrentComboSize() * 0.2F)
+            val randomBoolean = AbstractDungeon.miscRng.randomBoolean(getCurrentComboSize() * 0.01F * m)
             if (randomBoolean) {
                 forceChest[0] = true
                 flash()
             }
         })
         PatchEffect.onPostOpenChestSubscribers.add(ComboEffect {
-            val randomBoolean = AbstractDungeon.miscRng.randomBoolean(getCurrentComboSize() * 0.2F)
+            val randomBoolean = AbstractDungeon.miscRng.randomBoolean(getCurrentComboSize() * 0.01F * m)
             if (randomBoolean && AbstractDungeon.currMapNode != null) {
                 flash()
                 AbstractDungeon.getCurrRoom().addRelicToRewards(AbstractDungeon.returnRandomRelicTier())

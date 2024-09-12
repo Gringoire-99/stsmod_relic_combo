@@ -9,6 +9,7 @@ import com.megacrit.cardcrawl.powers.AccuracyPower
 import com.megacrit.cardcrawl.relics.*
 import core.AbstractRelicCombo
 import core.ComboEffect
+import core.ConfigurableType
 import core.PatchEffect
 import utils.addToBot
 import utils.makeId
@@ -18,12 +19,15 @@ class Ninja :
         Ninja::class.makeId(),
         hashSetOf(Kunai.ID, Shuriken.ID, NinjaScroll.ID, WristBlade.ID, OrnamentalFan.ID)
     ) {
-    private var maxTriggerCount = 1
+    private val max = setConfigurableProperty("M", 1, ConfigurableType.Int).toInt()
+    private var maxTriggerCount = max
+    private val increase = setConfigurableProperty("M2", 2, ConfigurableType.Int).toInt()
+    private val add = setConfigurableProperty("M3", 1, ConfigurableType.Int).toInt()
     private var triggerCount = 0
     private var attackCount = 0
     override fun onActive() {
         PatchEffect.onPostBattleStartCleanupSubscribers.add(ComboEffect {
-            maxTriggerCount = 1 + getExtraCollectCount()
+            maxTriggerCount = max + getExtraCollectCount()
         })
         PatchEffect.onPostStartOfTurnSubscribers.add(ComboEffect {
             triggerCount = 0
@@ -36,11 +40,11 @@ class Ninja :
                     attackCount = 0
                     triggerCount++
                     addToBot(
-                        MakeTempCardInHandAction(Shiv().apply { upgrade() }, 1),
+                        MakeTempCardInHandAction(Shiv().apply { upgrade() }, add),
                         ApplyPowerAction(
                             AbstractDungeon.player,
                             AbstractDungeon.player,
-                            AccuracyPower(AbstractDungeon.player, 2)
+                            AccuracyPower(AbstractDungeon.player, increase)
                         )
                     )
                     flash()

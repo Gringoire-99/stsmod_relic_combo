@@ -10,6 +10,7 @@ import com.megacrit.cardcrawl.vfx.UpgradeShineEffect
 import com.megacrit.cardcrawl.vfx.cardManip.ShowCardBrieflyEffect
 import core.AbstractRelicCombo
 import core.ComboEffect
+import core.ConfigurableType
 import core.PatchEffect
 import utils.makeId
 import kotlin.math.max
@@ -18,6 +19,7 @@ class VIP : AbstractRelicCombo(
     VIP::class.makeId(),
     hashSetOf(MealTicket.ID, SmilingMask.ID, OldCoin.ID, MembershipCard.ID, Courier.ID)
 ) {
+    private val repeat = setConfigurableProperty("M", 1, ConfigurableType.Int).toInt()
     override fun onActive() {
         PatchEffect.onPreShopInitSubscribers.add(ComboEffect {
                 _: ShopScreen,
@@ -46,18 +48,20 @@ class VIP : AbstractRelicCombo(
         })
         PatchEffect.onPostShopPurgeSubscribers.add(ComboEffect {
             ShopScreen.actualPurgeCost = 0
-            AbstractDungeon.effectsQueue.add(EmptyEffect {
-                AbstractDungeon.player.masterDeck.group.filter { it.canUpgrade() }.randomOrNull()?.apply {
-                    upgrade()
-                    AbstractDungeon.effectsQueue.add(ShowCardBrieflyEffect(makeStatEquivalentCopy()))
-                    AbstractDungeon.topLevelEffectsQueue.add(
-                        UpgradeShineEffect(
-                            Settings.WIDTH.toFloat() / 2.0f,
-                            Settings.HEIGHT.toFloat() / 2.0f
+            repeat(repeat) {
+                AbstractDungeon.effectsQueue.add(EmptyEffect {
+                    AbstractDungeon.player.masterDeck.group.filter { it.canUpgrade() }.randomOrNull()?.apply {
+                        upgrade()
+                        AbstractDungeon.effectsQueue.add(ShowCardBrieflyEffect(makeStatEquivalentCopy()))
+                        AbstractDungeon.topLevelEffectsQueue.add(
+                            UpgradeShineEffect(
+                                Settings.WIDTH.toFloat() / 2.0f,
+                                Settings.HEIGHT.toFloat() / 2.0f
+                            )
                         )
-                    )
-                }
-            })
+                    }
+                })
+            }
             flash()
         })
 

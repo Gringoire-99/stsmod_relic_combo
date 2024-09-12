@@ -13,6 +13,7 @@ import com.megacrit.cardcrawl.vfx.UpgradeShineEffect
 import com.megacrit.cardcrawl.vfx.cardManip.ShowCardBrieflyEffect
 import core.AbstractRelicCombo
 import core.ComboEffect
+import core.ConfigurableType
 import core.PatchEffect
 import utils.makeId
 import kotlin.math.max
@@ -21,43 +22,47 @@ class GetSomeSleep : AbstractRelicCombo(
     GetSomeSleep::class.makeId(),
     hashSetOf(AncientTeaSet.ID, DreamCatcher.ID, RegalPillow.ID, UnceasingTop.ID)
 ) {
+    private val increase = setConfigurableProperty("M", 10, ConfigurableType.Int).toInt()
+    private val repeat = setConfigurableProperty("M2", 2, ConfigurableType.Int).toInt()
     override fun onActive() {
         PatchEffect.onPreRestSubscribers.add(ComboEffect { healAmount ->
             flash()
             val a: Int = max(healAmount, AbstractDungeon.player.maxHealth - AbstractDungeon.player.currentHealth)
             AbstractDungeon.effectsQueue.add(EmptyEffect {
-                AbstractDungeon.player.increaseMaxHp(10, true)
+                AbstractDungeon.player.increaseMaxHp(increase, true)
             })
-            repeat(2 + getExtraCollectCount()) {
-                val group = AbstractDungeon.player.masterDeck.group.filter { it.canUpgrade() }.groupBy { it.rarity }
-                val s =
-                    hashSetOf(
-                        CardRarity.RARE,
-                        CardRarity.UNCOMMON,
-                        CardRarity.COMMON,
-                        CardRarity.BASIC,
-                        CardRarity.SPECIAL,
-                        CardRarity.CURSE
-                    )
-                var c: AbstractCard? = null
-                s.any {
-                    val randomOrNull = group[it]?.randomOrNull()
-                    if (randomOrNull != null) {
-                        c = randomOrNull
-                    }
-                    randomOrNull != null
-                }
-                c?.apply {
-                    upgrade()
-                    AbstractDungeon.effectsQueue.add(ShowCardBrieflyEffect(makeStatEquivalentCopy()))
-                    AbstractDungeon.topLevelEffectsQueue.add(
-                        UpgradeShineEffect(
-                            Settings.WIDTH.toFloat() / 2.0f,
-                            Settings.HEIGHT.toFloat() / 2.0f
+            AbstractDungeon.effectsQueue.add(EmptyEffect {
+                repeat(repeat + getExtraCollectCount()) {
+                    val group = AbstractDungeon.player.masterDeck.group.filter { it.canUpgrade() }.groupBy { it.rarity }
+                    val s =
+                        hashSetOf(
+                            CardRarity.RARE,
+                            CardRarity.UNCOMMON,
+                            CardRarity.COMMON,
+                            CardRarity.BASIC,
+                            CardRarity.SPECIAL,
+                            CardRarity.CURSE
                         )
-                    )
+                    var c: AbstractCard? = null
+                    s.any {
+                        val randomOrNull = group[it]?.randomOrNull()
+                        if (randomOrNull != null) {
+                            c = randomOrNull
+                        }
+                        randomOrNull != null
+                    }
+                    c?.apply {
+                        upgrade()
+                        AbstractDungeon.effectsQueue.add(ShowCardBrieflyEffect(makeStatEquivalentCopy()))
+                        AbstractDungeon.topLevelEffectsQueue.add(
+                            UpgradeShineEffect(
+                                Settings.WIDTH.toFloat() / 2.0f,
+                                Settings.HEIGHT.toFloat() / 2.0f
+                            )
+                        )
+                    }
                 }
-            }
+            })
             a
         })
     }

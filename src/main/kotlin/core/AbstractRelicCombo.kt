@@ -14,18 +14,93 @@ import utils.toLog
 import kotlin.math.max
 
 abstract class AbstractRelicCombo(
-    val id: String, val combo: HashSet<String> = hashSetOf(), var numberToActive: Int = 3
+    val id: String, val combo: HashSet<String> = hashSetOf(), numberToActiveCombo: Int = 3, enableCombo: Boolean = true
 ) {
+    val configurablePropertySet: HashMap<String, ConfigurableProperty> = hashMapOf()
     var title: String = ""
     var desc: String = ""
     private var tip: ComboPowerTip = ComboPowerTip(title, desc, id)
     private val flavorTexts: ArrayList<String> = arrayListOf()
     private val relicStrings = CardCrawlGame.languagePack?.getRelicStrings(id)
 
+    class ConfigurableProperty(val key: String, val default: Any, val name: String, val type: ConfigurableType)
+
+    var numberToActive: Int = setConfigurableProperty(NumberToActive, numberToActiveCombo, ConfigurableType.Int).toInt()
+    val enableCombo: Boolean = setConfigurableProperty(EnableCombo, enableCombo, ConfigurableType.Bool).toBoolean()
+
+    /**
+     * call this function during init or manually add Property to configurablePropertySet
+     * ,otherwise it won't generate right config ui
+     */
+    fun setConfigurableProperty(
+        name: String, default: Any, type: ConfigurableType
+    ): PropertyString {
+        val k = getConfigurablePropertyKey(name)
+        val d = default.toString()
+        var r: String = d
+        configurablePropertySet[k] = ConfigurableProperty(key = k, default = d, name = name, type = type)
+        RelicComboModConfig.spireModConfig?.apply {
+            if (has(k)) {
+                r = getString(k)
+            } else {
+                setString(k, d)
+            }
+        }
+        return PropertyString(r, d)
+    }
+
+    // (Case Exception may happen when change an old property's type or have a wrong default value)
+    class PropertyString(private val value: String, private val default: Any) {
+        fun toInt(): Int {
+            val i: Int = try {
+                value.toInt()
+            } catch (e: NumberFormatException) {
+                default.toString().toInt()
+            }
+            return i
+        }
+
+        fun toBoolean(): Boolean {
+            val b: Boolean = try {
+                value.toBooleanStrict()
+            } catch (e: IllegalArgumentException) {
+                default.toString().toBooleanStrict()
+            }
+            return b
+        }
+    }
+
+    /**
+     *  will throw an exception when get a null property
+     */
+    private fun getConfigurableProperty(name: String): PropertyString {
+        val k = getConfigurablePropertyKey(name)
+        val d = configurablePropertySet[k]?.default?.toString()
+        var r: String? = d
+        if (r == null || d == null) {
+            throw RuntimeException("get a property before set")
+        }
+        RelicComboModConfig.spireModConfig?.apply {
+            if (has(k)) {
+                r = getString(k)
+            } else {
+                setString(k, d)
+            }
+        }
+        if (r == null) {
+            throw RuntimeException("property is null")
+        }
+        return PropertyString(r!!, d)
+    }
+
+    private fun getConfigurablePropertyKey(name: String): String {
+        return "${id}:${name}"
+    }
+
+
     init {
         relicStrings?.apply {
             title = relicStrings.NAME
-            desc = relicStrings.DESCRIPTIONS.joinToString(" NL ") { it.replace(" !N! ", " ${numberToActive} ") }
             if (relicStrings.FLAVOR == null || relicStrings.FLAVOR == "") {
                 flavorTexts.add(title)
             } else {
@@ -64,10 +139,22 @@ abstract class AbstractRelicCombo(
         )
     }
 
-    private fun updateTip(idToHighlight: HashSet<String> = hashSetOf()) {
+    fun updateTip(idToHighlight: HashSet<String> = hashSetOf()) {
         relicStrings?.apply {
-            val c = if (idToHighlight.size >= numberToActive) "#g" else "#r"
-            desc = relicStrings.DESCRIPTIONS.joinToString(" NL ") { it.replace(" !N! ", " ${c}${numberToActive} ") }
+            val c = if (idToHighlight.size >= numberToActive) "#g" else "#y"
+            desc = relicStrings.DESCRIPTIONS.joinToString(" NL ") {
+                var replace = it.replace(" !N! ", " ${c}${numberToActive} ")
+                configurablePropertySet.values.forEach { p ->
+                    if (p.type == ConfigurableType.Int) {
+                        val v = getConfigurableProperty(p.name).toInt()
+                        var color = "#y"
+                        if (v > p.default.toString().toInt()) color =
+                            "#g" else if (v < p.default.toString().toInt()) color = "#r"
+                        replace = replace.replace(" !${p.name}! ", " ${color}${v} ")
+                    }
+                }
+                replace
+            }
             val s = combo.joinToString(separator = " NL ") {
                 var color = "#b"
                 if (it in idToHighlight) {
@@ -91,6 +178,9 @@ abstract class AbstractRelicCombo(
     }
 
     companion object {
+        const val NumberToActive = "NumberToActive"
+        const val EnableCombo = "EnableCombo"
+
 
         // registered combo
         val registeredComboSet = hashSetOf<AbstractRelicCombo>()
@@ -107,30 +197,20 @@ abstract class AbstractRelicCombo(
 
         // update the enabled combo , call after setting changed
         fun updateEnabledRelicComboSets() {
+            val map = registeredComboSet.map { it.javaClass.newInstance() }
+            registeredComboSet.clear()
+            registeredComboSet.addAll(map)
             enabledRelicComboSets.clear()
+            allId.clear()
             val filter: ArrayList<AbstractRelicCombo> = arrayListOf()
 
-            registeredComboSet.forEach {
-                if (RelicComboModConfig.spireModConfig?.getBool(
-                        RelicComboModConfig.getPropertyKey(
-                            it,
-                            RelicComboModConfig.Companion.ComboConfig.EnableCombo
-                        )
-                    ) == true
-                ) {
-                    filter.add(it.javaClass.newInstance())
+            registeredComboSet.forEach { s ->
+                if (s.enableCombo) {
+                    filter.add(s.javaClass.newInstance())
                 }
-                it.combo.forEach {
+                s.combo.forEach {
                     RelicLibrary.getRelic(it).tips.removeIf { tip -> tip is ComboPowerTip }
                 }
-            }
-            filter.forEach {
-                it.numberToActive = RelicComboModConfig.spireModConfig?.getInt(
-                    RelicComboModConfig.getPropertyKey(
-                        it,
-                        RelicComboModConfig.Companion.ComboConfig.NumberToActive
-                    )
-                ) ?: it.numberToActive
             }
             enabledRelicComboSets.addAll(filter)
             enabledRelicComboSets.forEach { s ->
@@ -189,7 +269,6 @@ abstract class AbstractRelicCombo(
                 "update combo set start".toLog()
 //              clean all triggerable effect for all combo
                 PatchEffect.cleanAllComboEffect()
-                PatchEffect.listOfAll.sumOf { it.size }.toLog("list size")
 
 //              remove non active combo
                 if (!isInCombat()) {
@@ -211,8 +290,7 @@ abstract class AbstractRelicCombo(
                             if (r in s.combo) {
                                 val find = currentComboSet.entries.find { it.key.id == s.id }
                                 val k =
-                                    find?.key ?: s.javaClass.newInstance()
-                                        .apply { numberToActive = s.numberToActive }
+                                    find?.key ?: s.javaClass.newInstance().apply { numberToActive = s.numberToActive }
                                 val v = find?.value ?: hashSetOf()
                                 v.add(r)
                                 currentComboSet[k] = v

@@ -8,6 +8,7 @@ import com.megacrit.cardcrawl.powers.StrengthPower
 import com.megacrit.cardcrawl.relics.*
 import core.AbstractRelicCombo
 import core.ComboEffect
+import core.ConfigurableType
 import core.PatchEffect
 import utils.addToBot
 import utils.addToTop
@@ -18,13 +19,16 @@ class StayHealthy : AbstractRelicCombo(
     StayHealthy::class.makeId(),
     hashSetOf(FaceOfCleric.ID, OddMushroom.ID, MedicalKit.ID, OrangePellets.ID, Ginger.ID, Girya.ID, AncientTeaSet.ID)
 ) {
+    private val m = setConfigurableProperty("M", 1, ConfigurableType.Int).toInt()
+    private val drawCard = setConfigurableProperty("M2", 1, ConfigurableType.Int).toInt()
+    private val gainE = setConfigurableProperty("M3", 1, ConfigurableType.Int).toInt()
     override fun onActive() {
         PatchEffect.onPostBattleStartSubscribers.add(ComboEffect(priority = 0) {
             addToBot {
                 val h = AbstractDungeon.player.currentHealth
-                val power = h / 20
-                val draw = h / 30
-                val e = h / 50
+                val power = (h / 20) * m
+                val draw = (h / 30) * drawCard
+                val e = (h / 50) * gainE
                 if (power > 0) {
                     flash()
                     val s = power / 2

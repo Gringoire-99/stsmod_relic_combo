@@ -14,6 +14,7 @@ import com.megacrit.cardcrawl.relics.*
 import com.megacrit.cardcrawl.vfx.combat.IntenseZoomEffect
 import core.AbstractRelicCombo
 import core.ComboEffect
+import core.ConfigurableType
 import core.PatchEffect
 import utils.addToTop
 import utils.isInCombat
@@ -25,6 +26,9 @@ class Awakened : AbstractRelicCombo(
 ) {
     private var isUsed: Boolean = false
 
+    private val magic = setConfigurableProperty("M", 1, ConfigurableType.Int).toInt()
+    private val heal = setConfigurableProperty("M2", 4, ConfigurableType.Int).toInt()
+
     override fun onActive() {
         PatchEffect.onPostBattleStartSubscribers.add(ComboEffect {
             isUsed = false
@@ -32,7 +36,7 @@ class Awakened : AbstractRelicCombo(
                 ApplyPowerAction(
                     AbstractDungeon.player,
                     AbstractDungeon.player,
-                    RitualPower(AbstractDungeon.player, 1, true)
+                    RitualPower(AbstractDungeon.player, magic, true)
                 )
             )
             flash()
@@ -46,9 +50,9 @@ class Awakened : AbstractRelicCombo(
                     ApplyPowerAction(
                         AbstractDungeon.player,
                         AbstractDungeon.player,
-                        StrengthPower(AbstractDungeon.player, 1 * getCurrentComboSize())
+                        StrengthPower(AbstractDungeon.player, magic * getCurrentComboSize())
                     ),
-                    HealAction(AbstractDungeon.player, AbstractDungeon.player, 4 * getCurrentComboSize()),
+                    HealAction(AbstractDungeon.player, AbstractDungeon.player, heal * getCurrentComboSize()),
                     EmptyAction {
                         AbstractDungeon.player.powers.forEach {
                             if (it.type == AbstractPower.PowerType.DEBUFF) {

@@ -36,7 +36,7 @@ class LabeledDropdown(
 
     override fun render(p0: SpriteBatch?) {
         label?.render(p0)
-        dropdownMenu.render(p0, xPos * com.megacrit.cardcrawl.core.Settings.xScale, yPos * Settings.yScale)
+        dropdownMenu.render(p0, xPos * Settings.xScale, yPos * Settings.yScale)
     }
 
     override fun update() {

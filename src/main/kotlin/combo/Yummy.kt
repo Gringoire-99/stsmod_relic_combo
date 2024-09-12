@@ -7,6 +7,7 @@ import com.megacrit.cardcrawl.powers.StrengthPower
 import com.megacrit.cardcrawl.relics.*
 import core.AbstractRelicCombo
 import core.ComboEffect
+import core.ConfigurableType
 import core.PatchEffect
 import utils.addToBot
 import utils.makeId
@@ -14,12 +15,13 @@ import utils.makeId
 class Yummy() : AbstractRelicCombo(
     id = Yummy::class.makeId(), combo = hashSetOf(
         Strawberry.ID, MeatOnTheBone.ID, Pear.ID, IceCream.ID, Mango.ID, OddMushroom.ID, Waffle.ID
-    ), numberToActive = 2
+    ), numberToActiveCombo = 2
 ) {
+    private val m = setConfigurableProperty("M", 1, ConfigurableType.Int).toInt()
     override fun onActive() {
         PatchEffect.onPostBattleStartSubscribers.add(ComboEffect {
             flash()
-            val s = getCurrentComboSize() / 2
+            val s = (getCurrentComboSize() / 2) * m
             val d = getCurrentComboSize() - s
             addToBot(
                 ApplyPowerAction(

@@ -5,10 +5,11 @@ import com.evacipated.cardcrawl.modthespire.lib.SpireInitializer
 import com.megacrit.cardcrawl.core.Settings
 import com.megacrit.cardcrawl.localization.RelicStrings
 import com.megacrit.cardcrawl.localization.UIStrings
-import core.AbstractRelicCombo
 import config.RelicComboModConfig
+import core.AbstractRelicCombo
 import core.PatchEffect
 import utils.modId
+import utils.toLog
 
 @SpireInitializer
 class RelicComboCore : EditStringsSubscriber,
@@ -44,10 +45,10 @@ class RelicComboCore : EditStringsSubscriber,
     }
 
     override fun receivePostInitialize() {
+        RelicComboModConfig.loadConfig()
         AbstractRelicCombo.registerComboSet(
             AbstractRelicCombo.getAllDefaultComboSet()
         )
-        RelicComboModConfig.loadConfig()
         RelicComboModConfig.initModMenu()
         AbstractRelicCombo.updateEnabledRelicComboSets()
     }

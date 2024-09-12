@@ -7,6 +7,7 @@ import com.megacrit.cardcrawl.powers.ThornsPower
 import com.megacrit.cardcrawl.relics.*
 import core.AbstractRelicCombo
 import core.ComboEffect
+import core.ConfigurableType
 import core.PatchEffect
 import utils.addToTop
 import utils.makeId
@@ -24,15 +25,16 @@ class CounterAttack : AbstractRelicCombo(
         ToughBandages.ID,
         ThreadAndNeedle.ID, FossilizedHelix.ID
     ),
-    numberToActive = 3
+    numberToActiveCombo = 3
 ) {
+    private val magic = setConfigurableProperty("M", 1, ConfigurableType.Int).toInt()
     override fun onActive() {
         PatchEffect.onPostBattleStartSubscribers.add(ComboEffect {
             addToTop(
                 ApplyPowerAction(
                     AbstractDungeon.player,
                     AbstractDungeon.player,
-                    ThornsPower(AbstractDungeon.player, getCurrentComboSize())
+                    ThornsPower(AbstractDungeon.player, getCurrentComboSize() * magic)
                 )
             )
             flash()

@@ -155,3 +155,4 @@ fun addToQueue(
 fun AbstractMonster.isAlive(): Boolean {
     return !this.halfDead && !this.isDying && !this.isEscaping
 }
+

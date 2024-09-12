@@ -5,6 +5,7 @@ import com.megacrit.cardcrawl.monsters.AbstractMonster
 import com.megacrit.cardcrawl.relics.*
 import core.AbstractRelicCombo
 import core.ComboEffect
+import core.ConfigurableType
 import core.PatchEffect
 import utils.drawCard
 import utils.isInCombat
@@ -18,7 +19,8 @@ class ChallengeMe :
         hashSetOf(ChampionsBelt.ID, SlaversCollar.ID, Sling.ID, Pantograph.ID, GremlinHorn.ID, PreservedInsect.ID)
     ) {
     private var active: Boolean = false
-
+    private val m = setConfigurableProperty("M", 5, ConfigurableType.Int).toInt()
+    private val draw = setConfigurableProperty("M2", 1, ConfigurableType.Int).toInt()
     override fun onActive() {
 
         PatchEffect.onPostBattleStartCleanupSubscribers.add(ComboEffect {
@@ -27,14 +29,14 @@ class ChallengeMe :
         })
         PatchEffect.onPostStartOfTurnSubscribers.add(ComboEffect {
             if (active) {
-                drawCard(1)
+                drawCard(draw)
                 flash()
             }
         })
         PatchEffect.onPreMonsterTakingDamageSubscribers.add(ComboEffect(priority = 0) { damage, _ ->
             var d = damage
             if (active) {
-                d += max(0, ceil(damage * 0.05 * getCurrentComboSize()).toInt())
+                d += max(0, ceil(damage * 0.01 * m * getCurrentComboSize()).toInt())
                 flash()
             }
             d
@@ -42,7 +44,7 @@ class ChallengeMe :
         PatchEffect.onPrePlayerTakingDamageSubscribers.add(ComboEffect(priority = 0) { damage, _ ->
             var d = damage
             if (active && isInCombat()) {
-                d = max(0, damage - ceil(damage * 0.05 * getCurrentComboSize()).toInt())
+                d = max(0, damage - ceil(damage * 0.01 * m * getCurrentComboSize()).toInt())
                 flash()
             }
             d

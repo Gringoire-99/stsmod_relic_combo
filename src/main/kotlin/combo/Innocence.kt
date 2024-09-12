@@ -5,6 +5,7 @@ import com.megacrit.cardcrawl.relics.*
 import com.megacrit.cardcrawl.stances.DivinityStance
 import core.AbstractRelicCombo
 import core.ComboEffect
+import core.ConfigurableType
 import core.PatchEffect
 import utils.addToBot
 import utils.isInCombat
@@ -24,8 +25,10 @@ class Innocence : AbstractRelicCombo(
         HoveringKite.ID,
         PaperCrane.ID,
         PaperFrog.ID,
-    ), numberToActive = 2
+    ), numberToActiveCombo = 2
 ) {
+    private val m = setConfigurableProperty("M", 3, ConfigurableType.Int).toInt()
+
     override fun onActive() {
         PatchEffect.onPostStartOfTurnSubscribers.add(ComboEffect {
             if (getCurrentComboSize() == this.combo.size) {
@@ -37,7 +40,7 @@ class Innocence : AbstractRelicCombo(
             var d = damage
             if (!isInCombat() || getCurrentComboSize() == this.combo.size) {
                 flash()
-                d = max(0, d - getCurrentComboSize() * 3)
+                d = max(0, d - getCurrentComboSize() * m)
             }
             d
         })
