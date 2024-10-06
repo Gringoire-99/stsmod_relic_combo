@@ -73,7 +73,8 @@ typealias OnCalculateCardDamage = (card: AbstractCard, damage: Float, mo: Abstra
  *
  */
 class PatchEffect : OnPlayerTurnStartPostDrawSubscriber, OnStartBattleSubscriber, PostDrawSubscriber,
-    PostBattleSubscriber, OnPlayerDamagedSubscriber, PostPowerApplySubscriber, PostExhaustSubscriber {
+    PostBattleSubscriber, OnPlayerDamagedSubscriber, PostPowerApplySubscriber, PostExhaustSubscriber,
+    StartGameSubscriber {
     companion object {
         val patchInstance = PatchEffect()
         val onPostEndBattleSubscribers: ArrayList<Effect<OnPostEndBattle>> = arrayListOf()
@@ -212,6 +213,11 @@ class PatchEffect : OnPlayerTurnStartPostDrawSubscriber, OnStartBattleSubscriber
         }
     }
 
+    override fun receiveStartGame() {
+        "start game update relic combo".toLog()
+        AbstractRelicCombo.updateCombo()
+    }
+
 
 }
 
@@ -219,9 +225,3 @@ class ComboEffect<T : Function<Any?>>(priority: Int = 1, effect: T) :
     Effect<T>(effect = effect, priority = priority)
 
 abstract class Effect<T : Function<Any?>>(val priority: Int = 0, val isInnate: Boolean = false, val effect: T)
-
-fun main() {
-    val arrayListOf = arrayListOf(1, 2, 3, 0, -1)
-    arrayListOf.sortBy { -it }
-    arrayListOf.toLog()
-}

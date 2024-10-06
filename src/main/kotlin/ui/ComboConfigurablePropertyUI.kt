@@ -9,7 +9,6 @@ import com.megacrit.cardcrawl.helpers.RelicLibrary
 import com.megacrit.cardcrawl.relics.AbstractRelic
 import core.AbstractRelicCombo
 import core.ConfigurableType
-import javax.swing.plaf.synth.ColorType
 
 class ComboConfigurablePropertyUI(val parent: ModPanel, val config: SpireConfig) : IUIElement {
     private val firstX = 400f
@@ -53,8 +52,8 @@ class ComboConfigurablePropertyUI(val parent: ModPanel, val config: SpireConfig)
 
     private fun getLocate(): Locate {
         val size = toggles.size + numberSelectors.size
-        val col = size / 5
-        val row = size % 5
+        val col = size / 7
+        val row = size % 7
         return Locate(firstX + col * 200f, firstY - row * 100F)
     }
 

@@ -14,8 +14,8 @@ import utils.makeId
 import kotlin.math.max
 import kotlin.math.min
 
-class CounterAttack : AbstractRelicCombo(
-    CounterAttack::class.makeId(),
+class Counterattack : AbstractRelicCombo(
+    Counterattack::class.makeId(),
     hashSetOf(
         BronzeScales.ID,
         LetterOpener.ID,

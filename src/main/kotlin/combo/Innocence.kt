@@ -31,14 +31,14 @@ class Innocence : AbstractRelicCombo(
 
     override fun onActive() {
         PatchEffect.onPostStartOfTurnSubscribers.add(ComboEffect {
-            if (getCurrentComboSize() == this.combo.size) {
+            if (getCurrentComboSize() >= this.combo.size) {
                 flash()
                 addToBot(ChangeStanceAction(DivinityStance.STANCE_ID))
             }
         })
         PatchEffect.onPrePlayerTakingDamageSubscribers.add(ComboEffect { damage, _ ->
             var d = damage
-            if (!isInCombat() || getCurrentComboSize() == this.combo.size) {
+            if (!isInCombat() || getCurrentComboSize() >= this.combo.size) {
                 flash()
                 d = max(0, d - getCurrentComboSize() * m)
             }

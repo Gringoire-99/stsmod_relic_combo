@@ -394,7 +394,6 @@ class ComboHookPatch {
             @JvmStatic
             @SpireInsertPatch(rloc = 156)
             fun insert() {
-                AbstractRelicCombo.updateCombo()
                 "moving to next room".toLog()
                 PatchEffect.onPostGoNextRoomSubscribers.forEach { it.effect() }
             }

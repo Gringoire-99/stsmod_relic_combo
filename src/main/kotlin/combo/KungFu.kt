@@ -24,7 +24,6 @@ class KungFu :
     private val reduceCost = setConfigurableProperty("M2", 1, ConfigurableType.Int).toInt()
     override fun onActive() {
         PatchEffect.onPostBattleStartSubscribers.add(ComboEffect {
-            flash()
             addToBot {
                 getAllGroup().forEach {
                     it.group.forEach { c ->

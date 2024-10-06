@@ -24,7 +24,7 @@ class DarkOnesOwnLuck : AbstractRelicCombo(
     )
 ) {
     private val m = setConfigurableProperty("M", 1, ConfigurableType.Int).toInt()
-    private val money = setConfigurableProperty("Money", 10, ConfigurableType.Int).toInt()
+    private val money = setConfigurableProperty("G", 10, ConfigurableType.Int).toInt()
     override fun onActive() {
 
         PatchEffect.onPreRollEventSubscribers.add(ComboEffect {

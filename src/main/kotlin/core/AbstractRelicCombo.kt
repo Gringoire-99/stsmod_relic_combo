@@ -8,13 +8,18 @@ import com.megacrit.cardcrawl.helpers.RelicLibrary
 import com.megacrit.cardcrawl.vfx.TextAboveCreatureEffect
 import combo.*
 import config.RelicComboModConfig
+import patch.RelicComboFieldPatch
 import ui.ComboPowerTip
 import utils.isInCombat
 import utils.toLog
 import kotlin.math.max
 
 abstract class AbstractRelicCombo(
-    val id: String, val combo: HashSet<String> = hashSetOf(), numberToActiveCombo: Int = 3, enableCombo: Boolean = true
+    val id: String,
+    //TODO make this configurable
+    val combo: HashSet<String> = hashSetOf(),
+    numberToActiveCombo: Int = 3, enableCombo: Boolean = true,
+    canRelicRepeat: Boolean = true
 ) {
     val configurablePropertySet: HashMap<String, ConfigurableProperty> = hashMapOf()
     var title: String = ""
@@ -27,6 +32,8 @@ abstract class AbstractRelicCombo(
 
     var numberToActive: Int = setConfigurableProperty(NumberToActive, numberToActiveCombo, ConfigurableType.Int).toInt()
     val enableCombo: Boolean = setConfigurableProperty(EnableCombo, enableCombo, ConfigurableType.Bool).toBoolean()
+    val canRelicRepeat: Boolean =
+        setConfigurableProperty(CanRelicRepeat, canRelicRepeat, ConfigurableType.Bool).toBoolean()
 
     /**
      * call this function during init or manually add Property to configurablePropertySet
@@ -49,7 +56,7 @@ abstract class AbstractRelicCombo(
         return PropertyString(r, d)
     }
 
-    // (Case Exception may happen when change an old property's type or have a wrong default value)
+    // (Cast Exception may happen when change an old property's type or have a wrong default value)
     class PropertyString(private val value: String, private val default: Any) {
         fun toInt(): Int {
             val i: Int = try {
@@ -122,12 +129,12 @@ abstract class AbstractRelicCombo(
 
     abstract fun onActive()
 
-    open fun isActive(combo: HashSet<String>): Boolean {
+    open fun isActive(combo: ArrayList<String>): Boolean {
         return combo.size >= numberToActive
     }
 
 
-    open fun getTip(idToHighlight: HashSet<String> = hashSetOf()): PowerTip {
+    open fun getTip(idToHighlight: ArrayList<String> = arrayListOf()): PowerTip {
         updateTip(idToHighlight)
         return tip
     }
@@ -146,7 +153,11 @@ abstract class AbstractRelicCombo(
         )
     }
 
-    fun updateTip(idToHighlight: HashSet<String> = hashSetOf()) {
+    fun updateTip(idToHighlight: ArrayList<String> = arrayListOf()) {
+        val map: HashMap<String, Int> = hashMapOf()
+        idToHighlight.forEach {
+            map[it] = map.getOrDefault(it, 0) + 1
+        }
         relicStrings?.apply {
             val c = if (idToHighlight.size >= numberToActive) "#g" else "#y"
             desc = relicStrings.DESCRIPTIONS.joinToString(" NL ") {
@@ -164,12 +175,19 @@ abstract class AbstractRelicCombo(
             }
             val s = combo.joinToString(separator = " NL ") {
                 var color = "#b"
-                if (it in idToHighlight) {
+                val number = map[it]
+                var postfix = ""
+
+                if (number != null) {
                     color = "#g"
+                    if (number > 1) {
+                        postfix = " x${number}"
+                    }
                 }
+
                 "· ${
                     CardCrawlGame.languagePack.getRelicStrings(it).NAME.split(" ")
-                        .joinToString(prefix = color, separator = " $color")
+                        .joinToString(prefix = color, separator = " $color", postfix = postfix)
                 }"
             }
             tip = ComboPowerTip(title, "$s NL $desc", id)
@@ -187,6 +205,7 @@ abstract class AbstractRelicCombo(
     companion object {
         const val NumberToActive = "NumberToActive"
         const val EnableCombo = "EnableCombo"
+        const val CanRelicRepeat = "CanRelicRepeat"
 
 
         // registered combo
@@ -223,7 +242,9 @@ abstract class AbstractRelicCombo(
             enabledRelicComboSets.forEach { s ->
                 s.combo.forEach { id ->
                     val relic = RelicLibrary.getRelic(id)
-                    relic?.tips?.add(s.getTip(hashSetOf(id)))
+                    relic?.tips?.add(s.getTip(arrayListOf(id)))
+                    val tags = RelicComboFieldPatch.Fields.relicComboTags.get(relic)
+                    tags.add(s.id)
                 }
                 allId.addAll(s.combo)
             }
@@ -231,7 +252,7 @@ abstract class AbstractRelicCombo(
 
 
         // player current combo set
-        val currentComboSet: HashMap<AbstractRelicCombo, HashSet<String>> = hashMapOf()
+        val currentComboSet: HashMap<AbstractRelicCombo, ArrayList<String>> = hashMapOf()
 
         // default combo sets
         fun getAllDefaultComboSet(): ArrayList<AbstractRelicCombo> {
@@ -241,7 +262,7 @@ abstract class AbstractRelicCombo(
                 Awakened(),
                 BringInTheBucks(),
                 ChallengeMe(),
-                CounterAttack(),
+                Counterattack(),
                 DeepMeditation(),
                 Dispel(),
                 Eternal(),
@@ -272,9 +293,10 @@ abstract class AbstractRelicCombo(
         // update current combo set , call after get/remove any relic
         fun updateCombo() {
             if (AbstractDungeon.player != null) {
-                val relics = AbstractDungeon.player.relics.map { it.relicId }
+                val relics = AbstractDungeon.player.relics
+                val relicIds = relics.map { it.relicId }
                 "update combo set start".toLog()
-//              clean all triggerable effect for all combo
+//              clean all effects for all combos
                 PatchEffect.cleanAllComboEffect()
 
 //              remove non active combo
@@ -285,23 +307,24 @@ abstract class AbstractRelicCombo(
                     currentComboSet.clear()
                     currentComboSet.putAll(filter)
                     currentComboSet.forEach { (_, v) ->
-                        v.removeIf { it !in relics }
+                        v.removeIf { it !in relicIds }
                     }
                 }
-
-
                 //update set
                 relics.forEach { r ->
-                    if (r in allId) {
-                        enabledRelicComboSets.forEach { s ->
-                            if (r in s.combo) {
-                                val find = currentComboSet.entries.find { it.key.id == s.id }
-                                val k =
-                                    find?.key ?: s.javaClass.newInstance().apply { numberToActive = s.numberToActive }
-                                val v = find?.value ?: hashSetOf()
-                                v.add(r)
-                                currentComboSet[k] = v
+                    val tags = RelicComboFieldPatch.Fields.relicComboTags.get(RelicLibrary.getRelic(r.relicId))
+                    r.tips.removeIf { it is ComboPowerTip }
+                    tags.forEach { t ->
+                        val register = enabledRelicComboSets.find { it.id == t }
+                        if (register != null) {
+                            val find = currentComboSet.entries.find { it.key.id == t }
+                            val k = find?.key ?: register.javaClass.newInstance()
+                            var v: ArrayList<String> = find?.value ?: arrayListOf()
+                            v.add(r.relicId)
+                            if (!k.canRelicRepeat) {
+                                v = v.distinct() as ArrayList<String>
                             }
+                            currentComboSet[k] = v
                         }
                     }
                 }
