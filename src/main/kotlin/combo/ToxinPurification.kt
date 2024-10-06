@@ -57,7 +57,6 @@ class ToxinPurification : AbstractRelicCombo(
                 }
             }
             true
-
         })
     }
 

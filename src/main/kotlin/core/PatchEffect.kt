@@ -63,6 +63,8 @@ typealias OnPostShopInit = (
 
 typealias OnPreShopPurge = () -> Unit
 typealias OnPostShopPurge = () -> Unit
+typealias OnGetChance = (fraction: AbstractRelicCombo.Fraction, caller: Any) -> Unit
+typealias OnCalculateCardDamage = (card: AbstractCard, damage: Float, mo: AbstractMonster?) -> Float
 
 /**
  * combo's effect
@@ -104,7 +106,8 @@ class PatchEffect : OnPlayerTurnStartPostDrawSubscriber, OnStartBattleSubscriber
         val onPostShopInitSubscribers: ArrayList<Effect<OnPostShopInit>> = arrayListOf()
         val onPreShopPurgeSubscribers: ArrayList<Effect<OnPreShopPurge>> = arrayListOf()
         val onPostShopPurgeSubscribers: ArrayList<Effect<OnPostShopPurge>> = arrayListOf()
-
+        val onGetChanceSubscribers: ArrayList<Effect<OnGetChance>> = arrayListOf()
+        val onCalculateCardDamageSubscriber: ArrayList<Effect<OnCalculateCardDamage>> = arrayListOf()
         val listOfAll = arrayListOf(
             onPostEndBattleSubscribers,
             onPostBattleStartSubscribers,
@@ -135,7 +138,9 @@ class PatchEffect : OnPlayerTurnStartPostDrawSubscriber, OnStartBattleSubscriber
             onPostShopInitSubscribers,
             onPreShopPurgeSubscribers,
             onPostShopPurgeSubscribers,
-            onPrePlayerLoseHpSubscribers
+            onPrePlayerLoseHpSubscribers,
+            onGetChanceSubscribers,
+            onCalculateCardDamageSubscriber
         )
 
         fun cleanNonInnateEffect() {
@@ -216,7 +221,7 @@ class ComboEffect<T : Function<Any?>>(priority: Int = 1, effect: T) :
 abstract class Effect<T : Function<Any?>>(val priority: Int = 0, val isInnate: Boolean = false, val effect: T)
 
 fun main() {
-    val arrayListOf = arrayListOf(1, 2, 3,0,-1)
+    val arrayListOf = arrayListOf(1, 2, 3, 0, -1)
     arrayListOf.sortBy { -it }
     arrayListOf.toLog()
 }

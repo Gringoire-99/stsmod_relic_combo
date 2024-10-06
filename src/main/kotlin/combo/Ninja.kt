@@ -1,11 +1,8 @@
 package combo
 
-import com.megacrit.cardcrawl.actions.common.ApplyPowerAction
 import com.megacrit.cardcrawl.actions.common.MakeTempCardInHandAction
 import com.megacrit.cardcrawl.cards.AbstractCard.CardType
 import com.megacrit.cardcrawl.cards.tempCards.Shiv
-import com.megacrit.cardcrawl.dungeons.AbstractDungeon
-import com.megacrit.cardcrawl.powers.AccuracyPower
 import com.megacrit.cardcrawl.relics.*
 import core.AbstractRelicCombo
 import core.ComboEffect
@@ -25,9 +22,11 @@ class Ninja :
     private val add = setConfigurableProperty("M3", 1, ConfigurableType.Int).toInt()
     private var triggerCount = 0
     private var attackCount = 0
+    private var increaseDamage = 0
     override fun onActive() {
         PatchEffect.onPostBattleStartCleanupSubscribers.add(ComboEffect {
             maxTriggerCount = max + getExtraCollectCount()
+            increaseDamage = 0
         })
         PatchEffect.onPostStartOfTurnSubscribers.add(ComboEffect {
             triggerCount = 0
@@ -41,15 +40,14 @@ class Ninja :
                     triggerCount++
                     addToBot(
                         MakeTempCardInHandAction(Shiv().apply { upgrade() }, add),
-                        ApplyPowerAction(
-                            AbstractDungeon.player,
-                            AbstractDungeon.player,
-                            AccuracyPower(AbstractDungeon.player, increase)
-                        )
                     )
+                    increaseDamage += increase
                     flash()
                 }
             }
+        })
+        PatchEffect.onCalculateCardDamageSubscriber.add(ComboEffect { c, d, _ ->
+            if (!(c.cost < 0 || c.costForTurn < 0 || c.type != CardType.ATTACK) && (c.costForTurn == 0 || c.freeToPlayOnce)) d + increaseDamage else d
         })
     }
 

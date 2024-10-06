@@ -549,4 +549,34 @@ class ComboHookPatch {
             }
         }
     }
+
+    @SpirePatch2(clz = AbstractCard::class, method = "calculateCardDamage")
+    internal class BeforeCalculateCardDamage {
+        companion object {
+            @JvmStatic
+            @SpireInsertPatch(rloc = 9, localvars = ["tmp"])
+            fun insert(__instance: AbstractCard, @ByRef tmp: FloatArray, mo: AbstractMonster?) {
+                var d = tmp[0]
+                PatchEffect.onCalculateCardDamageSubscriber.forEach {
+                    d = it.effect(__instance, d, mo)
+                }
+                tmp[0] = d
+            }
+        }
+    }
+
+    @SpirePatch2(clz = AbstractCard::class, method = "calculateCardDamage")
+    internal class BeforeCalculateCardDamageMulti {
+        companion object {
+            @JvmStatic
+            @SpireInsertPatch(rloc = 65, localvars = ["tmp"])
+            fun insert(__instance: AbstractCard, tmp: FloatArray, mo: AbstractMonster?) {
+                tmp.forEachIndexed { index, _ ->
+                    PatchEffect.onCalculateCardDamageSubscriber.forEach {
+                        tmp[index] = it.effect(__instance, tmp[index], mo)
+                    }
+                }
+            }
+        }
+    }
 }

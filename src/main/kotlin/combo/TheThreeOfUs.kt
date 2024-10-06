@@ -9,6 +9,7 @@ import core.AbstractRelicCombo
 import core.ComboEffect
 import core.ConfigurableType
 import core.PatchEffect
+import utils.addEffect
 import utils.makeId
 
 class TheThreeOfUs :
@@ -35,6 +36,13 @@ class TheThreeOfUs :
         PatchEffect.onPostOpenChestSubscribers.add(ComboEffect {
             repeat(m) {
                 AbstractDungeon.getCurrRoom().addRelicToRewards(AbstractDungeon.returnRandomRelicTier())
+            }
+        })
+        PatchEffect.onPostEndBattleSubscribers.add(ComboEffect {
+            addEffect {
+                repeat(m) {
+                    AbstractDungeon.getCurrRoom().addRelicToRewards(AbstractDungeon.returnRandomRelicTier())
+                }
             }
         })
     }

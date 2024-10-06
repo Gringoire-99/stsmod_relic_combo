@@ -62,13 +62,20 @@ abstract class AbstractRelicCombo(
 
         fun toBoolean(): Boolean {
             val b: Boolean = try {
-                value.toBooleanStrict()
+                toBooleanStrict(value)
             } catch (e: IllegalArgumentException) {
-                default.toString().toBooleanStrict()
+                toBooleanStrict(default.toString())
             }
             return b
         }
+
+        private fun toBooleanStrict(s: String): Boolean = when (s) {
+            "true" -> true
+            "false" -> false
+            else -> throw IllegalArgumentException("The string doesn't represent a boolean value: $s")
+        }
     }
+
 
     /**
      *  will throw an exception when get a null property
@@ -241,12 +248,12 @@ abstract class AbstractRelicCombo(
                 FourElement(),
                 GetSomeSleep(),
                 Innocence(),
-                KnowledgeIsPower(),
+                Bookworm(),
                 KungFu(),
                 LessIsMore(),
                 Library(),
                 Mechanism(),
-                MightFortune(),
+                DarkOnesOwnLuck(),
                 Ninja(),
                 Sacrifice(),
                 Plain(),
@@ -322,6 +329,16 @@ abstract class AbstractRelicCombo(
 
     }
 
+    class Fraction(var dividend: Float, var divisor: Float) {
+        fun calc(): Float {
+            return dividend / divisor
+        }
+    }
+
+    fun getChance(fraction: Fraction, caller: Any = this): Float {
+        PatchEffect.onGetChanceSubscribers.forEach { it.effect(fraction, caller) }
+        return fraction.calc()
+    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

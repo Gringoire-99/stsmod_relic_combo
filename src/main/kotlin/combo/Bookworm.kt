@@ -11,9 +11,9 @@ import core.PatchEffect
 import utils.addToQueue
 import utils.makeId
 
-class KnowledgeIsPower :
+class Bookworm :
     AbstractRelicCombo(
-        KnowledgeIsPower::class.makeId(),
+        Bookworm::class.makeId(),
         hashSetOf(Enchiridion.ID, Necronomicon.ID, NilrysCodex.ID, ArtOfWar.ID)
     ) {
 

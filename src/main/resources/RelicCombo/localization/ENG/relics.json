@@ -1,27 +1,127 @@
 {
-  "RelicCombo:Yummy": {
-    "NAME": "Combo: Yummy!",
-    "FLAVOR": "Delicacy",
+  "RelicCombo:Alchemy": {
+    "NAME": "Combo: Alchemy",
+    "FLAVOR": "Sage's Sacred Elixir",
     "DESCRIPTIONS": [
       "Collect !N! to activate",
-      "At the start of combat: Gain 1 Strength or Dexterity for each collected."
+      "Each collection increases the rarity of potions by ( !Rate! %)",
+      "Use potions !M! extra times per use, and each additional collection adds one more use",
+      "Each additional collection draws !M! cards when using potions"
     ]
   },
-  "RelicCombo:SetSail": {
-    "NAME": "Combo: Set Sail!",
-    "FLAVOR": "Smooth Sailing",
+  "RelicCombo:AncientCreation": {
+    "NAME": "Combo: Ancient Creation",
+    "FLAVOR": "Ancient Reshaping",
     "DESCRIPTIONS": [
       "Collect !N! to activate",
-      "At the start of combat: Draw 1 extra card for each collected."
+      "All negative status effects inflicted by enemies are converted into Strength"
+    ]
+  },
+  "RelicCombo:Awakened": {
+    "NAME": "Combo: Awakened",
+    "FLAVOR": "Rebirth",
+    "DESCRIPTIONS": [
+      "Collect !N! to activate",
+      "At the start of combat: Gain !M! Ritual",
+      "Resets at the start of combat:",
+      "Negate one fatal blow and remove all negative status effects",
+      "Each collection repeats the effect, restores !M2! HP, and grants !M! Strength"
+    ]
+  },
+  "RelicCombo:BringInTheBucks": {
+    "NAME": "Combo: Bring in the Bucks",
+    "FLAVOR": "Windfall!",
+    "DESCRIPTIONS": [
+      "Collect !N! to activate",
+      "Increases the amount of gold found",
+      "Each collection increases gold gain by !M2! %",
+      "Each additional collection grants an extra gold drop after combat",
+      "Each additional collection also grants !M! max HP when acquiring gold (can trigger up to !C! times per room)"
+    ]
+  },
+  "RelicCombo:ChallengeMe": {
+    "NAME": "Combo: Challenge Me",
+    "FLAVOR": "Curse of the Strong",
+    "DESCRIPTIONS": [
+      "Collect !N! to activate",
+      "At the start of combat: if fighting a powerful enemy",
+      "Draw !M2! additional cards at the start of each turn",
+      "Each collection reduces damage taken from enemies by !M! %",
+      "Each collection increases damage dealt to enemies by !M! %"
+    ]
+  },
+  "RelicCombo:CounterAttack": {
+    "NAME": "Combo: Counterattack",
+    "FLAVOR": "Fang Tian's Decree",
+    "DESCRIPTIONS": [
+      "Collect !N! to activate",
+      "At the start of combat: Gain !M! Thorns per collection",
+      "The amount of Thorns increases the Thorns damage enemies take (up to double the original damage)"
+    ]
+  },
+  "RelicCombo:DeepMeditation": {
+    "NAME": "Combo: Deep Meditation",
+    "FLAVOR": "Harmonious Melody",
+    "DESCRIPTIONS": [
+      "Collect !N! to activate",
+      "Draw !M! cards when entering or leaving Calm"
+    ]
+  },
+  "RelicCombo:Dispel": {
+    "NAME": "Combo: Dispel",
+    "FLAVOR": "Power Absorption",
+    "DESCRIPTIONS": [
+      "Collect !N! to activate",
+      "When drawing a curse, draw !M! extra cards and gain !M! temporary Strength",
+      "Once per turn, when a curse is exhausted, gain !M2! [E] and !M3! Strength"
+    ]
+  },
+  "RelicCombo:Eternal": {
+    "NAME": "Combo: Eternal",
+    "FLAVOR": "Eternal",
+    "DESCRIPTIONS": [
+      "Collect !N! to activate",
+      "At the start of combat: Gain !M2! Agility and Strength",
+      "Every !M! turns, trigger all start-of-combat effects again",
+      "Each collection reduces the number of turns required to trigger by one"
+    ]
+  },
+  "RelicCombo:FourElement": {
+    "NAME": "Combo: Four Elements as One",
+    "FLAVOR": "Four Elements as One",
+    "DESCRIPTIONS": [
+      "Collect !N! to activate",
+      "At the start of combat",
+      "Upgrade all cards",
+      "Heal !M! HP",
+      "For each innate card in your deck, draw !M2! cards and gain !M2! [E]"
     ]
   },
   "RelicCombo:GetSomeSleep": {
     "NAME": "Combo: Get Some Sleep",
-    "FLAVOR": "Sweet Dreams!",
+    "FLAVOR": "Dream Come True!",
     "DESCRIPTIONS": [
       "Collect !N! to activate",
-      "When you rest: Fully restore HP, increase max HP by 10, and upgrade the 2 highest rarity cards in your deck.",
-      "For each extra collected, upgrade one more card."
+      "When resting, fully restore HP, increase max HP ( !M! )",
+      "And upgrade !M2! of the highest rarity cards in your deck",
+      "Each additional collection upgrades an additional card"
+    ]
+  },
+  "RelicCombo:Innocence": {
+    "NAME": "Combo: Innocence",
+    "FLAVOR": "Cleanse the Evil",
+    "DESCRIPTIONS": [
+      "Collect !N! to activate",
+      "Each collection reduces non-combat HP loss by !M! points",
+      "When all are collected, reduces combat damage and grants Divinity at the start of each turn"
+    ]
+  },
+  "RelicCombo:KnowledgeIsPower": {
+    "NAME": "Combo: Knowledge is Power",
+    "FLAVOR": "Extra Attack!",
+    "DESCRIPTIONS": [
+      "Collect !N! to activate",
+      "Attack cards are played an extra time"
     ]
   },
   "RelicCombo:KungFu": {
@@ -30,118 +130,19 @@
     "DESCRIPTIONS": [
       "Collect !N! to activate",
       "At the start of combat:",
-      "Reduce the cost of Strike and Pressure Point cards in your deck by 1, and increase their damage by 4.",
-      "Pressure Point triggers twice."
+      "Strike and Pressure Point cards in your deck cost !M2! less and deal !M! more damage",
+      "Pressure Points are triggered twice"
     ]
   },
-  "RelicCombo:AncientCreation": {
-    "NAME": "Combo: Ancient Creation",
-    "FLAVOR": "Reshaping",
+  "RelicCombo:LessIsMore": {
+    "NAME": "Combo: Less is More",
+    "FLAVOR": "Less is More",
     "DESCRIPTIONS": [
       "Collect !N! to activate",
-      "Convert all negative status effects inflicted on you into Strength."
-    ]
-  },
-  "RelicCombo:StayUp": {
-    "NAME": "Combo: Stay Up",
-    "FLAVOR": "???",
-    "DESCRIPTIONS": [
-      "Collect !N! to activate",
-      "???",
-      "???"
-    ]
-  },
-  "RelicCombo:BringInTheBucks": {
-    "NAME": "Combo: Bring In The Bucks",
-    "FLAVOR": "Windfall!",
-    "DESCRIPTIONS": [
-      "Collect !N! to activate",
-      "Increased gold found.",
-      "For each collected, increase gold gain by 5%.",
-      "For each extra collected, an additional gold drop occurs after combat.",
-      "For each extra collected, gain 1 max HP for each time gold is obtained (up to 5 times per room)."
-    ]
-  },
-  "RelicCombo:VIP": {
-    "NAME": "Combo: VIP",
-    "FLAVOR": "Special Treatment!",
-    "DESCRIPTIONS": [
-      "Collect !N! to activate",
-      "Every item receives a massive discount before its first purchase.",
-      "Merchant’s card removal service no longer costs gold, and removing a card upgrades a random card in your deck.",
-      "Upgrades shop cards."
-    ]
-  },
-  "RelicCombo:MightFortune": {
-    "NAME": "Combo: Might Fortune",
-    "FLAVOR": "Fortune’s Favor!",
-    "DESCRIPTIONS": [
-      "Collect !N! to activate",
-      "For each collected",
-      "Increase the chance of finding a chest in ? room ",
-      "Increase the chance of an extra relic appearing in the chest (20%)."
-    ]
-  },
-  "RelicCombo:Stargazing": {
-    "NAME": "Combo: Stargazing",
-    "FLAVOR": "Illuminate the Darkness",
-    "DESCRIPTIONS": [
-      "Collect !N! to activate",
-      "At the start of combat: For each collected, increase the number of cards to be Scry by 2. Scry: 1.",
-      "After Scry, deal Thorn damage equal to the number of Scry to all enemies and heal 1 HP."
-    ]
-  },
-  "RelicCombo:DeepMeditation": {
-    "NAME": "Combo: Deep Meditation",
-    "FLAVOR": "Harmonious Melody",
-    "DESCRIPTIONS": [
-      "Collect !N! to activate",
-      "Draw 1 card when you enter or exit Calm."
-    ]
-  },
-  "RelicCombo:Ninja": {
-    "NAME": "Combo: Ninja",
-    "FLAVOR": "Shadow's Blade",
-    "DESCRIPTIONS": [
-      "Collect !N! to activate",
-      "Once per turn, after playing 3 Attack cards, add a Shiv+ to your hand, and Shiv damage is increased by 2.",
-      "For each extra collected, trigger one more time per turn."
-    ]
-  },
-  "RelicCombo:ToxinPurification": {
-    "NAME": "Combo: Toxin Purification",
-    "FLAVOR": "Poison Amplification",
-    "DESCRIPTIONS": [
-      "Collect !N! to activate",
-      "After applying Poison three times to an enemy in one turn,",
-      "Immediately trigger all Poison on all enemies. For each extra collected, trigger once more."
-    ]
-  },
-  "RelicCombo:Eternal": {
-    "NAME": "Combo: Eternal",
-    "FLAVOR": "Eternal",
-    "DESCRIPTIONS": [
-      "Collect !N! to activate",
-      "At the start of combat: Gain 1 Dexterity and Strength.",
-      "Every 7 turns, trigger all start-of-combat effects in this fight again.",
-      "For each collected, reduce the turn count by 1."
-    ]
-  },
-  "RelicCombo:Sacrifice": {
-    "NAME": "Combo: Sacrifice",
-    "FLAVOR": "Blood Sacrifice",
-    "DESCRIPTIONS": [
-      "Collect !N! to activate",
-      "Gain 1 temporary Strength after taking damage."
-    ]
-  },
-  "RelicCombo:Dispel": {
-    "NAME": "Combo: Dispel",
-    "FLAVOR": "Draw Strength",
-    "DESCRIPTIONS": [
-      "Collect !N! to activate",
-      "Draw one more card and gain 1 temporary Strength when drawing a Curse.",
-      "Once per turn, gain 1 [E] and 2 Strength when a Curse is exhausted."
+      "At the start of combat: If your deck contains !M! or fewer cards",
+      "All your cards gain !M2! strength",
+      "At the start of each turn: If your deck contains !M! or fewer cards",
+      "Gain !M3! [E] and draw until your hand is full"
     ]
   },
   "RelicCombo:Library": {
@@ -149,107 +150,8 @@
     "FLAVOR": "Enlightenment!",
     "DESCRIPTIONS": [
       "Collect !N! to activate",
-      "Gain 1 extra card drop after combat.",
-      "For each extra collected, gain one more extra drop."
-    ]
-  },
-  "RelicCombo:LessIsMore": {
-    "NAME": "Combo: Less Is More",
-    "FLAVOR": "Less Is More",
-    "DESCRIPTIONS": [
-      "Collect !N! to activate",
-      "At the start of combat: If your deck has 10 or fewer cards,",
-      "Strengthen all cards by 1.",
-      "At the start of each turn: If your deck has 10 or fewer cards,",
-      "Gain 1 [E] and draw up to your hand size."
-    ]
-  },
-  "RelicCombo:Awakened": {
-    "NAME": "Combo: Awakened",
-    "FLAVOR": "Reborn",
-    "DESCRIPTIONS": [
-      "Collect !N! to activate",
-      "At the start of combat: Gain 1 Ritual.",
-      "Reset at the start of combat:",
-      "Immune to one fatal damage, remove all negative power.",
-      "For each collected, repeat once, heal 4 HP, and gain 1 Strength."
-    ]
-  },
-  "RelicCombo:Plain": {
-    "NAME": "Combo: Plain",
-    "FLAVOR": "Power of Simplicity",
-    "DESCRIPTIONS": [
-      "Collect !N! to activate",
-      "At the start of combat:",
-      "Double the damage and block of basic cards in your deck."
-    ]
-  },
-  "RelicCombo:FourElement": {
-    "NAME": "Combo: The Four Elements",
-    "FLAVOR": "United",
-    "DESCRIPTIONS": [
-      "Collect !N! to activate",
-      "At the start of combat:",
-      "Upgrade all cards.",
-      "Heal 10 HP.",
-      "For each innate card in your deck, draw 1 card and gain 1 [E] ."
-    ]
-  },
-  "RelicCombo:Repair": {
-    "NAME": "Combo: Repair",
-    "FLAVOR": "Repair",
-    "DESCRIPTIONS": [
-      "Collect !N! to activate",
-      "At the start of combat: Gain 1 Focus, 1 Strength, and 1 Dexterity. For each extra collected, trigger once more.",
-      "Trigger all orb passive effects at the start of each turn.",
-      "Attack cards play one additional time."
-    ]
-  },
-  "RelicCombo:KnowledgeIsPower": {
-    "NAME": "Combo: Knowledge Is Power",
-    "FLAVOR": "Extra attack",
-    "DESCRIPTIONS": [
-      "Collect !N! to activate",
-      "Attack cards play one additional time."
-    ]
-  },
-  "RelicCombo:TheThreeOfUs": {
-    "NAME": "Combo: The Three of Us",
-    "FLAVOR": "Destined for Greatness!",
-    "DESCRIPTIONS": [
-      "Collect !N! to activate",
-      "Prioritize finding rare relics (does not affect shop and boss relics)",
-      "An additional relic will be found in chests"
-    ]
-  },
-  "RelicCombo:ChallengeMe": {
-    "NAME": "Combo: Challenge Me",
-    "FLAVOR": "Bane of the Powerful",
-    "DESCRIPTIONS": [
-      "Collect !N! to activate",
-      "At the start of combat: If you are facing a powerful enemy",
-      "Draw one extra card at the start of each turn",
-      "For each collected, reduce damage taken by 5%",
-      "For each collected, increase damage dealt to enemies by 5%"
-    ]
-  },
-  "RelicCombo:Alchemy": {
-    "NAME": "Combo: Alchemy",
-    "FLAVOR": "Sage's Elixir",
-    "DESCRIPTIONS": [
-      "Collect !N! to activate",
-      "For each collected, increase the rarity of potions (by 10%)",
-      "Use the potion an additional time, and for each extra collected, use one more time",
-      "For each extra collected, draw one card when using a potion"
-    ]
-  },
-  "RelicCombo:CounterAttack": {
-    "NAME": "Combo: Counter Attack",
-    "FLAVOR": "Fangtian's Decree",
-    "DESCRIPTIONS": [
-      "Collect !N! to activate",
-      "At the start of combat: Gain 1 Thorns for each collected",
-      "Your Thorns amount increases the Thorns damage enemy take (up to doubling the original damage)"
+      "Combat rewards drop !M! additional cards",
+      "Each additional collection adds an additional drop"
     ]
   },
   "RelicCombo:Mechanism": {
@@ -257,30 +159,124 @@
     "FLAVOR": "Launch Hidden Weapons",
     "DESCRIPTIONS": [
       "Collect !N! to activate",
-      "At the start of each turn, deal 1 Thorns damage to a random enemy and gain 2 Block",
-      "Increase the triggered damage by 1 each time",
-      "For each extra collected, trigger once more"
+      "At the start of each turn, deal !M! Thorns damage to a random enemy and gain !M2! Block !M3! times",
+      "Each trigger increases the damage by +1",
+      "Each additional collection adds one more trigger"
+    ]
+  },
+  "RelicCombo:MightFortune": {
+    "NAME": "Combo: Otherworldly Luck",
+    "FLAVOR": "Spirit Blessing!",
+    "DESCRIPTIONS": [
+      "Collect !N! to activate",
+      "Each collection increases the chance of finding a chest in ? rooms and a chance for the chest to contain an extra relic ( !M! %)"
+    ]
+  },
+  "RelicCombo:Ninja": {
+    "NAME": "Combo: Ninja",
+    "FLAVOR": "Shadowblade",
+    "DESCRIPTIONS": [
+      "Collect !N! to activate",
+      "Once per turn !M! times, after playing 3 attack cards, add !M3! Shivs to your hand and increase Shiv damage by !M2! ",
+      "Each additional collection allows one more trigger per turn"
+    ]
+  },
+  "RelicCombo:Plain": {
+    "NAME": "Combo: Simplicity",
+    "FLAVOR": "Power of Simplicity",
+    "DESCRIPTIONS": [
+      "Collect !N! to activate",
+      "At the start of combat:",
+      "Basic cards in your deck deal and block !M! times more"
+    ]
+  },
+  "RelicCombo:Repair": {
+    "NAME": "Combo: Repair",
+    "FLAVOR": "Let's See the Power of Chicken Pot!",
+    "DESCRIPTIONS": [
+      "Collect !N! to activate",
+      "At the start of combat, gain !M! Focus, !M! Strength, !M! Agility, each additional collection adds +1",
+      "At the start of each turn, trigger all orb passive effects !M2! times",
+      "Attack cards are played an extra time"
+    ]
+  },
+  "RelicCombo:Sacrifice": {
+    "NAME": "Combo: Sacrifice",
+    "FLAVOR": "Blood Ritual",
+    "DESCRIPTIONS": [
+      "Collect !N! activations",
+      "Gain !M! temporary Strength after taking damage"
+    ]
+  },
+  "RelicCombo:SetSail": {
+    "NAME": "Combo: Set Sail!",
+    "FLAVOR": "Smooth Sailing",
+    "DESCRIPTIONS": [
+      "Collect !N! activations",
+      "At the start of combat: Draw !M! additional cards for each activation collected"
+    ]
+  },
+  "RelicCombo:Stargazing": {
+    "NAME": "Combo: Stargazing",
+    "FLAVOR": "Pierce the Darkness",
+    "DESCRIPTIONS": [
+      "Collect !N! activations",
+      "At the start of combat: For each activation, increase the number of cards foreseen by !M!, foresee: !M2!",
+      "After foreseeing, deal thorns damage equal to the foresight count to all enemies, heal for !M2! HP"
     ]
   },
   "RelicCombo:StayHealthy": {
     "NAME": "Combo: Stay Healthy",
-    "FLAVOR": "Vitality",
+    "FLAVOR": "Dragon Tendons, Tiger Bones",
     "DESCRIPTIONS": [
-      "Collect !N! to activate",
-      "At the start of combat: Gain benefits based on your current HP",
-      "Gain 1 Strength or Dexterity for every 20 HP",
-      "Draw one card for every 30 HP",
-      "Gain 1 [E] for every 50 HP"
+      "Collect !N! activations",
+      "At the start of combat: Gain buffs based on your current HP",
+      "For every 20 HP, gain !M! Strength or Dexterity",
+      "For every 30 HP, draw !M2! cards",
+      "For every 50 HP, gain !M3! [E]"
     ]
   },
-  "RelicCombo:Innocence": {
-    "NAME": "Combo: Innocence",
-    "FLAVOR": "Purify Evil",
+  "RelicCombo:StayUp": {
+    "NAME": "Combo: Stay Up",
+    "FLAVOR": "???",
     "DESCRIPTIONS": [
-      "Collect !N! to activate",
-      "Reduce HP loss outside of combat by 3 for each collected",
-      "When fully collected, also reduce damage in combat and enter Divinity at the start of each turn"
+      "Collect !N! activations",
+      "???",
+      "???"
     ]
-  }
-}
-
+  },
+  "RelicCombo:TheThreeOfUs": {
+    "NAME": "Combo: The Three of Us",
+    "FLAVOR": "Destined for Greatness!",
+    "DESCRIPTIONS": [
+      "Collect !N! activations",
+      "Find rare relics more easily (does not affect shop or boss relics)",
+      "Chests yield !M! additional relics"
+    ]
+  },
+  "RelicCombo:ToxinPurification": {
+    "NAME": "Combo: Toxin Purification",
+    "FLAVOR": "Blood Manipulation",
+    "DESCRIPTIONS": [
+      "Collect !N! activations",
+      "After applying poison to enemies !M! times in one turn, immediately detonate all poison stacks on all enemies !M2! times. For each additional activation, detonate an extra time"
+    ]
+  },
+  "RelicCombo:VIP": {
+    "NAME": "Combo: VIP",
+    "FLAVOR": "Special Treatment!",
+    "DESCRIPTIONS": [
+      "Collect !N! activations",
+      "Every item has a massive discount before its first purchase",
+      "Removing cards costs no gold and also upgrades !M! random cards in your deck,",
+      "Upgrade shop cards"
+    ]
+  },
+  "RelicCombo:Yummy": {
+    "NAME": "Combo: Yummy!",
+    "FLAVOR": "Delicacies",
+    "DESCRIPTIONS": [
+      "Collect !N! activations",
+      "At the start of combat: Gain !M! Strength or Dexterity for each activation collected"
+    ]
+  

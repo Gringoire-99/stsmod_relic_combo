@@ -1,7 +1,13 @@
 package combo
 
+import action.EmptyAction
+import com.megacrit.cardcrawl.actions.common.ApplyPowerAction
 import com.megacrit.cardcrawl.cards.AbstractCard
+import com.megacrit.cardcrawl.cards.green.Eviscerate
 import com.megacrit.cardcrawl.cards.purple.PressurePoints
+import com.megacrit.cardcrawl.dungeons.AbstractDungeon
+import com.megacrit.cardcrawl.monsters.AbstractMonster
+import com.megacrit.cardcrawl.powers.watcher.MarkPower
 import com.megacrit.cardcrawl.relics.ArtOfWar
 import com.megacrit.cardcrawl.relics.Duality
 import com.megacrit.cardcrawl.relics.Nunchaku
@@ -36,7 +42,20 @@ class KungFu :
         })
         PatchEffect.onPostUseCardSubscribers.add(ComboEffect { c, t ->
             if (c is PressurePoints && !c.purgeOnUse) {
-                addToQueue(c, t, random = false, purge = true)
+                addToTop(EmptyAction {
+                    AbstractDungeon.getMonsters().monsters.forEach {
+                        if (it.isAlive() && it is AbstractMonster && it != t) {
+                            addToTop(
+                                ApplyPowerAction(
+                                    it,
+                                    AbstractDungeon.player,
+                                    MarkPower(it, c.magicNumber),
+                                    c.magicNumber
+                                )
+                            )
+                        }
+                    }
+                })
                 flash()
             }
         })

@@ -2,6 +2,7 @@ package combo
 
 import action.EmptyEffect
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon
+import com.megacrit.cardcrawl.helpers.PotionHelper
 import com.megacrit.cardcrawl.relics.*
 import core.AbstractRelicCombo
 import core.ComboEffect
@@ -10,7 +11,6 @@ import core.PatchEffect
 import utils.drawCard
 import utils.isInCombat
 import utils.makeId
-import kotlin.math.min
 
 class Alchemy : AbstractRelicCombo(
     Alchemy::class.makeId(),
@@ -24,12 +24,30 @@ class Alchemy : AbstractRelicCombo(
         SacredBark.ID
     ),
 ) {
-    private val rate: Int = setConfigurableProperty("Rate", 10, ConfigurableType.Int).toInt()
+    private val chance: Int = setConfigurableProperty("C", 1, ConfigurableType.Int).toInt()
     private val magic: Int = setConfigurableProperty("M", 1, ConfigurableType.Int).toInt()
 
     override fun onActive() {
         PatchEffect.onPreDropRandomPotionSubscribers.add(ComboEffect { c ->
-            min(99, c + rate * getCurrentComboSize())
+            var result = c
+            if (AbstractDungeon.miscRng.randomBoolean(
+                    getChance(
+                        Fraction(
+                            dividend = getCurrentComboSize() * chance.toFloat(),
+                            divisor = 7f
+                        )
+                    )
+                )
+            ) {
+                if (result < PotionHelper.POTION_COMMON_CHANCE) {
+                    result = PotionHelper.POTION_COMMON_CHANCE
+                    flash()
+                } else if (result < PotionHelper.POTION_COMMON_CHANCE + PotionHelper.POTION_UNCOMMON_CHANCE) {
+                    result = PotionHelper.POTION_COMMON_CHANCE + PotionHelper.POTION_UNCOMMON_CHANCE
+                    flash()
+                }
+            }
+            result
         })
         PatchEffect.onPostUsePotionSubscribers.add(ComboEffect { p, t ->
             if (isInCombat()) {
@@ -37,12 +55,20 @@ class Alchemy : AbstractRelicCombo(
                     drawCard(getExtraCollectCount() * magic)
                 }
             }
-            AbstractDungeon.effectsQueue.add(EmptyEffect {
-                repeat(magic + getExtraCollectCount()) {
-                    p.use(t)
-                }
-            })
-            flash()
+            if (AbstractDungeon.miscRng.randomBoolean(
+                    getChance(
+                        Fraction(
+                            dividend = getCurrentComboSize() * chance.toFloat(),
+                            divisor = 10f
+                        )
+                    )
+                )
+            ) {
+                AbstractDungeon.effectsQueue.add(EmptyEffect {
+                    AbstractDungeon.player.obtainPotion(AbstractDungeon.returnRandomPotion())
+                })
+                flash()
+            }
         })
     }
 }

@@ -2,6 +2,7 @@ package utils
 
 import RelicComboCore
 import action.EmptyAction
+import action.EmptyEffect
 import com.megacrit.cardcrawl.actions.AbstractGameAction
 import com.megacrit.cardcrawl.actions.AbstractGameAction.AttackEffect
 import com.megacrit.cardcrawl.actions.common.DamageAction
@@ -15,6 +16,7 @@ import com.megacrit.cardcrawl.core.AbstractCreature
 import com.megacrit.cardcrawl.core.Settings
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon
 import com.megacrit.cardcrawl.monsters.AbstractMonster
+import com.megacrit.cardcrawl.vfx.AbstractGameEffect
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 import kotlin.reflect.KClass
@@ -51,6 +53,22 @@ fun addToTop(vararg action: AbstractGameAction = arrayOf(), cb: () -> Unit = {})
     a.addAll(action)
     a.forEach {
         AbstractDungeon.actionManager.addToTop(it)
+    }
+}
+
+fun addTopEffect(vararg effects: AbstractGameEffect = arrayOf(), cb: () -> Unit = {}) {
+    val e: ArrayList<AbstractGameEffect> = arrayListOf(EmptyEffect { cb() })
+    e.addAll(effects)
+    e.forEach {
+        AbstractDungeon.topLevelEffects.add(it)
+    }
+}
+
+fun addEffect(vararg effects: AbstractGameEffect = arrayOf(), cb: () -> Unit = {}) {
+    val e: ArrayList<AbstractGameEffect> = arrayListOf(EmptyEffect { cb() })
+    e.addAll(effects)
+    e.forEach {
+        AbstractDungeon.effectsQueue.add(it)
     }
 }
 
