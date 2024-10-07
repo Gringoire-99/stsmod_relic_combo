@@ -18,7 +18,8 @@ class Mechanism : AbstractRelicCombo(
 ) {
     private val initialDamage = setConfigurableProperty("M", 1, ConfigurableType.Int).toInt()
     private val initialBlock = setConfigurableProperty("M2", 2, ConfigurableType.Int).toInt()
-    private val repeat = setConfigurableProperty("M3", 1, ConfigurableType.Int).toInt()
+    private val repeat = setConfigurableProperty("M3", 2, ConfigurableType.Int).toInt()
+    private val grow = setConfigurableProperty("G", 1, ConfigurableType.Int).toInt()
     private var damage: Int = initialDamage
     private var block: Int = initialBlock
 
@@ -39,7 +40,7 @@ class Mechanism : AbstractRelicCombo(
                     damageEffect = AbstractGameAction.AttackEffect.BLUNT_LIGHT
                 )
                 gainBlock(AbstractDungeon.player, block)
-                damage++
+                damage += grow
             }
         })
     }

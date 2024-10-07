@@ -307,7 +307,7 @@ abstract class AbstractRelicCombo(
                     currentComboSet.clear()
                     currentComboSet.putAll(filter)
                     currentComboSet.forEach { (_, v) ->
-                        v.removeIf { it !in relicIds }
+                        v.clear()
                     }
                 }
                 //update set
@@ -359,8 +359,10 @@ abstract class AbstractRelicCombo(
     }
 
     fun getChance(fraction: Fraction, caller: Any = this): Float {
+        fraction.calc().toLog("pre get chance")
         PatchEffect.onGetChanceSubscribers.forEach { it.effect(fraction, caller) }
-        return fraction.calc()
+        return fraction.calc().apply { toLog("post get chance") }
+
     }
 
     override fun equals(other: Any?): Boolean {

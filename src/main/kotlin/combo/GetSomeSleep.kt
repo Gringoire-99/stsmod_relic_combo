@@ -35,7 +35,7 @@ class GetSomeSleep : AbstractRelicCombo(
                 repeat(repeat + getExtraCollectCount()) {
                     val group = AbstractDungeon.player.masterDeck.group.filter { it.canUpgrade() }.groupBy { it.rarity }
                     val s =
-                        hashSetOf(
+                        arrayListOf(
                             CardRarity.RARE,
                             CardRarity.UNCOMMON,
                             CardRarity.COMMON,

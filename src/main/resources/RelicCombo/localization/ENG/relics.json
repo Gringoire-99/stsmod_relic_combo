@@ -170,7 +170,7 @@
     "DESCRIPTIONS": [
       "Collect !N! to activate",
       "At the start of each turn, deal !M! Thorns damage to a random enemy and gain !M2! Block !M3! times",
-      "Each trigger increases the damage by +1",
+      "Each trigger increases the damage by + !G! ",
       "Each additional collection adds one more trigger"
     ]
   },
@@ -208,7 +208,8 @@
     "FLAVOR": "Blood Ritual",
     "DESCRIPTIONS": [
       "Collect !N! to activate",
-      "Gain !M! temporary Strength after taking damage"
+      "Gain !M! temporary Strength after taking damage",
+      "For every 1% of HP lost, increase damage by 1%."
     ]
   },
   "RelicCombo:SetSail": {
