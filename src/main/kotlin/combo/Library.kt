@@ -17,7 +17,7 @@ class Library : AbstractRelicCombo(
     private val magic = setConfigurableProperty("M", 1, ConfigurableType.Int).toInt()
 
     override fun onActive() {
-        PatchEffect.onPostEndBattleSubscribers.add(ComboEffect {
+        PatchEffect.onPostEndBattleSubscribers.add(ComboEffect(caller = this) {
             flash()
             AbstractDungeon.effectsQueue.add(EmptyEffect {
                 repeat(magic + getExtraCollectCount()) {

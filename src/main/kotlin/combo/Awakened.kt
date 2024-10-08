@@ -30,7 +30,7 @@ class Awakened : AbstractRelicCombo(
     private val heal = setConfigurableProperty("M2", 4, ConfigurableType.Int).toInt()
 
     override fun onActive() {
-        PatchEffect.onPostBattleStartSubscribers.add(ComboEffect {
+        PatchEffect.onPostBattleStartSubscribers.add(ComboEffect(caller = this) {
             isUsed = false
             addToTop(
                 ApplyPowerAction(
@@ -41,35 +41,45 @@ class Awakened : AbstractRelicCombo(
             )
             flash()
         })
-        PatchEffect.onPostPlayerTakingDamageSubscribers.add(ComboEffect(priority = Int.MIN_VALUE) { damage: Int, _ ->
-            var d = damage
-            if (d >= AbstractDungeon.player.currentHealth && !isUsed && isInCombat()) {
-                d = 0
-                isUsed = true
-                addToTop(
-                    ApplyPowerAction(
-                        AbstractDungeon.player,
-                        AbstractDungeon.player,
-                        StrengthPower(AbstractDungeon.player, magic * getCurrentComboSize())
-                    ),
-                    HealAction(AbstractDungeon.player, AbstractDungeon.player, heal * getCurrentComboSize()),
-                    EmptyAction {
-                        AbstractDungeon.player.powers.forEach {
-                            if (it.type == AbstractPower.PowerType.DEBUFF) {
-                                addToTop(RemoveSpecificPowerAction(AbstractDungeon.player, AbstractDungeon.player, it))
+        PatchEffect.onPostPlayerTakingDamageSubscribers.add(
+            ComboEffect(
+                caller = this,
+                priority = Int.MIN_VALUE
+            ) { damage: Int, _ ->
+                var d = damage
+                if (d >= AbstractDungeon.player.currentHealth && !isUsed && isInCombat()) {
+                    d = 0
+                    isUsed = true
+                    addToTop(
+                        ApplyPowerAction(
+                            AbstractDungeon.player,
+                            AbstractDungeon.player,
+                            StrengthPower(AbstractDungeon.player, magic * getCurrentComboSize())
+                        ),
+                        HealAction(AbstractDungeon.player, AbstractDungeon.player, heal * getCurrentComboSize()),
+                        EmptyAction {
+                            AbstractDungeon.player.powers.forEach {
+                                if (it.type == AbstractPower.PowerType.DEBUFF) {
+                                    addToTop(
+                                        RemoveSpecificPowerAction(
+                                            AbstractDungeon.player,
+                                            AbstractDungeon.player,
+                                            it
+                                        )
+                                    )
+                                }
                             }
-                        }
-                    },
-                    SFXAction("VO_AWAKENEDONE_1"), VFXAction(
-                        AbstractDungeon.player,
-                        IntenseZoomEffect(AbstractDungeon.player.hb.cX, AbstractDungeon.player.hb.cY, true),
-                        0.05f,
-                        true
+                        },
+                        SFXAction("VO_AWAKENEDONE_1"), VFXAction(
+                            AbstractDungeon.player,
+                            IntenseZoomEffect(AbstractDungeon.player.hb.cX, AbstractDungeon.player.hb.cY, true),
+                            0.05f,
+                            true
+                        )
                     )
-                )
-                flash()
-            }
-            d
-        })
+                    flash()
+                }
+                d
+            })
     }
 }

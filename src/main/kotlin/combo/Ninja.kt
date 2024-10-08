@@ -24,15 +24,15 @@ class Ninja :
     private var attackCount = 0
     private var increaseDamage = 0
     override fun onActive() {
-        PatchEffect.onPostBattleStartCleanupSubscribers.add(ComboEffect {
+        PatchEffect.onPostBattleStartCleanupSubscribers.add(ComboEffect(caller = this) {
             maxTriggerCount = max + getExtraCollectCount()
             increaseDamage = 0
         })
-        PatchEffect.onPostStartOfTurnSubscribers.add(ComboEffect {
+        PatchEffect.onPostStartOfTurnSubscribers.add(ComboEffect(caller = this) {
             triggerCount = 0
             attackCount = 0
         })
-        PatchEffect.onPostUseCardSubscribers.add(ComboEffect { c, t ->
+        PatchEffect.onPostUseCardSubscribers.add(ComboEffect(caller = this) { c, t ->
             if (c.type == CardType.ATTACK && triggerCount < maxTriggerCount) {
                 attackCount++
                 if (attackCount == 3) {
@@ -46,7 +46,7 @@ class Ninja :
                 }
             }
         })
-        PatchEffect.onCalculateCardDamageSubscriber.add(ComboEffect { c, d, _ ->
+        PatchEffect.onCalculateCardDamageSubscriber.add(ComboEffect(caller = this) { c, d, _ ->
             if (!(c.cost < 0 || c.costForTurn < 0 || c.type != CardType.ATTACK) && (c.costForTurn == 0 || c.freeToPlayOnce)) d + increaseDamage else d
         })
     }

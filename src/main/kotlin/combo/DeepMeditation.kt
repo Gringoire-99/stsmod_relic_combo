@@ -17,7 +17,7 @@ class DeepMeditation : AbstractRelicCombo(
     private val magic = setConfigurableProperty("M", 1, ConfigurableType.Int).toInt()
 
     override fun onActive() {
-        PatchEffect.onPostChangeStanceSubscribers.add(ComboEffect { oldStance: AbstractStance?, newStance: AbstractStance? ->
+        PatchEffect.onPostChangeStanceSubscribers.add(ComboEffect(caller = this) { oldStance: AbstractStance?, newStance: AbstractStance? ->
             if ((newStance is CalmStance && oldStance !is CalmStance) || (oldStance is CalmStance && newStance !is CalmStance)) {
                 drawCard(magic)
                 flash()

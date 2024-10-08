@@ -15,7 +15,7 @@ class Plain :
     ) {
     private val m = setConfigurableProperty("M", 1, ConfigurableType.Int).toInt()
     override fun onActive() {
-        PatchEffect.onPostBattleStartSubscribers.add(ComboEffect(priority = 0) {
+        PatchEffect.onPostBattleStartSubscribers.add(ComboEffect(caller = this, priority = 0) {
             flash()
             addToBot {
                 getAllGroup().forEach {

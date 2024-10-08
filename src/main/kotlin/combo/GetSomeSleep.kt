@@ -25,7 +25,7 @@ class GetSomeSleep : AbstractRelicCombo(
     private val increase = setConfigurableProperty("M", 10, ConfigurableType.Int).toInt()
     private val repeat = setConfigurableProperty("M2", 2, ConfigurableType.Int).toInt()
     override fun onActive() {
-        PatchEffect.onPreRestSubscribers.add(ComboEffect { healAmount ->
+        PatchEffect.onPreRestSubscribers.add(ComboEffect(caller = this) { healAmount ->
             flash()
             val a: Int = max(healAmount, AbstractDungeon.player.maxHealth - AbstractDungeon.player.currentHealth)
             AbstractDungeon.effectsQueue.add(EmptyEffect {

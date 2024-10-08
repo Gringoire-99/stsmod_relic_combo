@@ -33,7 +33,7 @@ class FourElement : AbstractRelicCombo(
     private val heal = setConfigurableProperty("M", 10, ConfigurableType.Int).toInt()
     private val m = setConfigurableProperty("M2", 1, ConfigurableType.Int).toInt()
     override fun onActive() {
-        PatchEffect.onPostBattleStartSubscribers.add(ComboEffect {
+        PatchEffect.onPostBattleStartSubscribers.add(ComboEffect(caller = this) {
             flash()
             CardCrawlGame.sound.play("STANCE_ENTER_DIVINITY")
             AbstractDungeon.effectsQueue.add(BorderFlashEffect(Color.GOLD, true))

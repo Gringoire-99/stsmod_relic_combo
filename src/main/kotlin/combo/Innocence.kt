@@ -30,13 +30,13 @@ class Innocence : AbstractRelicCombo(
     private val m = setConfigurableProperty("M", 3, ConfigurableType.Int).toInt()
 
     override fun onActive() {
-        PatchEffect.onPostStartOfTurnSubscribers.add(ComboEffect {
+        PatchEffect.onPostStartOfTurnSubscribers.add(ComboEffect(caller = this) {
             if (getCurrentComboSize() >= this.combo.size) {
                 flash()
                 addToBot(ChangeStanceAction(DivinityStance.STANCE_ID))
             }
         })
-        PatchEffect.onPrePlayerTakingDamageSubscribers.add(ComboEffect { damage, _ ->
+        PatchEffect.onPrePlayerTakingDamageSubscribers.add(ComboEffect(caller = this) { damage, _ ->
             var d = damage
             if (!isInCombat() || getCurrentComboSize() >= this.combo.size) {
                 flash()

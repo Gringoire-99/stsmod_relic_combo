@@ -22,7 +22,7 @@ class BringInTheBucks : AbstractRelicCombo(
     private var increaseHP = setConfigurableProperty("M", 1, ConfigurableType.Int).toInt()
     private var increaseGold = setConfigurableProperty("M2", 5, ConfigurableType.Int).toInt()
     override fun onActive() {
-        PatchEffect.onPostEndBattleSubscribers.add(ComboEffect {
+        PatchEffect.onPostEndBattleSubscribers.add(ComboEffect(caller = this) {
             repeat(getExtraCollectCount() + 1) {
                 val g = AbstractDungeon.miscRng.random(5, 10)
                 AbstractDungeon.effectsQueue.add(EmptyEffect {
@@ -31,7 +31,7 @@ class BringInTheBucks : AbstractRelicCombo(
                 flash()
             }
         })
-        PatchEffect.onPreGainGoldSubscribers.add(ComboEffect { goldAmount ->
+        PatchEffect.onPreGainGoldSubscribers.add(ComboEffect(caller = this) { goldAmount ->
             flash()
             "amount:${goldAmount} combo size:${getCurrentComboSize()} extra:${getExtraCollectCount()}".toLog()
             val a: Int = goldAmount + max(0, ceil(goldAmount * getCurrentComboSize() * 0.01F * increaseGold).toInt())
@@ -43,7 +43,7 @@ class BringInTheBucks : AbstractRelicCombo(
             }
             a
         })
-        PatchEffect.onPostGoNextRoomSubscribers.add(ComboEffect {
+        PatchEffect.onPostGoNextRoomSubscribers.add(ComboEffect(caller = this) {
             count = maxCount
         })
     }

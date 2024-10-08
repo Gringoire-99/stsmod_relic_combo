@@ -29,7 +29,7 @@ class Counterattack : AbstractRelicCombo(
 ) {
     private val magic = setConfigurableProperty("M", 1, ConfigurableType.Int).toInt()
     override fun onActive() {
-        PatchEffect.onPostBattleStartSubscribers.add(ComboEffect {
+        PatchEffect.onPostBattleStartSubscribers.add(ComboEffect(caller = this) {
             addToTop(
                 ApplyPowerAction(
                     AbstractDungeon.player,
@@ -39,7 +39,7 @@ class Counterattack : AbstractRelicCombo(
             )
             flash()
         })
-        PatchEffect.onPreMonsterTakingDamageSubscribers.add(ComboEffect { damage, info ->
+        PatchEffect.onPreMonsterTakingDamageSubscribers.add(ComboEffect(caller = this) { damage, info ->
             var d = damage
             if (info != null && info.type == DamageInfo.DamageType.THORNS) {
                 d += min(d, max(0, AbstractDungeon.player.getPower(ThornsPower.POWER_ID)?.amount ?: 0))

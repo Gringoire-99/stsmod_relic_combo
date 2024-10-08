@@ -33,10 +33,10 @@ class Dispel : AbstractRelicCombo(
 
     private var isUsed: Boolean = false
     override fun onActive() {
-        PatchEffect.onPostStartOfTurnSubscribers.add(ComboEffect {
+        PatchEffect.onPostStartOfTurnSubscribers.add(ComboEffect(caller = this) {
             isUsed = false
         })
-        PatchEffect.onPostDrawnCardSubscribers.add(ComboEffect {
+        PatchEffect.onPostDrawnCardSubscribers.add(ComboEffect(caller = this) {
             if (it.type == AbstractCard.CardType.CURSE) {
                 drawCard(m)
                 addToBot(
@@ -54,7 +54,7 @@ class Dispel : AbstractRelicCombo(
                 flash()
             }
         })
-        PatchEffect.onPostExhaustCardSubscribers.add(ComboEffect {
+        PatchEffect.onPostExhaustCardSubscribers.add(ComboEffect(caller = this) {
             if (!isUsed && it.type == AbstractCard.CardType.CURSE) {
                 addToBot(
                     GainEnergyAction(gain),

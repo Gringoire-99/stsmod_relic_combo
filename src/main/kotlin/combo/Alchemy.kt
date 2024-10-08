@@ -28,7 +28,7 @@ class Alchemy : AbstractRelicCombo(
     private val magic: Int = setConfigurableProperty("M", 1, ConfigurableType.Int).toInt()
 
     override fun onActive() {
-        PatchEffect.onPreDropRandomPotionSubscribers.add(ComboEffect { c ->
+        PatchEffect.onPreDropRandomPotionSubscribers.add(ComboEffect(caller = this) { c ->
             var result = c
             if (AbstractDungeon.miscRng.randomBoolean(
                     getChance(
@@ -49,7 +49,7 @@ class Alchemy : AbstractRelicCombo(
             }
             result
         })
-        PatchEffect.onPostUsePotionSubscribers.add(ComboEffect { p, t ->
+        PatchEffect.onPostUsePotionSubscribers.add(ComboEffect(caller = this) { p, t ->
             if (isInCombat()) {
                 if (getExtraCollectCount() > 0) {
                     drawCard(getExtraCollectCount() * magic)

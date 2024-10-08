@@ -24,14 +24,14 @@ class Stargazing : AbstractRelicCombo(
     private val m = setConfigurableProperty("M2", 1, ConfigurableType.Int).toInt()
     private var scryCount = 0
     override fun onActive() {
-        PatchEffect.onPostBattleStartSubscribers.add(ComboEffect {
+        PatchEffect.onPostBattleStartSubscribers.add(ComboEffect(caller = this) {
             scryCount += getCurrentComboSize() * scryAdd
             addToTop(ScryAction(m))
         })
-        PatchEffect.onPostBattleStartCleanupSubscribers.add(ComboEffect {
+        PatchEffect.onPostBattleStartCleanupSubscribers.add(ComboEffect(caller = this) {
             scryCount = 0
         })
-        PatchEffect.onPreScrySubscribers.add(ComboEffect { amount ->
+        PatchEffect.onPreScrySubscribers.add(ComboEffect(caller = this) { amount ->
             val a: Int = amount + max(0, scryCount)
             addToBot(
                 DamageAllEnemiesAction(

@@ -32,7 +32,7 @@ class Eternal :
     private val m = setConfigurableProperty("M2", 1, ConfigurableType.Int).toInt()
 
     override fun onActive() {
-        PatchEffect.onPostBattleStartSubscribers.add(ComboEffect {
+        PatchEffect.onPostBattleStartSubscribers.add(ComboEffect(caller = this) {
             addToTop(
                 ApplyPowerAction(
                     AbstractDungeon.player,
@@ -47,10 +47,10 @@ class Eternal :
             )
             flash()
         })
-        PatchEffect.onPostBattleStartCleanupSubscribers.add(ComboEffect {
+        PatchEffect.onPostBattleStartCleanupSubscribers.add(ComboEffect(caller = this) {
             counter = 0
         })
-        PatchEffect.onPostStartOfTurnSubscribers.add(ComboEffect {
+        PatchEffect.onPostStartOfTurnSubscribers.add(ComboEffect(caller = this) {
             counter += 1
             val require = max(1, max - getCurrentComboSize())
             if (counter >= require) {

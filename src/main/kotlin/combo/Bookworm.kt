@@ -18,7 +18,7 @@ class Bookworm :
     ) {
 
     override fun onActive() {
-        PatchEffect.onPostUseCardSubscribers.add(ComboEffect { c, t ->
+        PatchEffect.onPostUseCardSubscribers.add(ComboEffect(caller = this) { c, t ->
             if (c.type == AbstractCard.CardType.ATTACK && !c.purgeOnUse) {
                 flash()
                 addToQueue(c, t, random = false, purge = true)

@@ -27,7 +27,7 @@ class DarkOnesOwnLuck : AbstractRelicCombo(
     private val money = setConfigurableProperty("G", 10, ConfigurableType.Int).toInt()
     override fun onActive() {
 
-        PatchEffect.onPreRollEventSubscribers.add(ComboEffect {
+        PatchEffect.onPreRollEventSubscribers.add(ComboEffect(caller = this) {
                 forceChest: BooleanArray,
                 _: IntArray,
                 _: IntArray,
@@ -48,7 +48,7 @@ class DarkOnesOwnLuck : AbstractRelicCombo(
                 flash()
             }
         })
-        PatchEffect.onPostOpenChestSubscribers.add(ComboEffect {
+        PatchEffect.onPostOpenChestSubscribers.add(ComboEffect(caller = this) {
             val randomBoolean =
                 AbstractDungeon.miscRng.randomBoolean(
                     getChance(
@@ -63,7 +63,7 @@ class DarkOnesOwnLuck : AbstractRelicCombo(
                 AbstractDungeon.getCurrRoom().addRelicToRewards(AbstractDungeon.returnRandomRelicTier())
             }
         })
-        PatchEffect.onGetChanceSubscribers.add(ComboEffect { f, caller ->
+        PatchEffect.onGetChanceSubscribers.add(ComboEffect(caller = this) { f, caller ->
             if (caller !is DarkOnesOwnLuck) {
                 f.dividend++
                 addTopEffect(RainingGoldEffect(money), EmptyEffect { AbstractDungeon.player.gainGold(money) })

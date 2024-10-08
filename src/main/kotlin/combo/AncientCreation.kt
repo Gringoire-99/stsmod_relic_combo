@@ -21,7 +21,7 @@ class AncientCreation : AbstractRelicCombo(
     hashSetOf(CentennialPuzzle.ID, GoldenEye.ID, RunicCube.ID, RunicDome.ID, RunicPyramid.ID, RunicCapacitor.ID)
 ) {
     override fun onActive() {
-        PatchEffect.onPreApplyPowerSubscribers.add(ComboEffect { target: AbstractCreature?,
+        PatchEffect.onPreApplyPowerSubscribers.add(ComboEffect(caller = this) { target: AbstractCreature?,
                                                                  source: AbstractCreature?,
                                                                  power: AbstractPower? ->
             var isApply = true

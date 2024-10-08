@@ -23,7 +23,7 @@ class StayHealthy : AbstractRelicCombo(
     private val drawCard = setConfigurableProperty("M2", 1, ConfigurableType.Int).toInt()
     private val gainE = setConfigurableProperty("M3", 1, ConfigurableType.Int).toInt()
     override fun onActive() {
-        PatchEffect.onPostBattleStartSubscribers.add(ComboEffect(priority = 0) {
+        PatchEffect.onPostBattleStartSubscribers.add(ComboEffect(caller = this, priority = 0) {
             addToBot {
                 val h = AbstractDungeon.player.currentHealth
                 val power = (h / 20) * m

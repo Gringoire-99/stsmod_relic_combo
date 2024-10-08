@@ -25,12 +25,12 @@ class ToxinPurification : AbstractRelicCombo(
     private val limit = setConfigurableProperty("M", 3, ConfigurableType.Int).toInt()
     private val repeat = setConfigurableProperty("M2", 1, ConfigurableType.Int).toInt()
     override fun onActive() {
-        PatchEffect.onPostStartOfTurnSubscribers.add(ComboEffect {
+        PatchEffect.onPostStartOfTurnSubscribers.add(ComboEffect(caller = this) {
             count = 0
         })
-        PatchEffect.onPreApplyPowerSubscribers.add(ComboEffect { target: AbstractCreature?,
-                                                                 source: AbstractCreature?,
-                                                                 power: AbstractPower? ->
+        PatchEffect.onPreApplyPowerSubscribers.add(ComboEffect(caller = this) { target: AbstractCreature?,
+                                                                                source: AbstractCreature?,
+                                                                                power: AbstractPower? ->
 
             if (power is PoisonPower && source is AbstractPlayer && target is AbstractMonster) {
                 count++

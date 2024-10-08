@@ -26,7 +26,7 @@ class Sacrifice : AbstractRelicCombo(
     private val m = setConfigurableProperty("M", 2, ConfigurableType.Int).toInt()
 
     override fun onActive() {
-        PatchEffect.onPrePlayerLoseHpSubscribers.add(ComboEffect { damage, t ->
+        PatchEffect.onPrePlayerLoseHpSubscribers.add(ComboEffect(caller = this) { damage, t ->
             val d = damage
             if (isInCombat() && damage > 0) {
                 addToBot(
@@ -45,7 +45,7 @@ class Sacrifice : AbstractRelicCombo(
             }
             d
         })
-        PatchEffect.onPreMonsterTakingDamageSubscribers.add(ComboEffect(priority = 0) { damage, _ ->
+        PatchEffect.onPreMonsterTakingDamageSubscribers.add(ComboEffect(caller = this, priority = 0) { damage, _ ->
             var d = damage
 
             d += max(

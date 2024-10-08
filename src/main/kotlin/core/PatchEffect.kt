@@ -21,11 +21,11 @@ typealias OnPostBattleStart = () -> Unit
 typealias OnPostBattleStartCleanup = () -> Unit
 typealias OnPreGainGold = (amount: Int) -> Int
 typealias OnPostChangeStance = (oldStance: AbstractStance?, newStance: AbstractStance?) -> Unit
-typealias OnPostDrawnCard = (c: AbstractCard) -> Unit
+typealias OnPostDrawnCard = (card: AbstractCard) -> Unit
 typealias OnPostStartOfTurn = () -> Unit
 typealias OnPreRest = (healAmount: Int) -> Int
-typealias OnPostUseCard = (c: AbstractCard, target: AbstractCreature?) -> Unit
-typealias OnPreDropRandomPotion = (change: Int) -> Int
+typealias OnPostUseCard = (card: AbstractCard, target: AbstractCreature?) -> Unit
+typealias OnPreDropRandomPotion = (chance: Int) -> Int
 typealias OnPostObtainRelic = (r: AbstractRelic) -> Unit
 typealias OnPostUsePotion = (potion: AbstractPotion, target: AbstractMonster?) -> Unit
 typealias OnPostPlayerTakingDamage = (damage: Int, info: DamageInfo?) -> Int
@@ -34,8 +34,8 @@ typealias OnPrePlayerLoseHp = (damage: Int, info: DamageInfo?) -> Int
 typealias OnPreMonsterTakingDamage = (damage: Int, info: DamageInfo?) -> Int
 typealias OnPreApplyPower = (target: AbstractCreature?, source: AbstractCreature?, power: AbstractPower?) -> Boolean
 typealias OnPostApplyPower = (target: AbstractCreature?, source: AbstractCreature?, power: AbstractPower?) -> Boolean
-typealias OnPostExhaustCard = (c: AbstractCard) -> Unit
-typealias OnPostOpenChest = (c: AbstractChest) -> Unit
+typealias OnPostExhaustCard = (card: AbstractCard) -> Unit
+typealias OnPostOpenChest = (card: AbstractChest) -> Unit
 typealias OnPreRollEvent = (
     forceChest: BooleanArray,
     eliteSize: IntArray,
@@ -221,7 +221,13 @@ class PatchEffect : OnPlayerTurnStartPostDrawSubscriber, OnStartBattleSubscriber
 
 }
 
-class ComboEffect<T : Function<Any?>>(priority: Int = 1, effect: T) :
-    Effect<T>(effect = effect, priority = priority)
+class ComboEffect<T : Function<Any?>>(caller: AbstractRelicCombo, priority: Int = 1, effect: T) :
+    Effect<T>(effect = effect, priority = priority, caller = caller) {
+}
 
-abstract class Effect<T : Function<Any?>>(val priority: Int = 0, val isInnate: Boolean = false, val effect: T)
+abstract class Effect<T : Function<Any?>>(
+    val priority: Int = 0,
+    val isInnate: Boolean = false,
+    var caller: Any? = null,
+    val effect: T
+)

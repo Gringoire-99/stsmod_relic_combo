@@ -19,7 +19,7 @@ class Yummy() : AbstractRelicCombo(
 ) {
     private val m = setConfigurableProperty("M", 1, ConfigurableType.Int).toInt()
     override fun onActive() {
-        PatchEffect.onPostBattleStartSubscribers.add(ComboEffect {
+        PatchEffect.onPostBattleStartSubscribers.add(ComboEffect(caller = this) {
             flash()
             val s = (getCurrentComboSize() / 2) * m
             val d = getCurrentComboSize() - s

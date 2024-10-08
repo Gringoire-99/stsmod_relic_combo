@@ -23,17 +23,17 @@ class ChallengeMe :
     private val draw = setConfigurableProperty("M2", 1, ConfigurableType.Int).toInt()
     override fun onActive() {
 
-        PatchEffect.onPostBattleStartCleanupSubscribers.add(ComboEffect {
+        PatchEffect.onPostBattleStartCleanupSubscribers.add(ComboEffect(caller = this) {
             active =
                 AbstractDungeon.getMonsters().monsters.any { it.type == AbstractMonster.EnemyType.BOSS || it.type == AbstractMonster.EnemyType.ELITE }
         })
-        PatchEffect.onPostStartOfTurnSubscribers.add(ComboEffect {
+        PatchEffect.onPostStartOfTurnSubscribers.add(ComboEffect(caller = this) {
             if (active) {
                 drawCard(draw)
                 flash()
             }
         })
-        PatchEffect.onPreMonsterTakingDamageSubscribers.add(ComboEffect(priority = 0) { damage, _ ->
+        PatchEffect.onPreMonsterTakingDamageSubscribers.add(ComboEffect(caller = this, priority = 0) { damage, _ ->
             var d = damage
             if (active) {
                 d += max(0, ceil(damage * 0.01 * m * getCurrentComboSize()).toInt())
@@ -41,7 +41,7 @@ class ChallengeMe :
             }
             d
         })
-        PatchEffect.onPrePlayerTakingDamageSubscribers.add(ComboEffect(priority = 0) { damage, _ ->
+        PatchEffect.onPrePlayerTakingDamageSubscribers.add(ComboEffect(caller = this, priority = 0) { damage, _ ->
             var d = damage
             if (active && isInCombat()) {
                 d = max(0, damage - ceil(damage * 0.01 * m * getCurrentComboSize()).toInt())

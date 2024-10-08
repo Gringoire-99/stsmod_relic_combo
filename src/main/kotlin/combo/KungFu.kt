@@ -23,7 +23,7 @@ class KungFu :
     private val damage = setConfigurableProperty("M", 4, ConfigurableType.Int).toInt()
     private val reduceCost = setConfigurableProperty("M2", 1, ConfigurableType.Int).toInt()
     override fun onActive() {
-        PatchEffect.onPostBattleStartSubscribers.add(ComboEffect {
+        PatchEffect.onPostBattleStartSubscribers.add(ComboEffect(caller = this) {
             addToBot {
                 getAllGroup().forEach {
                     it.group.forEach { c ->
@@ -39,7 +39,7 @@ class KungFu :
                 }
             }
         })
-        PatchEffect.onPostUseCardSubscribers.add(ComboEffect { c, t ->
+        PatchEffect.onPostUseCardSubscribers.add(ComboEffect(caller = this) { c, t ->
             if (c is PressurePoints && !c.purgeOnUse) {
                 addToTop(EmptyAction {
                     AbstractDungeon.getMonsters().monsters.forEach {

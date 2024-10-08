@@ -20,7 +20,7 @@ class LessIsMore : AbstractRelicCombo(
     private val upgrade = setConfigurableProperty("M2", 1, ConfigurableType.Int).toInt()
     private val gain = setConfigurableProperty("M3", 1, ConfigurableType.Int).toInt()
     override fun onActive() {
-        PatchEffect.onPostBattleStartSubscribers.add(ComboEffect {
+        PatchEffect.onPostBattleStartSubscribers.add(ComboEffect(caller = this) {
             if (AbstractDungeon.player.masterDeck.size() <= limit) {
                 flash()
                 addToTop {
@@ -34,7 +34,7 @@ class LessIsMore : AbstractRelicCombo(
                 }
             }
         })
-        PatchEffect.onPostStartOfTurnSubscribers.add(ComboEffect {
+        PatchEffect.onPostStartOfTurnSubscribers.add(ComboEffect(caller = this) {
             val sumOf = getAllGroup().sumOf { it.group.size }
             if (sumOf <= limit) {
                 flash()

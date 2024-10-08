@@ -31,7 +31,7 @@ class Repair : AbstractRelicCombo(
     private val amount = setConfigurableProperty("M", 1, ConfigurableType.Int).toInt()
     private val impulse = setConfigurableProperty("M2", 1, ConfigurableType.Int).toInt()
     override fun onActive() {
-        PatchEffect.onPostBattleStartSubscribers.add(ComboEffect {
+        PatchEffect.onPostBattleStartSubscribers.add(ComboEffect(caller = this) {
             flash()
             val a = amount + getExtraCollectCount()
             addToBot(
@@ -52,7 +52,7 @@ class Repair : AbstractRelicCombo(
                 ),
             )
         })
-        PatchEffect.onPostStartOfTurnSubscribers.add(ComboEffect {
+        PatchEffect.onPostStartOfTurnSubscribers.add(ComboEffect(caller = this) {
             flash()
             repeat(impulse) {
                 addToBot(
@@ -60,7 +60,7 @@ class Repair : AbstractRelicCombo(
                 )
             }
         })
-        PatchEffect.onPostUseCardSubscribers.add(ComboEffect { c, t ->
+        PatchEffect.onPostUseCardSubscribers.add(ComboEffect(caller = this) { c, t ->
             if (c.type == AbstractCard.CardType.ATTACK && !c.purgeOnUse) {
                 flash()
                 addToQueue(c, t, random = false, purge = true)

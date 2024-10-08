@@ -21,7 +21,7 @@ class VIP : AbstractRelicCombo(
 ) {
     private val repeat = setConfigurableProperty("M", 1, ConfigurableType.Int).toInt()
     override fun onActive() {
-        PatchEffect.onPreShopInitSubscribers.add(ComboEffect {
+        PatchEffect.onPreShopInitSubscribers.add(ComboEffect(caller = this) {
                 _: ShopScreen,
                 coloredCards: ArrayList<AbstractCard>?,
                 colorlessCards: ArrayList<AbstractCard>?,
@@ -38,15 +38,15 @@ class VIP : AbstractRelicCombo(
                 }
             }
         })
-        PatchEffect.onPostShopInitSubscribers.add(ComboEffect { shop: ShopScreen, _: ArrayList<AbstractCard>?,
-                                                                _: ArrayList<AbstractCard>? ->
+        PatchEffect.onPostShopInitSubscribers.add(ComboEffect(caller = this) { shop: ShopScreen, _: ArrayList<AbstractCard>?,
+                                                                               _: ArrayList<AbstractCard>? ->
             shop.applyDiscount(max(0F, 1 - getCurrentComboSize() * 0.25F), true)
             ShopScreen.actualPurgeCost = 0
         })
-        PatchEffect.onPreShopPurgeSubscribers.add(ComboEffect {
+        PatchEffect.onPreShopPurgeSubscribers.add(ComboEffect(caller = this) {
             ShopScreen.actualPurgeCost = 0
         })
-        PatchEffect.onPostShopPurgeSubscribers.add(ComboEffect {
+        PatchEffect.onPostShopPurgeSubscribers.add(ComboEffect(caller = this) {
             ShopScreen.actualPurgeCost = 0
             repeat(repeat) {
                 AbstractDungeon.effectsQueue.add(EmptyEffect {

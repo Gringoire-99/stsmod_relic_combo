@@ -20,7 +20,7 @@ class TheThreeOfUs :
     ) {
     private val m = setConfigurableProperty("M", 1, ConfigurableType.Int).toInt()
     override fun onActive() {
-        PatchEffect.onPreReturnRandomRelicSubscribers.add(ComboEffect { tier: RelicTier ->
+        PatchEffect.onPreReturnRandomRelicSubscribers.add(ComboEffect(caller = this) { tier: RelicTier ->
             var t = tier
             if (t == RelicTier.RARE || t == RelicTier.UNCOMMON || t == RelicTier.COMMON) {
                 if (AbstractDungeon.rareRelicPool.isNotEmpty() && t != RelicTier.RARE) {
@@ -33,12 +33,12 @@ class TheThreeOfUs :
             }
             t
         })
-        PatchEffect.onPostOpenChestSubscribers.add(ComboEffect {
+        PatchEffect.onPostOpenChestSubscribers.add(ComboEffect(caller = this) {
             repeat(m) {
                 AbstractDungeon.getCurrRoom().addRelicToRewards(AbstractDungeon.returnRandomRelicTier())
             }
         })
-        PatchEffect.onPostEndBattleSubscribers.add(ComboEffect {
+        PatchEffect.onPostEndBattleSubscribers.add(ComboEffect(caller = this) {
             addEffect {
                 repeat(m) {
                     AbstractDungeon.getCurrRoom().addRelicToRewards(AbstractDungeon.returnRandomRelicTier())

@@ -18,7 +18,7 @@ class SetSail :
     ) {
     private val m = setConfigurableProperty("M", 1, ConfigurableType.Int).toInt()
     override fun onActive() {
-        PatchEffect.onPostBattleStartSubscribers.add(ComboEffect {
+        PatchEffect.onPostBattleStartSubscribers.add(ComboEffect(caller = this) {
             flash()
             drawCard(getCurrentComboSize() * m)
         })

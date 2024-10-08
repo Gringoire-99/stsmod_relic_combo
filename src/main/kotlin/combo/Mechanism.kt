@@ -25,11 +25,11 @@ class Mechanism : AbstractRelicCombo(
 
     override fun onActive() {
 
-        PatchEffect.onPostBattleStartCleanupSubscribers.add(ComboEffect {
+        PatchEffect.onPostBattleStartCleanupSubscribers.add(ComboEffect(caller = this) {
             damage = initialDamage
             block = initialBlock
         })
-        PatchEffect.onPostStartOfTurnSubscribers.add(ComboEffect {
+        PatchEffect.onPostStartOfTurnSubscribers.add(ComboEffect(caller = this) {
             flash()
             repeat(repeat + getExtraCollectCount()) {
                 dealDamage(
