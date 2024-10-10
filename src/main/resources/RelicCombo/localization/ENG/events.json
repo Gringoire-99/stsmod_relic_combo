@@ -1,0 +1,47 @@
+{
+  "RelicCombo:TheWorldsResponse": {
+    "NAME": "The World's Response",
+    "DESCRIPTIONS": [
+      "As you step deeper into the Spire, the atmosphere around you becomes increasingly #y~unusual~ , with each step feeling like entering a different realm. NL Time and space seem to blur into a single existence. NL NL You feel that #y~the~ #y~world~ is #y~no~ #y~longer~ #y~indifferent~ , but is #g@responding@ to your every thought in the ~subtlest~ of ways. NL NL An ancient and indescribable #rpower seems to be responding to your will, as if this #yworld is quietly beginning to #p~yield~ to you.",
+      "Every time your mind stirs, a hidden #p@law@ quietly takes effect. NL NL This feeling of #g~control~ is #g~intoxicating~ . NL NL Yet you sense that a #r~price~ is approaching, and that with every #r~choice~ , this power becomes increasingly #r@uncontrollable@ .",
+      "A mere touch of your consciousness causes these #ppower to start ~gathering~ , start @dancing@ @wildly@ , and begin to respond obediently to your innermost desires, waiting for you to give them #g@new@ #g@forms@ . NL The power of the Spire transforming into #g~something~ #g~you~ #g~need~ . NL However, you also notice your #rlife force being drained by this power, and with every #r@breath@ you take , a part of your #r@essence@ is being drawn away.",
+      "A pure desire for #r@destruction@ emerges in your mind, yearning to obliterate all that exists. NL With a mere thought, the #g~certain~ #g~presence~ within you silently begins to #r~collapse~ . NL In the moment of dissipation, a surge of #g@energy@ #g@erupts@ , bringing you into sync with the rhythm of this world.",
+      "Your #r@heartbeat@ gradually aligns with the #r@rhythm@ of the Spire, as if #p~certain~ #p~parts~ of the #p~Spire~ have become part of your body. NL Through this resonance, you can #g@reshape@ the existing elements of this world, even beyond their #g@original@ #g@forms@ . NL But at the same time, you become acutely aware that this deep connection is greedily #r@devouring@ your essence, #r@draining@ your #r@most@ #r@precious@ core as a price.",
+      "You close your eyes, feeling the flow of #r@power@ around you, as if the #y~entire~ #y~world~ is awaiting #y~your~ #y~command~ . NL NL Yet, you do not take the next step. NL NL You allow this wondrous sensation to gradually #b~fade~ away, ~like~ the #b~silence~ left behind after the #b~tide~ has receded. NL NL You understand that everything is within your grasp, but sometimes, #y~letting~ #y~go~ #y~of~ #y~control~ is the hardest choice."
+    ],
+    "OPTIONS": [
+      "[Creation] #gGain #ga #grandom #grelic. #rTake  !M!  #rdamage.",
+      "[Destruction] #rLose #rrelic  !M! , #gUpgrade #g3 #grandom #gcards.",
+      "[Resonance] #gTransform #grelic  !M!  #ginto #g2 #gof #gthe #gsame #gtype. #rLose #r !M2!  #rMax #rHP.",
+      "[Let Go] #gHeal? #g !M!  #gHP.",
+      "[Lock] Requires: Relic or Max HP."
+    ]
+  },
+  "RelicCombo:MirrorOfLoss": {
+    "NAME": "Mirror of Loss",
+    "DESCRIPTIONS": [
+      "You step into a room #p~shrouded~ #p~in~ #p~shadow~ . NL NL In the center stands an #pancient #pmirror , a dim light seeping from it, whispering of some #p~lost~ #p~past~ . NL It is said that this mirror once belonged to a #p~forgotten~ #p~dark~ #p~deity~ , carrying countless #p~forgotten~ and sealed #g@memories@ . NL NL The closer you get, the more you feel an invisible #rpressure , as if your #gmemories are being #rstripped away, #ra #rscrutinized , and prepared to be eternally #r@sealed@ .",
+      "The #pimage reflected in the mirror #y~slightly~ #y~distorts~ , no longer completely syncing with your movements, as if another #p~presence~ #p~is~ #p~silently~ #p~watching~ #p~you~ . NL NL ~Perhaps~ , #p~it~ is waiting for you to make a #y~choice~ .",
+      "A certain #g~deep-seated~ #g~memory~ emerges in the mirror, resembling an item you #g~once~ #g~possessed~ . NL NL That familiar outline draws you to reach out and touch the #p~mirror's~ #p~surface~ . NL NL A chill of #b@coldness@ spreads, as that #gitem slowly transforms from #pillusion into #greality, coming into your hand. NL NL The #pcracks in the mirror #gslightly #gheal , and you feel a part of yourself #r@being@ #r@stripped@ #r@away@ , disappearing into that #pmirror.",
+      "“Bang!!” NL You #r@strike@ #r@the@ #r@mirror@ with a punch. NL The #pmirror #r@instantly@ #r@shatters@ , dark shards #r@scatter@ #r@away@ . NL NL Accompanied by the sound of breaking, ancient #g~memories~ surge forth from the mirror like a tide, #g~nourishing~ #g~your~ #g~soul~ , bringing you new #g@power@ . NL However, this all comes at a #r@cost@ #b—a #bchilling #p@curse@ quietly creeps up your spine. NL You lower your head, seeing flickering #ycoins in the shadows.",
+      "You long #r~stare~ at the #p~reflection~ #p~in~ #p~the~ #p~mirror~ . NL Gradually, that reflection begins to #r~blur~ , until you can no longer distinguish it. NL NL You feel something in your consciousness #r~disappearing~ , being #r~taken~ #r~away~ bit by bit, leaving you unable to even remember its existence. NL NL Just at that moment, the mirror suddenly reflects #g@a@ #g@strange@ #g@light@ , unfamiliar and profound, as if it comes from #y~another~ #y~world~ .",
+      "You gaze at that #p~mirror~ #p~surface~ , where the images flicker like #p~distant~ #p~dreams~ . NL Fragments of #pmemory , #rpower , and even #yfragments of fate call out to you, waiting for you to touch them. NL NL But just as you're about to cross that boundary, you stop. NL The mirror's #bcoldness seeps into your #gsoul . NL NL In the end, you take a step back, giving up this #p~temptation~ . NL NL All the images on the mirror #rdim instantly, as if they never existed, and the untouched power also #p~vanishes~ #p~into~ #p~nothingness~ ."
+    ],
+    "OPTIONS": [
+      "[Reach out to touch] #gGain #grelic  !M!  . #rLose  !M2!  #rmaximum #rhealth.",
+      "[Shatter] #rCursed #r(Clumsy), #grandomly #gupgrade 2 #gcards, #gchoose 2 #gcards #gto #ggain, #ggain  !M!  #ggolds.",
+      "[Stare at the mirror] Remove cards  !M!  ,  !M2!  ,  !M3!  . #gChoose 1 #gcard #gand 1 #gcolorless #gcard #gto #ggain.",
+      "[Lock] Requires: Relic.",
+      "[Lock] Requires: Card."
+    ]
+  },
+  "RelicCombo:CommonText": {
+    "NAME": "CommonText",
+    "DESCRIPTIONS": [
+    ],
+    "OPTIONS": [
+      "[Continue]",
+      "[Leave]"
+    ]
+  }
+}

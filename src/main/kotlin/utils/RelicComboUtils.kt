@@ -19,6 +19,8 @@ import com.megacrit.cardcrawl.monsters.AbstractMonster
 import com.megacrit.cardcrawl.vfx.AbstractGameEffect
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
+import kotlin.math.max
+import kotlin.math.min
 import kotlin.reflect.KClass
 
 const val modId = "RelicCombo"
@@ -172,5 +174,20 @@ fun addToQueue(
 
 fun AbstractMonster.isAlive(): Boolean {
     return !this.halfDead && !this.isDying && !this.isEscaping
+}
+
+fun <T> List<T>.randomPick(number: Int = 1): ArrayList<T> {
+    val n = min(size, max(0, number))
+    val source: ArrayList<T> = ArrayList(this)
+    val r: ArrayList<T> = arrayListOf()
+
+    repeat(n) {
+        val take = source.getOrNull(AbstractDungeon.miscRng.random(0, max(0, source.size - 1)))
+        source.remove(take)
+        take?.apply {
+            r.add(this)
+        }
+    }
+    return r
 }
 

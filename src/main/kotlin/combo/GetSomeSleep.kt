@@ -1,6 +1,7 @@
 package combo
 
 import action.EmptyEffect
+import com.badlogic.gdx.math.MathUtils
 import com.megacrit.cardcrawl.cards.AbstractCard
 import com.megacrit.cardcrawl.cards.AbstractCard.CardRarity
 import com.megacrit.cardcrawl.core.Settings
@@ -53,11 +54,13 @@ class GetSomeSleep : AbstractRelicCombo(
                     }
                     c?.apply {
                         upgrade()
+                        val x = MathUtils.random(0.1f, 0.9f) * Settings.WIDTH.toFloat()
+                        val y = MathUtils.random(0.2f, 0.8f) * Settings.HEIGHT.toFloat()
                         AbstractDungeon.effectsQueue.add(ShowCardBrieflyEffect(makeStatEquivalentCopy()))
                         AbstractDungeon.topLevelEffectsQueue.add(
                             UpgradeShineEffect(
-                                Settings.WIDTH.toFloat() / 2.0f,
-                                Settings.HEIGHT.toFloat() / 2.0f
+                                x,
+                                y
                             )
                         )
                     }

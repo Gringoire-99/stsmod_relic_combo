@@ -52,97 +52,16 @@ class RelicComboModConfig {
             modPanel?.apply {
                 spireModConfig?.let {
                     addUIElement(ComboConfigurablePropertyUI(this, it))
-//                    //Enable Combo
-//                    val enableComboToggleButton =
-//                        ToggleButton(label = comboConfigText.getOrDefault(ComboConfig.EnableCombo.key, "??"),
-//                            xPos = firstX,
-//                            yPos = firstY,
-//                            initialVal = it.getBool(getPropertyKey(options.get(index), ComboConfig.EnableCombo)),
-//                            parent = this,
-//                            onChange = { b ->
-//                                it.apply {
-//                                    setBool(getPropertyKey(options.get(index), ComboConfig.EnableCombo), b.enabled)
-//                                    save()
-//                                    AbstractRelicCombo.updateEnabledRelicComboSets()
-//                                }
-//                            })
-//                    //Desc
-//                    addUIElement(HeadlessTip(xPos = firstX + 400, yPos = firstY) {
-//                        options.get(index).desc
-//                    })
-//
-//                    val numberSelector = NumberSelector(
-//                        it.getInt(
-//                            getPropertyKey(
-//                                options.get(index),
-//                                ComboConfig.NumberToActive
-//                            )
-//                        ),
-//                        label = comboConfigText.get(ComboConfig.NumberToActive.key) ?: "label not find!",
-//                        range = 1..Int.MAX_VALUE,
-//                        xPos = firstX,
-//                        yPos = firstY - 100,
-//                        onChange = { _, new ->
-//                            it.apply {
-//                                setInt(getPropertyKey(options.get(index), ComboConfig.NumberToActive), new)
-//                                save()
-//                                AbstractRelicCombo.updateEnabledRelicComboSets()
-//                            }
-//                        }
-//                    )
-//                    //Dropdown to select current combo
-//                    addUIElement(LabeledDropdown(
-//                        parent = this,
-//                        options = ArrayList(options.map { it.title }),
-//                        xPos = firstX + 800,
-//                        yPos = firstY + 50
-//                    ) { i, _ ->
-//                        index = i
-//                        enableComboToggleButton.value =
-//                            it.getBool(
-//                                getPropertyKey(
-//                                    options.get(index),
-//                                    ComboConfig.EnableCombo
-//                                )
-//                            ) == true
-//                        numberSelector.value = it.getInt(
-//                            getPropertyKey(
-//                                options.get(index),
-//                                ComboConfig.NumberToActive
-//                            )
-//                        )
-//                    })
-//                    addUIElement(
-//                        enableComboToggleButton
-//                    )
-//                    addUIElement(
-//                        numberSelector
-//                    )
                     BaseMod.registerModBadge(
                         ImageMaster.loadImage("$modId/ui/badge.png"), modId, "glen", "relic combo!", modPanel
                     )
                 }
-
             }
-
         }
 
         fun <T : Serializable> getPropertyKey(combo: AbstractRelicCombo, option: Option<T>): String {
             return "${combo.id}:${option.key}"
         }
-
-//        private fun createDefaultConfig() {
-//            val config = Properties()
-////            AbstractRelicCombo.registeredComboSet.forEach { s ->
-////                config.setProperty(getPropertyKey(s, ComboConfig.EnableCombo), true.toString())
-////                config.setProperty(getPropertyKey(s, ComboConfig.NumberToActive), s.numberToActive.toString())
-////                config.setProperty(
-////                    getPropertyKey(s, ComboConfig.RelicsOfThisCombo),
-////                    Json().toJson(s.combo.toArray())
-////                )
-////            }
-//            defaultConfig = config
-//        }
 
         fun loadConfig() {
             spireModConfig = SpireConfig(modId, RelicComboModConfig::class.makeId(), Properties())
